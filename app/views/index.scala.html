@@ -1,0 +1,75 @@
+@()
+
+@main("Welcome to Spark","""
+
+  $('#trainLoader').hide();
+
+  $('#trainButton').click(function() {
+    $('#trainResult').hide();
+    $('#trainLoader').show();
+
+    var fileLocation = $('#fileLocation').val();
+    setTimeout(function(){
+      $.getJSON("spark/mllib/naivebayes/train?fileLocation="+fileLocation, function(data) {
+        $('#trainResult').text("Accuracy of training is "+data.accuracy);
+        $('#trainLoader').hide();
+        $('#trainResult').show();
+      });
+    }, 1000);
+  });
+
+""") {
+
+<!-- Header -->
+<header id="top" class="header">
+  <div class="text-vertical-center">
+    <h1>Play-Scala-Spark</h1>
+    <h3>Click the button below to start</h3>
+    <br>
+    <button type="button" class="btn btn-dark btn-lg" data-toggle="modal" data-target="#startModal">Start Button</button>
+  </div>
+</header>
+
+<div class="modal fade" id="startModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Train Naive Bayes</h4>
+      </div>
+      <div class="modal-body">
+        <p>Try training a Naive Bayes model here. Add the file you want to use to the project classpath, and enter its location below. We've pre-filled a default for you.</p>
+        <form role="form" id="fileLocationForm" onsubmit="return false;">
+          <div class="form-group">
+            <label for="fileLocation">Location of File</label>
+            <input type="text" class="form-control" id="fileLocation" placeholder="enterFileLocation" value="public/data/sample_naive_bayes_data.txt">
+          </div>
+          <a href="javascript:;" class="btn btn-default" id="trainButton">Train Using Spark!</a>
+        </form>
+        <p>&nbsp;</p>
+        <p>Output will appear below:</p>
+        <div id="trainLoader"><img src="@routes.Assets.at("img/loader.gif")"></div>
+        <div id="trainResult">Hit the button above to begin.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- About -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2>Need machine learning for Scala? Apache Spark is your solution.</h2>
+        <p class="lead">Check out this blog by <a target="_blank" href="http://blog.knoldus.com/2014/07/21/play-with-spark-building-spark-mllib-in-a-play-spark-application/">Knoldus</a> for the original source. Updated by <a href="http://twitter.com/crockpotveggies" target="_blank">@@crockpotveggies</a>.</p>
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+</section>
+
+}
