@@ -1,0 +1,31 @@
+@(errorMsg: Option[String] = None)(implicit request: RequestHeader, lang: Lang)
+
+@insecure("Start Tinderbox") {
+<div class="middle-box text-center loginscreen animated fadeInDown">
+  <div>
+    <div>
+      <h1 class="logo-name"><img src="@routes.Assets.at("img/favicon.png")" alt="Spora"></h1>
+    </div>
+
+    @errorMsg.map { msg =>
+    <div class="alert alert-danger alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      @Messages(msg)
+    </div>
+    }
+
+    <h2>Start Tinderbox</h2>
+    <p>Enter your Facebook access token and your Facebook ID below. You can get an access token <a href="https://www.facebook.com/dialog/oauth?client_id=464891386855067&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=basic_info,email,public_profile,user_about_me,user_activities,user_birthday,user_education_history,user_friends,user_interests,user_likes,user_location,user_photos,user_relationship_details&response_type=token" target="_blank">here</a>.</p>
+
+    <form class="m-t" role="form" action="@routes.Application.authenticate" method="POST">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="FB Token" required="" name="facebook_token">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="FB ID" required="" name="facebook_id">
+      </div>
+      <button type="submit" class="btn btn-primary block full-width m-b">Authorize</button>
+    </form>
+  </div>
+</div>
+}

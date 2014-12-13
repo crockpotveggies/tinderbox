@@ -108,10 +108,13 @@ class User(
   val pos: Position,
 
   @(JsonProperty@field)("user_number")
-  val user_number: Int
+  val user_number: Int,
+
+  @(JsonProperty@field)("discoverable")
+  val discoverable: Option[Boolean]
 ) {
   /**
    * necessary for object instantiation
    */
-  def this() = this("","",0,"","","","",0,0,"","","",0,0,List(0),"","",new Location(),0,"",false,List(new Photo()),"",new Position(),0)
+  def this() = this("","",0,"","","","",0,0,"","","",0,0,List(0),"","",new Location(),0,"",false,List(new Photo()),"",new Position(),0,None)
 }

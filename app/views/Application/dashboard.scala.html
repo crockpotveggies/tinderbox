@@ -1,0 +1,20 @@
+@(session: utils.tinder.model.TinderAuth)(implicit request: RequestHeader)
+@main(
+  title = "Your Spora Trial",
+  js = "",
+  session = session
+) {
+<div class="row">
+  <div class="col-lg-12">
+    <div class="wrapper wrapper-content">
+      <div class="middle-box text-center animated fadeInRightBig">
+        <h2 class="font-bold">Welcome</h2>
+
+        <div class="error-desc">
+          <p>You are logged in</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

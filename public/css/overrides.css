@@ -1,0 +1,17 @@
+/*
+ * Style overrides for main theme
+ */
+
+.user-profile-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+.skin-3 .img-circle {
+  border-radius: 50%;
+}
+
+.navbar-header-brand {
+  margin-top: 20px;
+  margin-left: 10px;
+}

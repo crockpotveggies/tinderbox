@@ -1,82 +1,126 @@
-@(title: String, pageJS: String)(content: Html)
-
+@(title: String = "", js: String = "", session: utils.tinder.model.TinderAuth)(content: Html)
 <!DOCTYPE html>
-
 <html>
   <head>
-    <title>@title</title>
-
-    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("img/favicon.png")">
 
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap Core CSS -->
-    <link href="@routes.Assets.at("style/bootstrap.min.css")" rel="stylesheet">
-    <!-- Theme CSS -->
-    <link href="@routes.Assets.at("style/stylish-portfolio.css")" rel="stylesheet">
-    <!-- Custom Fonts -->
-    <link href="@routes.Assets.at("style/font-awesome.min.css")" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="@routes.Assets.at("img/favicon.ico")">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <title>@title</title>
+
+    <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("font-awesome/css/font-awesome.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/plugins/iCheck/custom.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/plugins/summernote/summernote.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/plugins/summernote/summernote-bs3.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/animate.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/style.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/overrides.css")" rel="stylesheet">
+
   </head>
-  <body>
 
-    @content
+  <body class="boxed-layout skin-1">
+
+  <div id="wrapper">
+
+  <nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+      <ul class="nav" id="side-menu">
+        <li class="nav-header">
+          <div class="dropdown profile-element">
+            <span><img alt="image" class="img-circle user-profile-img" src="@session.user.photos.head.url" /> </span>
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+              <span class="clear">
+                <span class="block m-t-xs"> <strong class="font-bold">@session.user.name</strong></span>
+                <span class="text-muted text-xs block">My Account <b class="caret"></b></span>
+              </span>
+            </a>
+            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+              <li><a href="/logout/@session.token">Logout</a></li>
+            </ul>
+          </div>
+          <div class="logo-element">
+            <img alt="image" class="img-circle user-profile-img" src="@routes.Assets.at("img/user-generic.png")" />
+          </div>
+        </li>
+        <li class="active" class="">
+          <a href="javascript:;"><i class="fa fa-line-chart"></i> <span class="nav-label">Dashboard</span></a>
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <div id="page-wrapper" class="gray-bg">
+  <div class="row border-bottom">
+    <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+      <div class="navbar-header">
+        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-fire"></i></a>
+      </div>
+      <ul class="nav navbar-top-links navbar-right">
+        <li>
+          <a href="/logout">
+            <i class="fa fa-sign-out"></i> Log out
+          </a>
+        </li>
+      </ul>
+
+    </nav>
+  </div>
 
 
-    <!-- jQuery -->
-    <script src="@routes.Assets.at("js/jquery.js")"></script>
+  @content
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script>
-    // Closes the sidebar menu
-    $("#menu-close").click(function(e) {
-        e.preventDefault();
-        $("#sidebar-wrapper").toggleClass("active");
-    });
+  <div class="footer">
+    <div class="pull-right">
+      A service by <strong><a href="http://3tierlogic.com/" target="_blank">3 Tier Logic</a></strong>.
+    </div>
+    <div>
+      <strong>Copyright</strong> &copy; Spora.
+    </div>
+  </div>
 
-    // Opens the sidebar menu
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#sidebar-wrapper").toggleClass("active");
-    });
+  </div>
+  </div>
 
-    // Scrolls to the selected menu item on the page
-    $(function() {
-        $('a[href*=#]:not([href=#])').click(function() {
-            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
+  <!-- Mainly scripts -->
+  <script src="@routes.Assets.at("js/jquery-2.1.1.js")"></script>
+  <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+  <script src="@routes.Assets.at("js/plugins/metisMenu/jquery.metisMenu.js")"></script>
+  <script src="@routes.Assets.at("js/plugins/slimscroll/jquery.slimscroll.min.js")"></script>
 
-                var target = $(this.hash);
-                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-                if (target.length) {
-                    $('html,body').animate({
-                        scrollTop: target.offset().top
-                    }, 1000);
-                    return false;
-                }
-            }
-        });
-    });
-    </script>
+  <!-- Custom and plugin javascript -->
+  <script src="@routes.Assets.at("js/inspinia.js")"></script>
+  <script src="js/plugins/pace/pace.min.js"></script>
 
-    <!-- page-specific javascript -->
-    <script type="text/javascript">
-    $(document).ready(function () {
-    @Html(pageJS)
-    });
+  <!-- iCheck -->
+  <script src="@routes.Assets.at("js/plugins/iCheck/icheck.min.js")"></script>
+
+  <!-- SUMMERNOTE -->
+  <script src="@routes.Assets.at("js/plugins/summernote/summernote.min.js")"></script>
+  <script>
+          $(document).ready(function(){
+              $('.i-checks').iCheck({
+                  checkboxClass: 'icheckbox_square-green',
+                  radioClass: 'iradio_square-green',
+              });
+
+
+              $('.summernote').summernote();
+
+          });
+          var edit = function() {
+              $('.click2edit').summernote({focus: true});
+          };
+          var save = function() {
+              var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+              $('.click2edit').destroy();
+          };
+
     </script>
   </body>
+
 </html>

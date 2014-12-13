@@ -12,7 +12,9 @@ import com.codahale.jerkson
 /**
  * Provides easy access to the Tinder API
  */
-object TinderApi {
+class TinderApi(
+  var xAuthToken: Option[String] = None
+) {
 
   /**
    * Instantiating this Json object here helps prevent ClassCast errors
@@ -23,11 +25,6 @@ object TinderApi {
    * Describes last time an update was retrieved
    */
   var lastActivity = new Date()
-
-  /**
-   * Authentication token for requests on user's behalf
-   */
-  var xAuthToken: Option[String] = None
 
   /**
    * The current profile's user id
@@ -166,8 +163,9 @@ object TinderApi {
     val response = tinderPost[model.TinderAuth]("auth", Json.obj("facebook_token" -> fbToken, "facebook_id" -> fbId))
     response.map { r =>
       r match {
-        case Left(_) =>
+        case Left(e) =>
           println("[Tinder] Something has gone wrong while authenticating Tinder.")
+          println("[Tinder] Error was: \n"+e.error)
         case Right(auth) =>
           xAuthToken = Some(auth.token)
           userId = Some(auth.user._id)
@@ -205,6 +203,13 @@ object TinderApi {
    */
   def updatePosition(lat: Double, lon: Double) = {
     tinderPost[model.PositionResult]("user/ping", Json.obj("lat" -> lat, "lon" -> lon))
+  }
+
+  /**
+   * Get the current user's profile.
+   */
+  def getProfile = {
+    tinderGet[model.User]("profile")
   }
 
   /**
