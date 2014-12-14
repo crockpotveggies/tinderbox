@@ -19,3 +19,5 @@ GET     /jumpstart/:xauthtoken              controllers.Application.jumpstart(xa
 GET     /t/:xauthtoken/messages                 controllers.Messaging.messages(xauthtoken: String)
 POST    /t/:xauthtoken/messages/send/:userId    controllers.Messaging.sendMessage(xauthtoken: String, userId: String)
 GET     /t/:xauthtoken/profile/:userId          controllers.People.profile(xauthtoken: String, userId: String)
+POST    /t/:xauthtoken/report/:userId/:causeId  controllers.People.report(xauthtoken: String, userId: String, causeId: Int)
+DELETE  /t/:xauthtoken/unmatch/:matchId         controllers.People.unmatch(xauthtoken: String, matchId: String)

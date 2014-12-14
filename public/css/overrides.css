@@ -26,14 +26,14 @@
 }
 .mail-box {
   overflow-y: scroll;
-  height: 400px;
+  height: 460px;
 }
 .mailbox-content {
   background: none;
   border: none;
   padding: 0px;
   overflow-y: scroll;
-  max-height: 500px;
+  max-height: 600px;
 }
 .mail-message {
   border-top: none
@@ -71,6 +71,12 @@
   margin-bottom: 15px;
   float: left;
   display: inline-block;
+}
+.message-empty-placeholder {
+  margin-top: 30px;
+  opacity: 0.6;
+  font-style: italic;
+  text-align: center;
 }
 .message-container img {
   height: 25px;

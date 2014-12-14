@@ -46,7 +46,7 @@ window.App = function() {
   }
 
   /*
-   * View models for Knockout.js
+   * ViewModels
    */
   _.matches = ko.observableArray([]);
   _.matchesGetter = ko.computed(function() {
@@ -58,6 +58,12 @@ window.App = function() {
   });
 
   _.selectedMatch = ko.observable();
+  _.selectedMatch.subscribe(function() {
+    $(".tooltip-ui").tooltip({
+      selector: "[data-toggle=tooltip]",
+      container: "body"
+    });
+  });
   _.selectedMatchId = ko.observable();
   _.matches.subscribe(function() { _.selectedMatchId.valueHasMutated(); });
   _.selectedMatchSetter = ko.computed(function() {
@@ -76,7 +82,30 @@ window.App = function() {
     $.post("/t/"+getAuthToken()+"/messages/send/"+_.selectedMatchId(), {message: _.messageDraft()}, function(data) {
       _.messageDraft("");
       _.selectedMatch().messages.unshift(new _.messageModel(data));
-    })
+    });
+  }
+
+  _.reportUser = function(data, event) {
+    var r = confirm("Are you sure you want to report this user as annoying?");
+    if(r==true) {
+      $.post("/t/"+getAuthToken()+"/report/"+data._id()+"/2", function(data) {
+        // reporting a user doesn't automatically unmatch them
+        _.unmatch(data, event)
+      });
+    }
+  }
+  _.unmatch = function(data, event) {
+    var r = confirm("Are you sure you want to unmatch with this user?");
+    if(r==true) {
+      $.ajax({
+          url: "/t/"+getAuthToken()+"/unmatch/"+_.selectedMatchId(),
+          type: "DELETE",
+          success: function(result) {
+            _.matches.valueHasMutated();
+            window.location.hash = "all"
+          }
+      });
+    }
   }
 
   /*
@@ -104,6 +133,7 @@ window.App = function() {
 
     this.get('#/all', function() {
       _.selectedMatch(null);
+      _.selectedMatchId(null);
     });
 
     this.get('#/match/:matchId', function() {

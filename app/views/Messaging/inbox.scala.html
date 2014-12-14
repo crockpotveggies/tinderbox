@@ -24,11 +24,25 @@
       </div>
     </div>
   </div>
+  <!-- ko if: selectedMatch()==null -->
+  <div class="col-lg-9 mailbox-col animated fadeInRight">
+    <div class="wrapper wrapper-content">
+      <div class="middle-box text-center animated fadeInRightBig">
+        <h2 class="font-bold">Your Inbox</h2>
+
+        <div class="error-desc">
+          <p>To get started, select a conversation from the left.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /ko -->
+  <!-- ko if: selectedMatch()!=null -->
   <div class="col-lg-9 mailbox-col animated fadeInRight" data-bind="with: selectedMatch">
     <div class="mail-box-header" data-bind="with: person">
-      <div class="pull-right tooltip-demo">
-        <a href="javascript:;" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Report"><i class="fa fa-exclamation-triangle"></i> Report</a>
-        <a href="javascript:;" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Unmatch"><i class="fa fa-frown-o"></i> Unmatch</a>
+      <div class="pull-right tooltip-ui">
+        <a href="javascript:;" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Unmatch" data-bind="click: $root.unmatch"><i class="fa fa-frown-o"></i></a>
+        <a href="javascript:;" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Report" data-bind="click: $root.reportUser"><i class="fa fa-exclamation-triangle"></i></a>
       </div>
       <h2>
         <img class="message-from-photo img-circle" data-bind="attr:{src: mainPhoto}" alt="">
@@ -53,6 +67,11 @@
     </div>
     <div class="mail-box">
       <div class="mail-body">
+        <!-- ko if: messages().length==0 -->
+        <div class="message-empty-placeholder">
+          Get started by sending a friendly message.
+        </div>
+        <!-- /ko -->
         <div data-bind="foreach: messages">
           <div class="message-container">
             <img data-bind="attr:{src: $parent.person().mainPhoto()}, visible: from()==$parent.participants()[0]" alt="" class="img-circle">
@@ -66,6 +85,7 @@
       </div>
     </div>
   </div>
+  <!-- /ko -->
 </div>
 </div>
 }

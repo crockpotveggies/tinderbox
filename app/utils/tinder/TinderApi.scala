@@ -124,6 +124,28 @@ class TinderApi(
   }
 
   /**
+   * Issues a DELETE request to the tinder API
+   * @param path the relative path
+   */
+  def tinderDelete[T](path: String)(implicit m: Manifest[T]): Future[Either[model.TinderError,T]] = {
+    val url = TINDER_HOST+"/"+path
+    TinderWS
+      .url(url)
+      .withHeaders(tinderHeaders: _*)
+      .delete()
+      .map { response =>
+      try {
+        Right(jsonContext.parse[T](response.body))
+      } catch {
+        case e: Throwable =>
+          println("[Tinder] Parsing failed with: \n" + response.body)
+          println(stackTrace(e))
+          Left(jsonContext.parse[model.TinderError](response.body))
+      }
+    }
+  }
+
+  /**
    * Gets a list of profiles nearby
    * @param limit the maximum number of profiles to fetch
    */
@@ -236,6 +258,23 @@ class TinderApi(
    */
   def getProfile(userId: String) = {
     tinderGet[model.Profile]("user/"+userId)
+  }
+
+  /**
+   * Sends a message to a user
+   * @param userId the id of the user
+   * @param causeId the reason for reporting (1=spam, 2=offensive)
+   */
+  def reportUser(userId: String, causeId: Int) = {
+    tinderPost[model.TinderStatus]("report/"+userId, Json.obj("cause" -> causeId))
+  }
+
+  /**
+   * Removes a match from user's inbox
+   * @param matchId the match ID of user's conversation
+   */
+  def unmatch(matchId: String) = {
+    tinderDelete[model.TinderStatus]("user/matches/"+matchId)
   }
 
   /**
