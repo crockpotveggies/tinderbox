@@ -1,4 +1,4 @@
-@(title: String = "", js: String = "", session: utils.tinder.model.TinderAuth)(content: Html)
+@(title: String = "", js: String = "", extraTags: List[String] = List(), session: utils.tinder.model.TinderAuth)(content: Html)
 <!DOCTYPE html>
 <html>
   <head>
@@ -23,102 +23,98 @@
 
   <body class="boxed-layout skin-1">
 
-  <div id="wrapper">
+    <div id="wrapper">
 
-  <nav class="navbar-default navbar-static-side" role="navigation">
-    <div class="sidebar-collapse">
-      <ul class="nav" id="side-menu">
-        <li class="nav-header">
-          <div class="dropdown profile-element">
-            <span><img alt="image" class="img-circle user-profile-img" src="@session.user.photos.head.url" /> </span>
-            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-              <span class="clear">
-                <span class="block m-t-xs"> <strong class="font-bold">@session.user.name</strong></span>
-                <span class="text-muted text-xs block">My Account <b class="caret"></b></span>
-              </span>
-            </a>
-            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-              <li><a href="/logout/@session.token">Logout</a></li>
-            </ul>
-          </div>
-          <div class="logo-element">
-            <img alt="image" class="img-circle user-profile-img" src="@routes.Assets.at("img/user-generic.png")" />
-          </div>
-        </li>
-        <li class="active" class="">
-          <a href="javascript:;"><i class="fa fa-line-chart"></i> <span class="nav-label">Dashboard</span></a>
-        </li>
-      </ul>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+      <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+          <li class="nav-header">
+            <div class="dropdown profile-element">
+              <span><img alt="image" class="img-circle user-profile-img" src="@session.user.photos.head.url" /> </span>
+              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                <span class="clear">
+                  <span class="block m-t-xs"> <strong class="font-bold">@session.user.name</strong></span>
+                  <span class="text-muted text-xs block">My Account <b class="caret"></b></span>
+                </span>
+              </a>
+              <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                <li><a href="@routes.Application.logout(session.token)">Logout</a></li>
+              </ul>
+            </div>
+            <div class="logo-element">
+              <img alt="image" class="img-circle user-profile-img" src="@routes.Assets.at("img/user-generic.png")" />
+            </div>
+          </li>
+          <li class="">
+            <a href="@routes.Application.dashboard(session.token)"><i class="fa fa-line-chart"></i> <span class="nav-label">Dashboard</span></a>
+          </li>
+          <li class="">
+            <a href="@routes.Messaging.inbox(session.token)"><i class="fa fa-envelope"></i> <span class="nav-label">Inbox</span></a>
+          </li>
+        </ul>
 
-    </div>
-  </nav>
-
-  <div id="page-wrapper" class="gray-bg">
-  <div class="row border-bottom">
-    <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
-      <div class="navbar-header">
-        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-fire"></i></a>
       </div>
-      <ul class="nav navbar-top-links navbar-right">
-        <li>
-          <a href="/logout">
-            <i class="fa fa-sign-out"></i> Log out
-          </a>
-        </li>
-      </ul>
-
     </nav>
-  </div>
 
+    <div id="page-wrapper" class="gray-bg">
+    <div class="row border-bottom">
+      <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+          <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-fire"></i></a>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+          <li>
+            <a href="@routes.Application.logout(session.token)">
+              <i class="fa fa-sign-out"></i> Log out
+            </a>
+          </li>
+        </ul>
 
-  @content
-
-
-  <div class="footer">
-    <div class="pull-right">
-      A service by <strong><a href="http://3tierlogic.com/" target="_blank">3 Tier Logic</a></strong>.
+      </nav>
     </div>
-    <div>
-      <strong>Copyright</strong> &copy; Spora.
+
+
+    @content
+
+
+    <div class="footer">
+      <div>
+        A <strong>@@crockpotveggies</strong> project.
+      </div>
     </div>
-  </div>
 
-  </div>
-  </div>
+    </div>
+    </div>
 
-  <!-- Mainly scripts -->
-  <script src="@routes.Assets.at("js/jquery-2.1.1.js")"></script>
-  <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
-  <script src="@routes.Assets.at("js/plugins/metisMenu/jquery.metisMenu.js")"></script>
-  <script src="@routes.Assets.at("js/plugins/slimscroll/jquery.slimscroll.min.js")"></script>
+    <!-- Mainly scripts -->
+    <script src="@routes.Assets.at("js/libs/jquery-2.1.1.js")"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/sammy.js/0.7.6/sammy.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+    <script src="@routes.Assets.at("js/libs/bootstrap.min.js")"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment-with-locales.min.js"></script>
 
-  <!-- Custom and plugin javascript -->
-  <script src="@routes.Assets.at("js/inspinia.js")"></script>
-  <script src="js/plugins/pace/pace.min.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="@routes.Assets.at("js/libs/inspinia.js")"></script>
 
-  <!-- iCheck -->
-  <script src="@routes.Assets.at("js/plugins/iCheck/icheck.min.js")"></script>
+    <!-- iCheck -->
+    <script src="@routes.Assets.at("js/libs/plugins/iCheck/icheck.min.js")"></script>
 
-  <!-- SUMMERNOTE -->
-  <script src="@routes.Assets.at("js/plugins/summernote/summernote.min.js")"></script>
-  <script>
-          $(document).ready(function(){
-              $('.i-checks').iCheck({
-                  checkboxClass: 'icheckbox_square-green',
-                  radioClass: 'iradio_square-green',
-              });
+    <!-- Extra Tags -->
+    @extraTags.map { tag =>
+    @Html(tag)
+    }
 
+    <script>
+    window.getAuthToken = function() { return "@session.token"; }
+    window.getUserId = function() { return "@session.user._id"; }
+    window.getUserImage = function() { return "@session.user.photos.head.url"; }
 
-              $('.summernote').summernote();
-
-          });
-          var edit = function() {
-              $('.click2edit').summernote({focus: true});
-          };
-          var save = function() {
-              var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
-              $('.click2edit').destroy();
-          };
+    $(document).ready(function(){
+      $('.i-checks').iCheck({
+          checkboxClass: 'icheckbox_square-green',
+          radioClass: 'iradio_square-green',
+      });
+    });
 
     </script>
   </body>

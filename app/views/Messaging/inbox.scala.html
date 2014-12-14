@@ -1,0 +1,71 @@
+@(session: utils.tinder.model.TinderAuth)(implicit request: RequestHeader)
+@main(
+  title = "Inbox",
+  js = "",
+  extraTags = List("""<script src="/assets/js/app/inbox.js"></script>"""),
+  session = session
+) {
+<div class="wrapper wrapper-content">
+<div class="row">
+  <div class="col-lg-3">
+    <div class="ibox float-e-margins">
+      <div class="ibox-content mailbox-content">
+        <div class="file-manager">
+          <ul class="folder-list m-b-md inbox-message-list" style="padding: 0" data-bind="foreach: matches">
+            <li data-bind="with: person, css:{active: $root.selectedMatchId()==_id()}">
+              <a data-bind="attr: {href: '#/match/'+$parent._id()}">
+                <img data-bind="attr:{src: mainPhoto}" alt=""> <span data-bind="text: name" class="message-from"></span><br>
+                <span data-bind="text: $parent.messagePreview" class="message-preview"></span>
+              </a>
+              <div class="clearfix"></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-9 mailbox-col animated fadeInRight" data-bind="with: selectedMatch">
+    <div class="mail-box-header" data-bind="with: person">
+      <div class="pull-right tooltip-demo">
+        <a href="javascript:;" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Report"><i class="fa fa-exclamation-triangle"></i> Report</a>
+        <a href="javascript:;" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Unmatch"><i class="fa fa-frown-o"></i> Unmatch</a>
+      </div>
+      <h2>
+        <img class="message-from-photo img-circle" data-bind="attr:{src: mainPhoto}" alt="">
+        <span data-bind="text: name"></span>
+      </h2>
+      <div class="mail-tools message-from-lastseen">
+        <h3>
+          <span class="font-noraml message-last-seen">Last Seen <span data-bind="text: lastSeen"></span></span>
+        </h3>
+      </div>
+      <div class="clearfix"></div>
+      <div class="mail-message">
+        <div class="input-group">
+          <input type="text" class="form-control input-md" name="message" placeholder="Write a message" data-bind="textInput: $root.messageDraft">
+          <div class="input-group-btn">
+            <button type="submit" class="btn btn-md btn-primary" data-bind="click: $root.sendMessage">
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mail-box">
+      <div class="mail-body">
+        <div data-bind="foreach: messages">
+          <div class="message-container">
+            <img data-bind="attr:{src: $parent.person().mainPhoto()}, visible: from()==$parent.participants()[0]" alt="" class="img-circle">
+            <div data-bind="css:{'bubble-from': from()==$parent.participants()[0], 'bubble-user': from()==getUserId()}" class="message-bubble">
+              <span class="message-content" data-bind="text: message"></span><span class="message-sent-date" data-bind="text: sent"></span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+}

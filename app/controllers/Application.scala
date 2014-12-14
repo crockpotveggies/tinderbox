@@ -57,7 +57,7 @@ object Application extends Controller {
 
             case Right(auth) =>
               TinderService.storeSession(auth)
-              Logger.info("Jumpstarting user "+auth.user.full_name)
+              Logger.info("Logging in user "+auth.user.name)
               Redirect(routes.Application.dashboard(auth.token))
           }
         }

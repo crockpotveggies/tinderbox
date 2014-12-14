@@ -14,16 +14,26 @@ import com.fasterxml.jackson.databind.annotation._
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class Match(
   @(JsonProperty@field)("_id")
-  _id: String,
+  val _id: String,
 
   @(JsonProperty@field)("messages")
-  messages: List[Message],
+  val messages: List[Message],
 
   @(JsonProperty@field)("last_activity_date")
-  last_activity_date: String
+  val last_activity_date: String,
+
+  @(JsonProperty@field)("participants")
+  val participants: List[String],
+
+  @(JsonProperty@field)("closed")
+  val closed: Boolean,
+
+  @(JsonProperty@field)("profile")
+  var person: ProfileBrief
+
 ) {
   /**
    * necessary for object instantiation
    */
-  def this() = this("",List(new Message()),"")
+  def this() = this("",List(new Message()),"",List(""),false,new ProfileBrief())
 }

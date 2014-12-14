@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.annotation._
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class TinderError(
   @(JsonProperty@field)("status")
-  status: Int,
+  status: String,
 
   @(JsonProperty@field)("error")
   error: String
@@ -21,5 +21,5 @@ case class TinderError(
   /**
    * necessary for object instantiation
    */
-  def this() = this(0,"")
+  def this() = this("","")
 }

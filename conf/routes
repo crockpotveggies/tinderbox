@@ -2,14 +2,20 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                       controllers.Assets.at(path="/public", file)
+
 # App Pages
-GET     /                             controllers.Application.index
-GET     /dashboard/:xauthtoken        controllers.Application.dashboard(xauthtoken: String)
+GET     /                                   controllers.Application.index
+GET     /t/:xauthtoken/dashboard            controllers.Application.dashboard(xauthtoken: String)
+GET     /t/:xauthtoken/inbox                controllers.Messaging.inbox(xauthtoken: String)
 
 # Auth
-POST    /authenticate                 controllers.Application.authenticate
-GET     /logout/:xauthtoken           controllers.Application.logout(xauthtoken: String)
-GET     /jumpstart/:xauthtoken        controllers.Application.jumpstart(xauthtoken: String)
+POST    /authenticate                       controllers.Application.authenticate
+GET     /logout/:xauthtoken                 controllers.Application.logout(xauthtoken: String)
+GET     /jumpstart/:xauthtoken              controllers.Application.jumpstart(xauthtoken: String)
 
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                 controllers.Assets.at(path="/public", file)
+# Data
+GET     /t/:xauthtoken/messages                 controllers.Messaging.messages(xauthtoken: String)
+POST    /t/:xauthtoken/messages/send/:userId    controllers.Messaging.sendMessage(xauthtoken: String, userId: String)
+GET     /t/:xauthtoken/profile/:userId          controllers.People.profile(xauthtoken: String, userId: String)

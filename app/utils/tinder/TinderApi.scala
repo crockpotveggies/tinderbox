@@ -74,9 +74,18 @@ class TinderApi(
           Right(jsonContext.parse[T](response.body))
         } catch {
           case e: Throwable =>
-            println("[Tinder] Parsing failed with: \n"+response.body)
-            println(stackTrace(e))
-            Left(jsonContext.parse[model.TinderError](response.body))
+            try {
+              // sometimes Tinder wraps these things in a results object
+              val res = (response.json \ "results")
+              if(res==None || res==null) throw new Exception("Data was not wrapped in a results class. Could not parse.")
+              val recs = jsonContext.parse[T](Json.stringify(res))
+              Right(recs)
+            } catch {
+              case e: Throwable =>
+                println("[Tinder] Parsing failed with: \n" + response.body)
+                println(stackTrace(e))
+                Left(jsonContext.parse[model.TinderError](response.body))
+            }
         }
       }
 
@@ -95,12 +104,21 @@ class TinderApi(
       .post(data)
       .map { response =>
         try {
-          Right(jsonContext.parse[T](response.body.trim))
+          Right(jsonContext.parse[T](response.body))
         } catch {
-          case e: com.fasterxml.jackson.databind.JsonMappingException =>
-            println("[Tinder] Parsing failed with: \n"+response.body)
-            println(stackTrace(e))
-            Left(jsonContext.parse[model.TinderError](response.body))
+          case e: Throwable =>
+            try {
+              // sometimes Tinder wraps these things in a results object
+              val res = (response.json \ "results")
+              val recs = jsonContext.parse[T](Json.stringify(res))
+              if(recs==null || recs=="null") throw new Exception("Data was not wrapped in a results class. Could not parse.")
+              Right(recs)
+            } catch {
+              case e: Throwable =>
+                println("[Tinder] Parsing failed with: \n" + response.body)
+                println(stackTrace(e))
+                Left(jsonContext.parse[model.TinderError](response.body))
+            }
         }
       }
   }
