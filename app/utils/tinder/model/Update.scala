@@ -24,7 +24,7 @@ case class Update(
   deleted_lists: List[Map[String, String]],
 
   @(JsonProperty@field)("last_activity_date")
-  last_activity_date: String,
+  last_activity_date: Option[String],
 
   @(JsonProperty@field)("lists")
   lists: Option[List[Map[String, String]]]
@@ -32,5 +32,5 @@ case class Update(
   /**
    * necessary for object instantiation
    */
-  def this() = this(List(new Match()),List(""),List(Map(""->"")),"",None)
+  def this() = this(List(new Match()),List(""),List(Map(""->"")),None,None)
 }

@@ -10,12 +10,12 @@ window.App = function() {
   /*
    * Object models
    */
-  _.matchModel = function(match, profile) {
+  _.matchModel = function(match) {
     var o = this;
     o._id = ko.observable(match._id);
     o.messages = ko.observableArray($.map(match.messages, function(item){ return new _.messageModel(item) }));
     o.messages.sort(function(left, right) { return new Date(left.created_date()) == new Date(right.created_date()) ? 0 : (new Date(right.created_date()) < new Date(left.created_date()) ? -1 : 1) });
-    o.person = ko.observable(new _.personModel(profile))
+    o.person = ko.observable(new _.personModel(match.person))
     o.last_activity_date = ko.observable(match.last_activity_date);
     o.participants = ko.observableArray(match.participants);
     o.unread_count = ko.observable(0)
@@ -70,11 +70,8 @@ window.App = function() {
       type: "GET",
       dataType: "json",
       success: function(data) {
-      $('.loader-global').hide();
-        var d = $.map(data, function(item){
-        var profile = (typeof item.profile=="undefined" ? item.match.person : item.profile);
-          return new _.matchModel(item.match, profile)
-        });
+        $('.loader-global').hide();
+        var d = $.map(data, function(item){ return new _.matchModel(item) });
         _.matches(d);
         _.matches.sort(function(left, right) { return new Date(left.last_activity_date()) == new Date(right.last_activity_date()) ? 0 : (new Date(right.last_activity_date()) < new Date(left.last_activity_date()) ? -1 : 1) });
       },
@@ -132,7 +129,7 @@ window.App = function() {
         // iterate through matches and update messages & read counts
         $.map(_.matches(), function(match) {
           var matchId = match._id();
-          if(typeof data.unread_counts[matchId]!="undefined") match.unread_count(data.unread_counts[matchId])
+          if(typeof data.unread_counts[matchId]!="undefined" && matchId!=_.selectedMatchId()) match.unread_count(data.unread_counts[matchId])
           if(typeof data.messages[matchId]!="undefined") {
             $.map(data.messages[matchId], function(m) { match.messages.unshift(new _.messageModel(m)); })
           }

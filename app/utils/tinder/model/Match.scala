@@ -17,7 +17,7 @@ case class Match(
   val _id: String,
 
   @(JsonProperty@field)("messages")
-  val messages: List[Message],
+  var messages: List[Message],
 
   @(JsonProperty@field)("last_activity_date")
   val last_activity_date: String,
@@ -29,11 +29,11 @@ case class Match(
   val closed: Boolean,
 
   @(JsonProperty@field)("profile")
-  var person: ProfileBrief
+  var person: Option[ProfileBrief]
 
 ) {
   /**
    * necessary for object instantiation
    */
-  def this() = this("",List(new Message()),"",List(""),false,new ProfileBrief())
+  def this() = this("",List(new Message()),"",List(""),false,None)
 }

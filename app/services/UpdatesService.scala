@@ -20,7 +20,7 @@ object UpdatesService {
   /**
    * History and notification storage
    */
-  private val matches: ConcurrentNavigableMap[String, List[MatchUpdate]] = MapDB.db.getTreeMap("matches")
+  private val matches: ConcurrentNavigableMap[String, List[Match]] = MapDB.db.getTreeMap("matches")
 
   private val notifications: ConcurrentNavigableMap[String, List[Notification]] = MapDB.db.getTreeMap("notifications")
 
@@ -39,7 +39,7 @@ object UpdatesService {
    * Note: this resets unread counts to zero since we let updates handle that for us.
    * @param xAuthToken
    */
-  private def syncHistory(xAuthToken: String): Option[List[MatchUpdate]] = {
+  private def syncHistory(xAuthToken: String): Option[List[Match]] = {
     val tinderApi = new TinderApi(Some(xAuthToken))
     val result = Await.result(tinderApi.getHistory, 30 seconds)
     result match {
@@ -49,15 +49,18 @@ object UpdatesService {
         None
       case Right(history) =>
         // update the last activity variable
-        lastActivity.put(xAuthToken, tinderApi.ISO8601.parse(history.last_activity_date))
-        val data = history.matches.map { m =>
-          new MatchUpdate(m._id, m, None)
-        }
+        history.last_activity_date.map{ date => lastActivity.put(xAuthToken, tinderApi.ISO8601.parse(date)) }
+        val data = history.matches
         if(data.size>0) matches.put(xAuthToken, data)
         Some(data)
     }
   }
 
+  /**
+   * Grabs recent updates and syncs them with history.
+   * @param xAuthToken
+   * @return
+   */
   private def syncUpdates(xAuthToken: String): Option[(Map[String, List[Message]], List[Notification], Map[String, Int])] = {
     val tinderApi = new TinderApi(Some(xAuthToken))
     val result = Await.result(tinderApi.getUpdates(lastActivity.get(xAuthToken).getOrElse(new Date())), 10 seconds)
@@ -68,15 +71,18 @@ object UpdatesService {
         None
       case Right(history) =>
         val messages = Map(history.matches.map( m => (m._id, m.messages)).toMap.toSeq: _*)
-        // first update history TODO
-        // logic for updating history goes here once we figure out the MapDB state issues
-        // then update notifications
+        // first update match history TODO
+        history.matches.foreach { m =>
+          putMessages(xAuthToken, m._id, m.messages)
+        }
+        history.last_activity_date.map{ date => lastActivity.put(xAuthToken, tinderApi.ISO8601.parse(date)) }
+        // then create notifications
         val notificationList = history.matches.map { m =>
           new Notification(
             "messages",
             m._id,
-            m.person.name,
-            "%s sent you %s messages.".format(m.person.name, m.messages.size),
+            m.person.map(_.name).getOrElse("Someone"),
+            "%s sent you %s messages.".format(m.person.map(_.name).getOrElse("Someone"), m.messages.size),
             m.messages.size
           )
         }
@@ -99,11 +105,31 @@ object UpdatesService {
   }
 
   /**
+   * Updates a list of messages into match history.
+   * @param xAuthToken
+   * @param matchId
+   * @param messages
+   */
+  def putMessages(xAuthToken: String, matchId: String, messages: List[Message]) {
+    fetchHistory(xAuthToken) match {
+      case None => // do nothing, might not exist
+      case Some(history) =>
+        history.filter(m => m._id==matchId).headOption match {
+          case None => // the match isn't in history, there are bigger problems
+          case Some(m) =>
+            val newMatch = m.copy(messages = messages)
+            val matchList = history.filterNot(m => m._id==matchId) ::: List(newMatch)
+            matches.put(xAuthToken, matchList)
+        }
+    }
+  }
+
+  /**
    * Retrieves full match history and all users.
    * @param xAuthToken
    * @return
    */
-  def fetchHistory(xAuthToken: String): Option[List[MatchUpdate]] = {
+  def fetchHistory(xAuthToken: String): Option[List[Match]] = {
     matches.get(xAuthToken) match {
       case null =>
         syncHistory(xAuthToken)

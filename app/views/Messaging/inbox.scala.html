@@ -15,7 +15,7 @@
             <li data-bind="with: person, css:{active: $root.selectedMatchId()==_id()}">
               <a data-bind="attr: {href: '#/match/'+$parent._id()}">
                 <img data-bind="attr:{src: mainPhoto}" alt=""> <span data-bind="text: name" class="message-from"></span>
-                <span class="label label-danger pull-right" data-bind="text: $parent.unread_count(), visible: $parent.unread_count()>0"></span><br>
+                <span class="label label-danger pull-right" data-bind="visible: $parent.unread_count()>0"><i class="fa fa-comment-o"></i></span><br>
                 <span data-bind="text: $parent.messagePreview" class="message-preview"></span>
               </a>
               <div class="clearfix"></div>
