@@ -22,7 +22,14 @@ GET     /t/:xauthtoken/messages/notifications     controllers.Messaging.getNotif
 DELETE  /t/:xauthtoken/messages/notifications     controllers.Messaging.clearNotifications(xauthtoken: String)
 GET     /t/:xauthtoken/messages/unread_count      controllers.Messaging.getUnreadCounts(xauthtoken: String)
 DELETE  /t/:xauthtoken/messages/unread_count/:id  controllers.Messaging.clearUnreadCount(xauthtoken: String, id: String)
+
 GET     /t/:xauthtoken/updates                    controllers.Messaging.updates(xauthtoken: String)
+
 GET     /t/:xauthtoken/profile/:userId            controllers.People.profile(xauthtoken: String, userId: String)
 POST    /t/:xauthtoken/report/:userId/:causeId    controllers.People.report(xauthtoken: String, userId: String, causeId: Int)
 DELETE  /t/:xauthtoken/unmatch/:matchId           controllers.People.unmatch(xauthtoken: String, matchId: String)
+
+GET     /t/:xauthtoken/matchmaker                 controllers.Recommendations.matchmaker(xauthtoken: String)
+GET     /t/:xauthtoken/recommendations            controllers.Recommendations.recommendations(xauthtoken: String)
+GET     /t/:xauthtoken/like/:userId               controllers.Recommendations.like(xauthtoken: String, userId: String)
+GET     /t/:xauthtoken/dislike/:userId            controllers.Recommendations.dislike(xauthtoken: String, userId: String)

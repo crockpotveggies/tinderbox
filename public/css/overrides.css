@@ -127,3 +127,11 @@
 .bubble-from {
   float: left;
 }
+
+
+.ibox-matchmaker-title {
+  height: 64px;
+}
+.ibox-matchmaker-title h5 {
+  float: none
+}

@@ -1,0 +1,105 @@
+@(session: utils.tinder.model.TinderAuth)(implicit request: RequestHeader)
+@main(
+  title = "Inbox",
+  js = "",
+  extraTags = List("""<script src="/assets/js/app/matchmaker.js"></script>"""),
+  session = session
+) {
+<div class="wrapper wrapper-content">
+  <!-- ko if: recs().length==0 -->
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="middle-box text-center animated fadeInRightBig">
+        <h2 class="font-bold">Still looking?</h2>
+        <div class="error-desc">
+          <p>There's no new recommendations, yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /ko -->
+
+  <!-- ko if: recs().length>0 -->
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="ibox float-e-margins recs-featured-profile" data-bind="with: featuredProfile">
+        <div class="ibox-title ibox-matchmaker-title text-center">
+          <h5>
+            <button class="btn btn-danger btn-large dim btn-outline" data-bind="click: $root.dislike"><i class="fa fa-remove"></i> Nope</button>
+            &nbsp &nbsp;
+            <button class="btn btn-primary btn-large dim btn-outline" data-bind="click: $root.like"><i class="fa fa-heart"></i> Like</button>
+          </h5>
+        </div>
+        <div class="ibox-content no-padding">
+          <div class="carousel slide" id="featuredProfileCarousel">
+            <div class="carousel-inner" data-bind="foreach: photos">
+              <div class="item" data-bind="css:{active: $index()==0}">
+                <img alt="image" class="img-responsive" data-bind="attr: {src: squareUrl }">
+              </div>
+            </div>
+            <a data-slide="prev" class="left carousel-control" data-bind="click: function() { $('#featuredProfileCarousel').carousel('prev') }">
+              <span class="icon-prev"></span>
+            </a>
+            <a data-slide="next" class="right carousel-control" data-bind="click: function() { $('#featuredProfileCarousel').carousel('next') }">
+              <span class="icon-next"></span>
+            </a>
+          </div>
+        </div>
+        <div class="ibox-content profile-content">
+          <div>
+            <h2><strong data-bind="text: name"></strong>, <span data-bind="text: age"></span></h2>
+            <p><i class="fa fa-clock-o"></i> <span data-bind="text: lastSeen"></span> &nbsp; &nbsp; <i class="fa fa-map-marker"></i> <span data-bind="text: distance_mi"></span>mi</p>
+            <h5>
+              About me
+            </h5>
+            <p data-bind="text: bio"></p>
+            <div class="row m-t-lg">
+              <div class="col-md-6">
+                <h5><strong data-bind="text: common_friend_count"></strong> Mutual Friends</h5>
+              </div>
+              <div class="col-md-6">
+                <h5><strong data-bind="text: common_like_count"></strong> Common Likes</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="ibox">
+        <div class="ibox-title">
+          <h5>Upcoming Recommendations</h5>
+          <div class="ibox-tools">
+            <a class="btn btn-white btn-xs" data-bind="click: $root.recsAppender">Get More</a>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <div class="project-list">
+            <table class="table table-hover">
+              <tbody data-bind="foreach: recs">
+                <tr data-bind="visible: $index()!=0">
+                  <td class="project-title">
+                    <strong data-bind="text: name">Contract with Zender Company</strong><small>, <span data-bind="text: age"></span></small>
+                  </td>
+                  <td class="project-people" data-bind="foreach: photos">
+                    <span data-bind="visible: $index()<5">
+                      <a href="javascript:;"><img alt="image" class="img-circle" data-bind="attr: {src: squareUrl}"></a>
+                    </span>
+                  </td>
+                  <td class="project-actions">
+                    <a class="btn btn-outline btn-primary btn-xs" data-bind="click: $root.like"><i class="fa fa-heart"></i> Like </a>
+                    <a class="btn btn-outline btn-danger btn-xs" data-bind="click: $root.dislike"><i class="fa fa-remove"></i> Dislike </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- /ko -->
+</div>
+}

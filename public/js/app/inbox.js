@@ -77,7 +77,6 @@ window.App = function() {
       },
       error: function() {
         $('.loader-global').hide();
-        gritter
       }
     });
   });
