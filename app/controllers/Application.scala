@@ -6,6 +6,7 @@ import play.api.data._
 import play.api.data.Forms._
 import scala.concurrent.future
 import scala.concurrent.ExecutionContext.Implicits._
+import com.codahale.jerkson.Json._
 import services.TinderService
 import utils.tinder.TinderApi
 import utils.tinder.model._
@@ -76,22 +77,8 @@ object Application extends Controller {
   /**
    * Pulls up an active Tinder session in a dashboard.
    */
-  def jumpstart(xAuthToken: String) = Action.async { implicit request =>
-      // test that the token works
-    val tinderApi = new TinderApi(Some(xAuthToken))
-    tinderApi.getProfile.map{ result => result match {
-      case Left(error) =>
-        BadRequest(views.html.Application.index(Some(error.error)))
-
-      case Right(profile) =>
-        val tinderAuth = new TinderAuth(xAuthToken,new TinderGlobals,profile,new TinderVersion)
-
-        // save it
-        TinderService.storeSession(tinderAuth)
-        Logger.info("Logging in user "+profile.full_name)
-        Redirect(routes.Application.dashboard(tinderAuth.token))
-      }
-    }
+  def activeSessions = Action { implicit request =>
+    Ok(generate(TinderService.activeSessions))
   }
 
 }

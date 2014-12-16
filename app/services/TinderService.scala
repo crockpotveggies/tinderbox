@@ -1,10 +1,11 @@
 package services
 
-import java.util.concurrent.ConcurrentNavigableMap
-
+import java.util.NavigableMap
+import play.api.Logger
 import scala.collection.mutable.Map
 import scala.concurrent._
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits._
 import org.mapdb._
 import utils.tinder.TinderApi
 import utils.tinder.model._
@@ -17,7 +18,7 @@ object TinderService {
   /**
    * Current active tokens.
    */
-  private val sessions: ConcurrentNavigableMap[String, TinderAuth] = MapDB.db.getTreeMap("sessions")
+  private val sessions: NavigableMap[String, TinderAuth] = MapDB.db.getTreeMap("sessions")
 
   /**
    * Retrieve an active session.
@@ -27,6 +28,7 @@ object TinderService {
   def fetchSession(xAuthToken: String): Option[TinderAuth] = {
     sessions.get(xAuthToken) match {
       case null =>
+        Logger.info("Creating new session for xAuthToken %s".format(xAuthToken))
         val tinderApi = new TinderApi(Some(xAuthToken))
         val result = Await.result(tinderApi.getProfile, 10 seconds)
         result match {
@@ -35,7 +37,7 @@ object TinderService {
             // create a placeholder auth object
             val tinderAuth = new TinderAuth(xAuthToken,new TinderGlobals,profile,new TinderVersion)
             // save it
-            storeSession(tinderAuth)
+            val f = future { storeSession(tinderAuth) }
             Some(tinderAuth)
         }
       case session => Some(session)
@@ -53,5 +55,12 @@ object TinderService {
    * @param xAuthToken
    */
   def deleteSession(xAuthToken: String) { sessions.remove(xAuthToken) }
+
+  /**
+   * Retrieve all active tokens
+   */
+  def activeSessions = {
+    sessions.keySet()
+  }
 
 }

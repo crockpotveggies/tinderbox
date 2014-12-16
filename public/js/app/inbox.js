@@ -10,15 +10,21 @@ window.App = function() {
   /*
    * Object models
    */
-  _.matchModel = function(data) {
+  _.matchModel = function(match, profile) {
     var o = this;
-    o._id = ko.observable(data._id);
-    o.messages = ko.observableArray($.map(data.messages, function(item){ return new _.messageModel(item) }));
+    o._id = ko.observable(match._id);
+    o.messages = ko.observableArray($.map(match.messages, function(item){ return new _.messageModel(item) }));
     o.messages.sort(function(left, right) { return new Date(left.created_date()) == new Date(right.created_date()) ? 0 : (new Date(right.created_date()) < new Date(left.created_date()) ? -1 : 1) });
-    o.person = ko.observable(new _.personModel(data.person))
-    o.last_activity_date = ko.observable(data.last_activity_date);
-    o.participants = ko.observableArray(data.participants);
-    o.messagePreview = ko.observable((data.messages.length!=0 ? data.messages[data.messages.length-1].message.slice(0, 15)+"..." : ""));
+    o.person = ko.observable(new _.personModel(profile))
+    o.last_activity_date = ko.observable(match.last_activity_date);
+    o.participants = ko.observableArray(match.participants);
+    o.unread_count = ko.observable(0)
+    o.messagePreview = ko.observable((match.messages.length!=0 ? match.messages[match.messages.length-1].message.slice(0, 15)+"..." : ""));
+    o.getEnhancedProfile = function() {
+      $.getJSON("/t/"+getAuthToken()+"/profile/"+o.participants()[0], function(data) {
+        o.person(new _.personModel(data));
+      });
+    }
   }
   _.personModel = function(data) {
     var o = this;
@@ -27,7 +33,12 @@ window.App = function() {
     o.photos = ko.observable($.map(data.photos, function(item){ return new _.photoModel(item) }));
     o.bio = ko.observable(data.bio);
     o.mainPhoto = ko.observable((data.photos.length!=0 ? data.photos[0].processedFiles[3].url : "/assets/img/user-generic.png"));
+    o.ping_time = ko.observable(data.ping_time);
+    o.distance_mi = ko.observable((typeof data.distance_mi=="undefined" ? null : data.distance_mi));
     o.lastSeen = ko.observable(moment(data.ping_time).fromNow());
+    setInterval(function() {
+      o.lastSeen(moment(o.ping_time()).fromNow());
+    }, 60000);
   }
   _.photoModel = function(data) {
     var o = this;
@@ -43,6 +54,9 @@ window.App = function() {
     o.message = ko.observable(data.message);
     o.created_date = ko.observable(data.created_date);
     o.sent = ko.observable(moment(data.created_date).fromNow());
+    setInterval(function() {
+      o.sent(moment(o.created_date()).fromNow());
+    }, 60000);
   }
 
   /*
@@ -50,19 +64,43 @@ window.App = function() {
    */
   _.matches = ko.observableArray([]);
   _.matchesGetter = ko.computed(function() {
-    $.getJSON("/t/"+getAuthToken()+"/messages", function(data) {
-      var d = $.map(data, function(item){ return new _.matchModel(item) });
-      _.matches(d);
-      _.matches.sort(function(left, right) { return new Date(left.last_activity_date()) == new Date(right.last_activity_date()) ? 0 : (new Date(right.last_activity_date()) < new Date(left.last_activity_date()) ? -1 : 1) });
+    $('.loader-global').show()
+    $.ajax({
+      url: "/t/"+getAuthToken()+"/messages",
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+      $('.loader-global').hide();
+        var d = $.map(data, function(item){
+        var profile = (typeof item.profile=="undefined" ? item.match.person : item.profile);
+          return new _.matchModel(item.match, profile)
+        });
+        _.matches(d);
+        _.matches.sort(function(left, right) { return new Date(left.last_activity_date()) == new Date(right.last_activity_date()) ? 0 : (new Date(right.last_activity_date()) < new Date(left.last_activity_date()) ? -1 : 1) });
+      },
+      error: function() {
+        $('.loader-global').hide();
+        gritter
+      }
     });
   });
 
   _.selectedMatch = ko.observable();
-  _.selectedMatch.subscribe(function() {
+  _.selectedMatch.subscribe(function(newValue) {
     $(".tooltip-ui").tooltip({
       selector: "[data-toggle=tooltip]",
       container: "body"
     });
+    if(newValue!=null) {
+      newValue.getEnhancedProfile();
+      $.ajax({
+        url: "/t/"+getAuthToken()+"/messages/unread_count/"+newValue._id(),
+        type: "DELETE",
+        success: function() {
+          newValue.unread_count(0);
+        }
+      })
+    }
   });
   _.selectedMatchId = ko.observable();
   _.matches.subscribe(function() { _.selectedMatchId.valueHasMutated(); });
@@ -84,6 +122,37 @@ window.App = function() {
       _.selectedMatch().messages.unshift(new _.messageModel(data));
     });
   }
+
+  _.getUpdates = function() {
+    $.ajax({
+      url: "/t/"+getAuthToken()+"/updates",
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        // iterate through matches and update messages & read counts
+        $.map(_.matches(), function(match) {
+          var matchId = match._id();
+          if(typeof data.unread_counts[matchId]!="undefined") match.unread_count(data.unread_counts[matchId])
+          if(typeof data.messages[matchId]!="undefined") {
+            $.map(data.messages[matchId], function(m) { match.messages.unshift(new _.messageModel(m)); })
+          }
+        });
+      },
+      error : function() {
+        _.updateIntervalErrors += 1;
+        console.warn("Polling failed for latest updates.");
+      }
+    });
+  }
+  // set a timer for automatically retrieving updates
+  _.updateIntervalErrors = 0;
+  _.updateInterval = setInterval(function() {
+    _.getUpdates();
+    if(_.updateIntervalErrors > 5) {
+      clearInterval(_.updateInterval)
+      console.warn("Polling has been canceled, error threshold reached.");
+    }
+  }, 30000);
 
   _.reportUser = function(data, event) {
     var r = confirm("Are you sure you want to report this user as annoying?");

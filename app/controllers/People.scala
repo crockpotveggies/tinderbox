@@ -18,7 +18,7 @@ object People extends Controller {
    * Pulls up an active Tinder session in a dashboard.
    */
   def profile(xAuthToken: String, userId: String) = Action.async { implicit request =>
-    val f = future { ProfileService.fetchProfile(userId) }
+    val f = future { ProfileService.fetchProfile(xAuthToken, userId) }
     f.map { result =>
       result match {
         case Some(o) => Ok(generate(o)).as("application/json")

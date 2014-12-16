@@ -63,6 +63,11 @@
           <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-fire"></i></a>
         </div>
         <ul class="nav navbar-top-links navbar-right">
+          <li class="loader-global" style="display: none">
+            <a href="javascript:;">
+              <img src="@routes.Assets.at("img/loader-header.gif")" alt=""> Loading
+            </a>
+          </li>
           <li>
             <a href="@routes.Application.logout(session.token)">
               <i class="fa fa-sign-out"></i> Log out

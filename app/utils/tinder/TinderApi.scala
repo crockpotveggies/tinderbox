@@ -22,11 +22,6 @@ class TinderApi(
   val jsonContext = new jerkson.Json{}
 
   /**
-   * Describes last time an update was retrieved
-   */
-  var lastActivity = new Date()
-
-  /**
    * The current profile's user id
    */
   var userId: Option[String] = None
@@ -46,7 +41,7 @@ class TinderApi(
    */
   val STANDARD_HEADERS: Seq[(String, String)] = Seq(
     ("User-Agent", "Tinder Android Version 2.2.3"),
-    ("os_version","16"),
+    ("os_version", "16"),
     ("Content-type", "application/json")
   )
   def tinderHeaders = xAuthToken match {
@@ -75,16 +70,15 @@ class TinderApi(
         } catch {
           case e: Throwable =>
             try {
-              // sometimes Tinder wraps these things in a results object
-              val res = (response.json \ "results")
-              if(res==None || res==null) throw new Exception("Data was not wrapped in a results class. Could not parse.")
-              val recs = jsonContext.parse[T](Json.stringify(res))
-              Right(recs)
+              // check if this response was a Tinder error
+              Left(jsonContext.parse[model.TinderError](response.body))
             } catch {
               case e: Throwable =>
-                println("[Tinder] Parsing failed with: \n" + response.body)
-                println(stackTrace(e))
-                Left(jsonContext.parse[model.TinderError](response.body))
+                // sometimes Tinder wraps these things in a results object
+                val res = (response.json \ "results")
+                if(res==None || res==null) throw new Exception("Data was not wrapped in a results class. Could not parse.")
+                val recs = jsonContext.parse[T](Json.stringify(res))
+                Right(recs)
             }
         }
       }
@@ -218,10 +212,8 @@ class TinderApi(
   /**
    * Gets a list of new updates. This will be things like new messages, people who liked you, etc.
    */
-  def getUpdates = {
-    val response = tinderPost[model.Update]("updates", Json.obj("last_activity_date" -> toISO8601(lastActivity)))
-    response.map { r => lastActivity = new Date() }
-    response
+  def getUpdates(lastActivity: Date) = {
+    tinderPost[model.Update]("updates", Json.obj("last_activity_date" -> toISO8601(lastActivity)))
   }
 
   /**
@@ -277,14 +269,18 @@ class TinderApi(
     tinderDelete[model.TinderStatus]("user/matches/"+matchId)
   }
 
+  def ISO8601 = {
+    val f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    f.setTimeZone(TimeZone.getTimeZone("UTC"))
+    f
+  }
+
   /**
    * Utility function for formatting Date into ISO
    * @param time a Date object to be formatted
    */
   def toISO8601(time: Date): String = {
-    val x = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    x.setTimeZone(TimeZone.getTimeZone("UTC"))
-    x.format(time)
+    ISO8601.format(time)
   }
 
   def stackTrace(e: Throwable): String = {

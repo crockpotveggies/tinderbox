@@ -35,6 +35,12 @@
   overflow-y: scroll;
   max-height: 600px;
 }
+.mail-box-header h2 {
+  font-weight: 600;
+}
+.mail-box-header h2 small {
+  opacity: 0.6;
+}
 .mail-message {
   border-top: none
   padding: 0 0 10px 0;
@@ -47,6 +53,11 @@
 }
 .inbox-message-list li.active:first-child {
   border-top: 1px solid #e7eaec;
+}
+.inbox-message-list li .label {
+  margin-right: 10px;
+  font-size: 8px;
+  padding: 3px 5px;
 }
 .inbox-message-list li img {
   width: 43px;
