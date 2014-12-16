@@ -1,9 +1,13 @@
+import akka.actor.Props
 import play.api._
 import play.api.mvc._
 import play.api.mvc.Results._
-import scala.concurrent._
+import play.api.Play.current
+import play.api.libs.concurrent.Akka
 import org.fusesource.jansi.Ansi._
 import org.fusesource.jansi.Ansi.Color._
+import services.TinderBot
+import models.bot.BotCommand
 /**
  * the big global class that lays the foundation
  */
@@ -14,7 +18,10 @@ object Global extends GlobalSettings {
    */
   override def onStart(app: Application) {
 
-    println(ansi().eraseScreen().fg(RED).bg(WHITE).a("""
+    // make sure the bot is instantiated and running
+    TinderBot.context ! BotCommand("run")
+
+    println(ansi().fg(RED).bg(WHITE).a("""
 
      |__________________`s__________________
      |__________________s$______________s___
