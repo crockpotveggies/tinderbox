@@ -87,7 +87,7 @@ window.App = function() {
 
   _.like = function(data, event) {
     $.getJSON("/t/"+getAuthToken()+"/like/"+data._id(), function(result) {
-      if(result.match) alert("It's a match! Head to the inbox to chat.")
+      if(result!=null) alert("It's a match! Head to the inbox to chat.")
       _.recs.remove(data);
     });
   }

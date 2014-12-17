@@ -7,8 +7,9 @@ import play.api.libs.concurrent.Akka, Akka.system
 import java.util.NavigableMap
 import java.util.concurrent.ConcurrentNavigableMap
 import scala.concurrent.duration._
+import scala.collection.JavaConversions._
 import org.mapdb._
-import models.bot._, Throttler._
+import models.bot._, Throttler._, tasks._
 
 /**
  * Background service that automates tasks for Tinder.
@@ -21,39 +22,53 @@ import models.bot._, Throttler._
  *
  * NOTE: the bot only starts when the Global object sends a start signal
  */
-class TinderBot(taskThreshold: Int) extends Actor {
+class TinderBot(taskWarningThreshold: Int, taskShutdownThreshold: Int) extends Actor {
 
   override def preStart() = {
-    makeRun
-    Logger.info("[tinderbot] Bot monitor has started up")
+    Logger.info("[tinderbot] TinderBot has started up")
   }
 
   def receive = {
+    // send commands to the bot
     case BotCommand(command) =>
       command match {
         case "idle" => makeIdle
         case "run" => makeRun
         case "state" => getState
+        case s if s.startsWith("rate=") => setTaskRate(s.split("=")(1).toInt)
       }
 
+    // logic for handling queue state
     case QueueState(queueLength) =>
       queueLength match {
         // no more tasks
         case 0 =>
-        // TODO send actors for recommendations
-        // tasks are less than 10
-        case l if l<10 =>
-        // TODO create more actors for recommendations
-        // tasks exceed 50
-        case l if l>taskThreshold =>
-        // TODO set bot state to "pressured"
+          TinderService.activeSessions.foreach { xAuthToken =>
+            botThrottle ! Props(new RecommendationsTask(xAuthToken, self))
+            Logger.info("[tinderbot] created new Recommendation task for token "+xAuthToken)
+          }
+
+        // tasks exceed shutdown threshold
+        case l if l>taskShutdownThreshold =>
+          makeIdle
+          Logger.warn("[tinderbot] TinderBot is going idle (too many tasks > %s)".format(taskShutdownThreshold))
+
+        // tasks exceed warning threshold
+        case l if l>taskWarningThreshold =>
+          Logger.warn("[tinderbot] TinderBot is under pressure (tasks queue > %s)".format(taskWarningThreshold))
+
         // everything else
-        case _ =>
-        // TODO set bot state to "running"
+        case l =>
+          Logger.info("[tinderbot] Tasks queue size is currently %s".format(l))
       }
 
+    // TinderBot received a task from a sender
+    case props: Props =>
+      botThrottle ! props
+
+    // someone is sending invalid messages
     case e: Any =>
-      Logger.error("[tinderbot] Supervisor received an unknown message")
+      Logger.error("[tinderbot] TinderBot received an unknown message")
       Logger.error("[supervisor] Received: \n %s" format e.toString)
 
   }
@@ -62,27 +77,25 @@ class TinderBot(taskThreshold: Int) extends Actor {
    * Tracks state of the bot for logging and tasks.
    */
   private var state: BotState = new BotState(false, "idle")
-  private val log: ConcurrentNavigableMap[String, BotLog] = MapDB.db.getTreeMap("bot_log")
-  private val log_update_queue: ConcurrentNavigableMap[String, BotState] = MapDB.db.getTreeMap("bot_log_updates")
 
   /**
    * Throttler and processor do all of the processing.
    */
-  val botThrottle = system.actorOf(Props(new BotThrottle(1 msgsPer (5 seconds), Some(self))), "BotThrottle")
+  val botThrottle = system.actorOf(Props(new BotThrottle(1 msgsPer (10 seconds), Some(self))), "BotThrottle")
   val botSupervisor = system.actorOf(Props(new BotSupervisor(self)), "BotSupervisor")
 
   /**
    * Retrieves the current state of the bot.
    * @return bot state
    */
-  def getState: BotState = state
+  private def getState: BotState = state
 
   /**
    * Stops the bot from processing new tasks.
    *
    * NOTE: the bot will continue to create new tasks until it has reached a task threshold.
    */
-  def makeIdle {
+  private def makeIdle {
     botThrottle ! SetTarget(None)
     state = new BotState(false, "idle")
   }
@@ -90,14 +103,72 @@ class TinderBot(taskThreshold: Int) extends Actor {
   /**
    * Starts the bot by setting a target.
    */
-  def makeRun {
+  private def makeRun {
     botThrottle ! SetTarget(Some(botSupervisor))
     state = new BotState(true, "running")
+  }
+
+  /**
+   * Starts the bot by setting a target.
+   */
+  private def setTaskRate(rate: Int) {
+    botThrottle ! SetRate(1 msgsPer (rate seconds))
   }
 
 }
 
 object TinderBot {
-  // instantiate the tinderbot
-  val context = Akka.system.actorOf(Props(new TinderBot(taskThreshold = 50)), "TinderBot")
+  /**
+   * Active context for TinderBot.
+   */
+  val context = Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 50, taskShutdownThreshold = 70)), "TinderBot")
+
+  /**
+   * Logging queues track past history of bot tasks.
+   *
+   * NOTE: in this case the key is the user's _id, not the X-Auth-Token.
+   */
+  private val log: ConcurrentNavigableMap[String, List[BotLog]] = MapDB.db.getTreeMap("bot_log")
+  private val log_update_queue: ConcurrentNavigableMap[String, List[BotLog]] = MapDB.db.getTreeMap("bot_log_updates")
+
+  /**
+   * Fetch the entire log for a TinderBot user.
+   * @param userId
+   * @return
+   */
+  def fetchLog(userId: String): List[BotLog] = {
+    log.get(userId) match {
+      case null => List()
+      case logs => logs
+    }
+  }
+
+  /**
+   * Fetch new log updates (useful for ajax) for a TinderBot user.
+   * @param userId
+   * @return
+   */
+  def fetchLogUpdates(userId: String, flush: Boolean=true): List[BotLog] = {
+    log_update_queue.get(userId) match {
+      case null => List()
+      case logs =>
+        // once updates are fetched, we optionally flush the queue
+        if(flush) log_update_queue.put(userId, List())
+        logs
+    }
+  }
+
+  /**
+   * Write a new log entry for TinderBot.
+   * @param userId
+   * @param entry
+   * @return
+   */
+  def writeLog(userId: String, entry: BotLog): BotLog = {
+    val newLog = fetchLog(userId) ++ List(entry)
+    log.put(userId, newLog)
+    val newUpdates = fetchLogUpdates(userId, false) ++ List(entry)
+    log_update_queue.put(userId, newUpdates)
+    entry
+  }
 }

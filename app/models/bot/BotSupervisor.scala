@@ -14,8 +14,11 @@ class BotSupervisor(parent: ActorRef) extends Actor {
   import scala.concurrent.duration._
 
   override val supervisorStrategy =
-    OneForOneStrategy(maxNrOfRetries = 3, withinTimeRange = 1 hour) {
-      case _                                    => Restart
+    OneForOneStrategy(maxNrOfRetries = 1, withinTimeRange = 1 minute) {
+      case e: Exception => {
+        Logger.error("[tinderbot] Retrying a troubled supervised task: \n"+e.getMessage)
+        Restart
+      }
     }
 
   override def preStart() = {
@@ -25,6 +28,7 @@ class BotSupervisor(parent: ActorRef) extends Actor {
   def receive = {
     case p: Props =>
       // Actor props sent here will be instantiated and supervised
+      Logger.info("[tinderbot] New task received for supervision.")
       context.actorOf(p)
 
     case e: Any =>

@@ -12,10 +12,10 @@ import com.fasterxml.jackson.databind.annotation._
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class MatchResult(
   @(JsonProperty@field)("match")
-  `match`: Boolean
+  `match`: MatchData
 ) {
   /**
    * necessary for object instantiation
    */
-  def this() = this(false)
+  def this() = this(new MatchData())
 }

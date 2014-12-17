@@ -29,7 +29,7 @@ object UpdatesService {
   /**
    * Required for timing updates properly
    */
-  private var lastActivity: Map[String, Date] = Map()
+  private var lastActivity: ConcurrentNavigableMap[String, Date] = MapDB.db.getTreeMap("last_activity")
 
   // timed actors for retrieving updates will go here
 
@@ -63,7 +63,7 @@ object UpdatesService {
    */
   private def syncUpdates(xAuthToken: String): Option[(Map[String, List[Message]], List[Notification], Map[String, Int])] = {
     val tinderApi = new TinderApi(Some(xAuthToken))
-    val result = Await.result(tinderApi.getUpdates(lastActivity.get(xAuthToken).getOrElse(new Date())), 10 seconds)
+    val result = Await.result(tinderApi.getUpdates(fetchLastActivity(xAuthToken).getOrElse(new Date())), 10 seconds)
     result match {
       case Left(error) =>
         Logger.error("An error occurred retrieving full history for %s.".format(xAuthToken))
@@ -135,6 +135,20 @@ object UpdatesService {
         syncHistory(xAuthToken)
       case matches =>
         Some(matches)
+    }
+  }
+
+  /**
+   * Retrieve the last date an update was valid.
+   * @param xAuthToken
+   * @return
+   */
+  def fetchLastActivity(xAuthToken: String): Option[Date] = {
+    lastActivity.get(xAuthToken) match {
+      case null =>
+        None
+      case date =>
+        Some(date)
     }
   }
 

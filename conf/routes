@@ -33,3 +33,9 @@ GET     /t/:xauthtoken/matchmaker                 controllers.Recommendations.ma
 GET     /t/:xauthtoken/recommendations            controllers.Recommendations.recommendations(xauthtoken: String)
 GET     /t/:xauthtoken/like/:userId               controllers.Recommendations.like(xauthtoken: String, userId: String)
 GET     /t/:xauthtoken/dislike/:userId            controllers.Recommendations.dislike(xauthtoken: String, userId: String)
+
+# Bot
+GET     /bot/state                                controllers.Bot.state
+GET     /bot/log/:userId/                         controllers.Bot.userLog(userId: String)
+GET     /bot/log/:userId/updates                  controllers.Bot.userLogUpdates(userId: String)
+
