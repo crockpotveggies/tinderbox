@@ -2,6 +2,45 @@ name := "tinderbox"
 
 version := "1.1-SNAPSHOT"
 
+val javacvVersion = "0.9"
+
+val javacppVersion = "0.9"
+
+// Some dependencies like `javacpp` are packaged with maven-plugin packaging
+classpathTypes += "maven-plugin"
+
+// Determine current platform
+val platform = {
+  // Determine platform name using code similar to javacpp
+  // com.googlecode.javacpp.Loader.java line 60-84
+  val jvmName = System.getProperty("java.vm.name").toLowerCase
+  var osName = System.getProperty("os.name").toLowerCase
+  var osArch = System.getProperty("os.arch").toLowerCase
+  if (jvmName.startsWith("dalvik") && osName.startsWith("linux")) {
+    osName = "android"
+  } else if (jvmName.startsWith("robovm") && osName.startsWith("darwin")) {
+    osName = "ios"
+    osArch = "arm"
+  } else if (osName.startsWith("mac os x")) {
+    osName = "macosx"
+  } else {
+    val spaceIndex = osName.indexOf(' ')
+    if (spaceIndex > 0) {
+      osName = osName.substring(0, spaceIndex)
+    }
+  }
+  if (osArch.equals("i386") || osArch.equals("i486") || osArch.equals("i586") || osArch.equals("i686")) {
+    osArch = "x86"
+  } else if (osArch.equals("amd64") || osArch.equals("x86-64") || osArch.equals("x64")) {
+    osArch = "x86_64"
+  } else if (osArch.startsWith("arm")) {
+    osArch = "arm"
+  }
+  val platformName = osName + "-" + osArch
+  println("platform: " + platformName)
+  platformName
+}
+
 libraryDependencies ++= Seq(
   jdbc,
   anorm,

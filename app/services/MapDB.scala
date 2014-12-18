@@ -41,7 +41,7 @@ object MapDB {
     def receive = {
       case "tick" =>
         database.commit()
-        Logger.info("[mapdb] Database committer has persisted data to disk.")
+        Logger.debug("[mapdb] Database committer has persisted data to disk.")
     }
   }
   private val commitActor = Akka.system.actorOf(Props(new DBCommitter(db)), name = "DBCommitter")

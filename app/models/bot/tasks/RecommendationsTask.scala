@@ -1,6 +1,7 @@
 package models.bot.tasks
 
 import akka.actor._
+import models.bot.BotCommand
 import scala.concurrent._
 import scala.concurrent.duration._
 import play.api.Logger
@@ -13,7 +14,7 @@ import utils.tinder.model._
 class RecommendationsTask(val xAuthToken: String, val tinderBot: ActorRef) extends TaskActor {
 
   override def preStart() = {
-    Logger.info("[tinderbot] Starting new recommendations task.")
+    Logger.debug("[tinderbot] Starting new recommendations task.")
     self ! "tick"
   }
 
@@ -28,10 +29,16 @@ class RecommendationsTask(val xAuthToken: String, val tinderBot: ActorRef) exten
 
         case Right(r) =>
           // create a new worker task for each recommendation
-          r.foreach { rec =>
-            Logger.info("[tinderbot] Creating new swipe task for user %s" format rec._id)
-            val task = Props(new SwipeTask(xAuthToken, tinderBot, rec))
-            tinderBot ! task
+          try {
+            r.foreach { rec =>
+              Logger.info("[tinderbot] Creating new swipe task for user %s" format rec._id)
+              val task = Props(new SwipeTask(xAuthToken, tinderBot, rec))
+              tinderBot ! task
+            }
+          } catch {
+            case e: NullPointerException =>
+              Logger.info("[tinderbot] No new recommendations are available, sleeping.")
+              tinderBot ! BotCommand("sleep")
           }
       }
 

@@ -31,9 +31,11 @@ class TinderBot(taskWarningThreshold: Int, taskShutdownThreshold: Int) extends A
   def receive = {
     // send commands to the bot
     case BotCommand(command) =>
+      Logger.info("[tinderbot] Received command: "+command)
       command match {
         case "idle" => makeIdle
         case "run" => makeRun
+        case "sleep" => makeSleep
         case "state" => getState
         case s if s.startsWith("rate=") => setTaskRate(s.split("=")(1).toInt)
       }
@@ -43,9 +45,11 @@ class TinderBot(taskWarningThreshold: Int, taskShutdownThreshold: Int) extends A
       queueLength match {
         // no more tasks
         case 0 =>
-          TinderService.activeSessions.foreach { xAuthToken =>
-            botThrottle ! Props(new RecommendationsTask(xAuthToken, self))
-            Logger.info("[tinderbot] created new Recommendation task for token "+xAuthToken)
+          if(state.state=="running") {
+            TinderService.activeSessions.foreach { xAuthToken =>
+              botThrottle ! Props(new RecommendationsTask(xAuthToken, self))
+              Logger.info("[tinderbot] created new Recommendation task for token " + xAuthToken)
+            }
           }
 
         // tasks exceed shutdown threshold
@@ -92,8 +96,6 @@ class TinderBot(taskWarningThreshold: Int, taskShutdownThreshold: Int) extends A
 
   /**
    * Stops the bot from processing new tasks.
-   *
-   * NOTE: the bot will continue to create new tasks until it has reached a task threshold.
    */
   private def makeIdle {
     botThrottle ! SetTarget(None)
@@ -106,6 +108,17 @@ class TinderBot(taskWarningThreshold: Int, taskShutdownThreshold: Int) extends A
   private def makeRun {
     botThrottle ! SetTarget(Some(botSupervisor))
     state = new BotState(true, "running")
+  }
+
+  /**
+   * Puts the bot to sleep for 50 seconds, useful when API limits reached or when we've run
+   * out of recommendations.
+   */
+  private def makeSleep {
+    botThrottle ! SetTarget(None)
+    state = new BotState(false, "sleeping")
+    Thread.sleep(50000)
+    makeRun
   }
 
   /**

@@ -22,13 +22,13 @@ class BotSupervisor(parent: ActorRef) extends Actor {
     }
 
   override def preStart() = {
-    Logger.info("[tinderbot] Bot supervisor has started up")
+    Logger.debug("[tinderbot] Bot supervisor has started up")
   }
 
   def receive = {
     case p: Props =>
       // Actor props sent here will be instantiated and supervised
-      Logger.info("[tinderbot] New task received for supervision.")
+      Logger.debug("[tinderbot] New task received for supervision")
       context.actorOf(p)
 
     case e: Any =>
