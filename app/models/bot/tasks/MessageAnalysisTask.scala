@@ -2,6 +2,7 @@ package models.bot.tasks
 
 import akka.actor._
 import play.api.Logger
+import play.api.Play.current
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits._
 import services._
@@ -27,6 +28,8 @@ class MessageAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef) exten
           Logger.debug("[tinderbot] Message history was empty.")
 
         case Some(matches) =>
+          // just in case
+          Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
           // make sure updates have first been synced
           UpdatesService.fetchUpdates(xAuthToken).getOrElse("Do nothing.")
           // find empty conversations and create an intro task

@@ -58,6 +58,11 @@
           <span class="font-noraml message-last-seen">
             seen <span data-bind="text: lastSeen"></span>
           </span>
+          <div class="pull-right message-header-photos" data-bind="foreach: photos">
+            <span data-bind="visible: $index()!=0">
+              <a href="javascript:;"><img alt="image" class="img-circle" data-bind="attr: {src: url}"></a>
+            </span>
+          </div>
         </h3>
       </div>
       <div class="clearfix"></div>

@@ -97,6 +97,10 @@
   margin-top: 5px;
   margin-right: 10px;
 }
+.message-header-photos img {
+  width: 22px;
+  height: 22px
+}
 .message-from-lastseen {
   opacity: 0.7;
 }

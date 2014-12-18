@@ -1,6 +1,7 @@
 package services
 
 import play.api.Logger
+import play.api.Play.current
 import scala.collection.mutable.Map
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -62,6 +63,9 @@ object UpdatesService {
    * @return
    */
   private def syncUpdates(xAuthToken: String): Option[(Map[String, List[Message]], List[Notification], Map[String, Int])] = {
+    // just in case...
+    Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
+    // grab updates and process them accordingly
     val tinderApi = new TinderApi(Some(xAuthToken))
     val result = Await.result(tinderApi.getUpdates(fetchLastActivity(xAuthToken).getOrElse(new Date())), 10 seconds)
     result match {
@@ -89,7 +93,10 @@ object UpdatesService {
         notifications.put(xAuthToken, notificationList)
         // finally append new notifications to existing read counts
         val unreads = unreadCounts.get(xAuthToken) match {
-          case null => Map[String, Int]()
+          case null =>
+            Map(notificationList.map { n =>
+              (n.associateId, n.size)
+            }.toMap.toSeq: _*)
           case counts =>
             counts.map { n =>
               val countAppend = notificationList.filter(o => o.associateId==n._1).headOption match {

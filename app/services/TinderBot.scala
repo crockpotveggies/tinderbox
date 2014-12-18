@@ -138,7 +138,10 @@ object TinderBot {
   /**
    * Active context for TinderBot.
    */
-  val context = Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 30, taskSleepThreshold = 40)), "TinderBot")
+  val context = {
+    Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
+    Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 30, taskSleepThreshold = 40)), "TinderBot")
+  }
 
   /**
    * Logging queues track past history of bot tasks.

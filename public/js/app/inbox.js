@@ -15,6 +15,12 @@ window.App = function() {
     o._id = ko.observable(match._id);
     o.messages = ko.observableArray($.map(match.messages, function(item){ return new _.messageModel(item) }));
     o.messages.sort(function(left, right) { return new Date(left.created_date()) == new Date(right.created_date()) ? 0 : (new Date(right.created_date()) < new Date(left.created_date()) ? -1 : 1) });
+    o.messages.subscribe(function(newMessages) {
+      if(newMessages.length!=0) {
+        var preview = newMessages[0].message().slice(0, 15)+"...";
+        o.messagePreview(preview);
+      }
+    });
     o.person = ko.observable(new _.personModel(match.person))
     o.last_activity_date = ko.observable(match.last_activity_date);
     o.participants = ko.observableArray(match.participants);
@@ -33,11 +39,12 @@ window.App = function() {
     o.photos = ko.observable($.map(data.photos, function(item){ return new _.photoModel(item) }));
     o.bio = ko.observable(data.bio);
     o.mainPhoto = ko.observable((data.photos.length!=0 ? data.photos[0].processedFiles[3].url : "/assets/img/user-generic.png"));
-    o.ping_time = ko.observable(data.ping_time);
+    try { var old_ping = new Date(o.ping_time()) } catch(e) { var old_ping = 0 }
+    o.ping_time = ko.observable((new Date(data.ping_time).getTime() > old_ping ? data.ping_time : old_ping));
     o.distance_mi = ko.observable((typeof data.distance_mi=="undefined" ? null : data.distance_mi));
-    o.lastSeen = ko.observable(moment(data.ping_time).fromNow());
+    o.lastSeen = ko.computed(function() { return moment(o.ping_time()).fromNow() });
     setInterval(function() {
-      o.lastSeen(moment(o.ping_time()).fromNow());
+      o.ping_time.valueHasMutated();
     }, 60000);
   }
   _.photoModel = function(data) {
@@ -73,7 +80,8 @@ window.App = function() {
         $('.loader-global').hide();
         var d = $.map(data, function(item){ return new _.matchModel(item) });
         _.matches(d);
-        _.matches.sort(function(left, right) { return new Date(left.last_activity_date()) == new Date(right.last_activity_date()) ? 0 : (new Date(right.last_activity_date()) < new Date(left.last_activity_date()) ? -1 : 1) });
+        //_.matches.sort(function(left, right) { return new Date(left.last_activity_date()) == new Date(right.last_activity_date()) ? 0 : (new Date(right.last_activity_date()) < new Date(left.last_activity_date()) ? -1 : 1) });
+        _.matches.reverse()
       },
       error: function() {
         $('.loader-global').hide();
@@ -113,9 +121,11 @@ window.App = function() {
 
   _.messageDraft = ko.observable("");
   _.sendMessage = function(data, event) {
-    $.post("/t/"+getAuthToken()+"/messages/send/"+_.selectedMatchId(), {message: _.messageDraft()}, function(data) {
+    $.post("/t/"+getAuthToken()+"/messages/send/"+_.selectedMatchId(), {message: _.messageDraft()}, function(newMessage) {
       _.messageDraft("");
-      _.selectedMatch().messages.unshift(new _.messageModel(data));
+      $.map(_.matches(), function(match) {
+        if(match.participants()[0]==newMessage.to) match.messages.unshift(new _.messageModel(newMessage));
+      });
     });
   }
 
@@ -130,7 +140,9 @@ window.App = function() {
           var matchId = match._id();
           if(typeof data.unread_counts[matchId]!="undefined" && matchId!=_.selectedMatchId()) match.unread_count(data.unread_counts[matchId])
           if(typeof data.messages[matchId]!="undefined") {
-            $.map(data.messages[matchId], function(m) { match.messages.unshift(new _.messageModel(m)); })
+            var newMessages = $.map(data.messages[matchId], function(m) { return new _.messageModel(m); });
+            match.messages(newMessages)
+            match.messages.reverse();
           }
         });
       },
