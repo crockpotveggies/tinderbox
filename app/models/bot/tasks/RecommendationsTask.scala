@@ -31,7 +31,7 @@ class RecommendationsTask(val xAuthToken: String, val tinderBot: ActorRef) exten
           // create a new worker task for each recommendation
           try {
             r.foreach { rec =>
-              Logger.info("[tinderbot] Creating new swipe task for user %s" format rec._id)
+              Logger.debug("[tinderbot] Creating new swipe task for user %s" format rec._id)
               val task = Props(new SwipeTask(xAuthToken, tinderBot, rec))
               tinderBot ! task
             }

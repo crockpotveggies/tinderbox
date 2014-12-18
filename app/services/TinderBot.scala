@@ -22,7 +22,7 @@ import models.bot._, Throttler._, tasks._
  *
  * NOTE: the bot only starts when the Global object sends a start signal
  */
-class TinderBot(taskWarningThreshold: Int, taskShutdownThreshold: Int) extends Actor {
+class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Actor {
 
   override def preStart() = {
     Logger.info("[tinderbot] TinderBot has started up")
@@ -47,15 +47,19 @@ class TinderBot(taskWarningThreshold: Int, taskShutdownThreshold: Int) extends A
         case 0 =>
           if(state.state=="running") {
             TinderService.activeSessions.foreach { xAuthToken =>
+              // analyze recommendations
               botThrottle ! Props(new RecommendationsTask(xAuthToken, self))
-              Logger.info("[tinderbot] created new Recommendation task for token " + xAuthToken)
+              Logger.debug("[tinderbot] created new Recommendation task for token " + xAuthToken)
+              // analyze messages
+              botThrottle ! Props(new MessageAnalysisTask(xAuthToken, self))
+              Logger.debug("[tinderbot] created new AutoMessage task for token " + xAuthToken)
             }
           }
 
         // tasks exceed shutdown threshold
-        case l if l>taskShutdownThreshold =>
+        case l if l>taskSleepThreshold =>
           makeIdle
-          Logger.warn("[tinderbot] TinderBot is going idle (too many tasks > %s)".format(taskShutdownThreshold))
+          Logger.warn("[tinderbot] TinderBot is going idle (too many tasks > %s)".format(taskSleepThreshold))
 
         // tasks exceed warning threshold
         case l if l>taskWarningThreshold =>
@@ -134,7 +138,7 @@ object TinderBot {
   /**
    * Active context for TinderBot.
    */
-  val context = Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 50, taskShutdownThreshold = 70)), "TinderBot")
+  val context = Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 30, taskSleepThreshold = 40)), "TinderBot")
 
   /**
    * Logging queues track past history of bot tasks.

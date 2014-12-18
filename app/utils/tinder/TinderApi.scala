@@ -165,11 +165,11 @@ class TinderApi(
 
   /**
    * Sends a message to a user
-   * @param userId the id of the user
+   * @param matchId the id of the user
    * @param message the message to send
    */
-  def sendMessage(userId: String, message: String) = {
-    tinderPost[model.MessageOutgoingResult]("user/matches/"+userId, Json.obj("message" -> message))
+  def sendMessage(matchId: String, message: String) = {
+    tinderPost[model.MessageOutgoingResult]("user/matches/"+matchId, Json.obj("message" -> message))
   }
 
   /**

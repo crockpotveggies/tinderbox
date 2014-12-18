@@ -49,6 +49,7 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
 
   private def photoCriteria(photos: List[Photo]): Boolean = {
     val facesPerPhoto: List[Int] = photos.map { photo => FacialDetection(photo.url).countFaces }
+    Logger.debug("[tinderbot] Number of faces for user %s: %s".format(rec._id, facesPerPhoto.toString))
     if(facesPerPhoto.find(p => p==1) == None) false // no singular photo of themselves
     else if(facesPerPhoto.sum==0) false // can't find a face in any photo
     else true
@@ -72,6 +73,7 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
       else if (rec.photos.size==1) dislikeUser("sparse photos")
       else if (lastSeenAgo > (day*3)) dislikeUser("hasn't been active for %s days".format((lastSeenAgo/day)))
       else if (!photoCriteria(rec.photos)) dislikeUser("failed photo criteria")
+      else if (rec.bio.matches("no.{0,15}hookups")) likeUser
       else if (autoLike) likeUser
       else Logger.info("[tinderbot] Ignored recommended user "+rec._id)
 
