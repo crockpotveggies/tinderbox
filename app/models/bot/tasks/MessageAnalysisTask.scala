@@ -16,7 +16,7 @@ import utils.tinder.model._
 class MessageAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef) extends TaskActor {
 
   override def preStart() = {
-    Logger.debug("[tinderbot] Starting new auto message task.")
+    Logger.debug("[tinderbot] Starting new message analysis task.")
     self ! "tick"
   }
 

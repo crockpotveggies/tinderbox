@@ -6,6 +6,7 @@ import scala.util.Random
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits._
 import services._
+import models.bot.BotLog
 import utils.tinder.TinderApi
 import utils.tinder.model._
 
@@ -25,7 +26,7 @@ class MessageIntroTask(val xAuthToken: String, val tinderBot: ActorRef, val m: M
     "Can you teach a guy to bake and all that?",
     "{name} are you a good rock skipper?",
     "Hello I am a Nigerian Prince and can make you rich beyond your dream! I just need your phone number.",
-    "Are you a dog trainer?",
+    "{name} do you like guacamole?",
     "I can't wait to introduce you to my mom!",
     "I’m not saying I’m the type you can take home to your mom, but I’m definitely the type you can take home. Please do, actually, I’m homeless :(.",
     "How do you know if someone is gluten free?"
@@ -42,6 +43,15 @@ class MessageIntroTask(val xAuthToken: String, val tinderBot: ActorRef, val m: M
             Logger.error("[tinderbot] Swipe task had an error on Tinder: " + e.error)
 
           case Right(message) =>
+            val user = TinderService.fetchSession(xAuthToken).get
+            val log = BotLog(
+              System.currentTimeMillis(),
+              "message_intro",
+              "Sent a conversation starter to %s.".format(m.person.map(_.name).getOrElse("a user")),
+              m.person.map(_._id),
+              Some(m.person.get.photos.head.url)
+            )
+            TinderBot.writeLog(user.user._id, log)
             Logger.info("[tinderbot] Opened conversation with match " + m._id)
             Logger.debug("[tinderbot] Message opener was: \"%s...\"" format intro.substring(0, 10))
         }

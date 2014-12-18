@@ -1,0 +1,56 @@
+@(session: utils.tinder.model.TinderAuth)(implicit request: RequestHeader)
+@main(
+  title = "TinderBot",
+  js = "",
+  extraTags = List("""<script src="/assets/js/app/bot.js"></script>"""),
+  session = session
+) {
+<div class="wrapper wrapper-content animated fadeInUp">
+  <!-- ko if: logs().length==0 -->
+  <div class="middle-box text-center animated fadeInRightBig">
+    <h2 class="font-bold">Empty Logs</h2>
+    <div class="error-desc">
+      <p>TinderBot hasn't done anything yet, give it a few minutes and check again.</p>
+    </div>
+  </div>
+  <!-- /ko -->
+
+  <div class="ibox" data-bind="visible: logs().length>0">
+    <div class="ibox-content">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="m-b-md">
+            <a class="btn btn-white btn-xs pull-right" data-bind="click: $root.logsAppender">Update Log</a>
+            <h2>Bot Logs</h2>
+          </div>
+        </div>
+      </div>
+      <div class="row m-t-sm">
+        <div class="col-lg-12">
+          <div class="panel blank-panel">
+            <div class="panel-body">
+              <div class="feed-activity-list" data-bind="foreach: logs">
+                <div class="feed-element">
+                  <a href="javascript:;" class="pull-left">
+                    <img alt="image" class="img-circle" data-bind="attr: {src: associateImg }">
+                  </a>
+                  <div class="media-body ">
+                    <small class="pull-right">
+                      <span data-bind="text: lastSeen"></span> &nbsp;
+                      <i class="fa fa-envelope" data-bind="visible: task().contains('message')"></i>
+                      <i class="fa fa-heart-o" data-bind="visible: task()=='swipe_dislike'"></i>
+                      <i class="fa fa-heart" data-bind="visible: task()=='swipe_like'"></i>
+                    </small>
+                    <span data-bind="text: log"></span><br>
+                    <small class="text-muted" data-bind="text: createdDate"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

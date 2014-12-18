@@ -1,6 +1,6 @@
 package services
 
-import java.util.NavigableMap
+import java.util.concurrent.ConcurrentNavigableMap
 import play.api.Logger
 import scala.collection.mutable.Map
 import scala.concurrent._
@@ -18,7 +18,7 @@ object TinderService {
   /**
    * Current active tokens.
    */
-  private val sessions: NavigableMap[String, TinderAuth] = MapDB.db.getTreeMap("sessions")
+  private val sessions: ConcurrentNavigableMap[String, TinderAuth] = MapDB.db.getTreeMap("sessions")
 
   /**
    * Retrieve an active session.

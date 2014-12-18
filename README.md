@@ -7,7 +7,17 @@ Tinderbox is an experiment built on the Tinder app API. The purpose of the appli
 
 ![Screenshot](https://raw.githubusercontent.com/crockpotveggies/tinderbox/master/public/img/screenshot.jpg)
 
-This version uses Play! 2.2 to create a desktop interface for Tinder and some of the features of Tinderbox.
+This version uses Play! 2.2 to create a desktop interface for Tinder and will also automate some of its features in the background.
+
+### Getting Started
+
+First read the "Running" section below to learn how to start the app.
+
+Tinderbox starts up a server that is accessible in your browser at `http://localhost:9000/`. You will need to authorize using a Facebook `access_token` and also with your Facebook ID. The login page has a link for you to create an access token. Copy the token from Facebook's URL and paste it in the Tinderbox login.
+
+Once you're inside, note that there a bot running in the background. If you watch the logs in terminal, it will show you debug statements about the moves the bot is taking. There is an action log available in the main interface.
+
+Most of Tinder's primary functionality has been re-created in Tinderbox. Note that if Tinder updates or changes its API it could potentially break this app.
 
 ### Running
 
@@ -18,8 +28,19 @@ Commands to run this Application:
 3. sbt run
 
 Note: 
-> Scala Build Tool (SBT) is the preferred method of running this applications. You will need to install SBT before running the app.
+> Scala Build Tool (SBT) is the preferred method of running this applications. You will need to install [SBT](http://www.scala-sbt.org/) before running the app.
 > SBT will automatically download Play! and also pick up changes in the code if you wish to use them.
+
+### Support
+
+Currently I'm not offering any support, but if there's enough interest I'd consider helping others contribute to the code.
+
+- Find a bug? Feel free to file an issue.
+- Want a feature? Please don't open an issue, instead contribute and open a pull request.
+
+### Word from the Author
+
+Tinderbox is one of the first bots I've built to interact on my behalf. Since it is a tool that automates a lot of the Tinder experience, be forewarned not everyone appreciates being met through a robot. And they certainly don't appreciate if you decide to use this code to spam the Tinder world.
 
 ### License
 

@@ -52,7 +52,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
               Logger.debug("[tinderbot] created new Recommendation task for token " + xAuthToken)
               // analyze messages
               botThrottle ! Props(new MessageAnalysisTask(xAuthToken, self))
-              Logger.debug("[tinderbot] created new AutoMessage task for token " + xAuthToken)
+              Logger.debug("[tinderbot] created new Message Analysis task for token " + xAuthToken)
             }
           }
 
@@ -89,8 +89,8 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   /**
    * Throttler and processor do all of the processing.
    */
-  val botThrottle = system.actorOf(Props(new BotThrottle(1 msgsPer (10 seconds), Some(self))), "BotThrottle")
-  val botSupervisor = system.actorOf(Props(new BotSupervisor(self)), "BotSupervisor")
+  val botThrottle = context.actorOf(Props(new BotThrottle(1 msgsPer (10 seconds), Some(self))), "BotThrottle")
+  val botSupervisor = context.actorOf(Props(new BotSupervisor(self)), "BotSupervisor")
 
   /**
    * Retrieves the current state of the bot.
@@ -121,7 +121,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   private def makeSleep {
     botThrottle ! SetTarget(None)
     state = new BotState(false, "sleeping")
-    Thread.sleep(50000)
+    Thread.sleep(90000)
     makeRun
   }
 

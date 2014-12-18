@@ -12,7 +12,7 @@ import play.api.Play.current
 import play.api.libs.concurrent.Akka.system
 import com.codahale.jerkson.Json._
 import models.bot.{BotState, BotCommand}
-import services.TinderBot
+import services.{TinderBot, TinderService}
 
 
 object Bot extends Controller {
@@ -20,11 +20,24 @@ object Bot extends Controller {
   implicit val timeout = Timeout(10 seconds)
 
   /**
+   * Pulls up an active Tinder session in a dashboard.
+   */
+  def bot(xAuthToken: String) = Action.async { implicit request =>
+    val f = future { TinderService.fetchSession(xAuthToken) }
+    f.map { result =>
+      result match {
+        case Some(session) => Ok(views.html.Bot.bot(session))
+        case None => BadRequest
+      }
+    }
+  }
+
+  /**
    * Get the current state of the Bot.
    */
   def state = Action.async { implicit request =>
     val f = TinderBot.context ? BotCommand("state")
-    f.map { result => Ok(generate(result)) }
+    f.map { result => Ok(generate(result)).as("application/json") }
   }
 
   /**
@@ -32,7 +45,7 @@ object Bot extends Controller {
    */
   def userLog(userId: String) = Action.async { implicit request =>
     val f = future { TinderBot.fetchLog(userId) }
-    f.map { result => Ok(generate(result)) }
+    f.map { result => Ok(generate(result)).as("application/json") }
   }
 
   /**
@@ -40,7 +53,7 @@ object Bot extends Controller {
    */
   def userLogUpdates(userId: String) = Action.async { implicit request =>
     val f = future { TinderBot.fetchLogUpdates(userId) }
-    f.map { result => Ok(generate(result)) }
+    f.map { result => Ok(generate(result)).as("application/json") }
   }
 
 }

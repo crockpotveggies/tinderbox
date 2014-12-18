@@ -1,7 +1,9 @@
 package models.bot.tasks
 
 import akka.actor._
+import models.bot.BotLog
 import play.api.Logger
+import services.{TinderBot, TinderService}
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits._
 import java.util.Date
@@ -28,19 +30,37 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
           Logger.error("[tinderbot] Swipe task had an error on Tinder: "+e.error)
 
         case Right(r) =>
+          val user = TinderService.fetchSession(xAuthToken).get
+          val log = BotLog(
+            System.currentTimeMillis(),
+            "swipe_dislike",
+            "Disliked %s because: %s.".format(rec.name, reason),
+            Some(rec._id),
+            Some(rec.photos.head.url)
+          )
+          TinderBot.writeLog(user.user._id, log)
           Logger.info("[tinderbot] Disliked user "+rec._id)
           Logger.debug("[tinderbot] User was disliked because: "+reason)
       }
     }
   }
 
-  private def likeUser = {
+  private def likeUser(reason: String) = {
     tinderApi.swipeNegative(rec._id).map { result =>
       result match {
         case Left(e) =>
           Logger.error("[tinderbot] Swipe task had an error on Tinder: "+e.error)
 
         case Right(r) =>
+          val user = TinderService.fetchSession(xAuthToken).get
+          val log = BotLog(
+            System.currentTimeMillis(),
+            "swipe_like",
+            "Liked %s because: %s.".format(rec.name, reason),
+            Some(rec._id),
+            Some(rec.photos.head.url)
+          )
+          TinderBot.writeLog(user.user._id, log)
           if(r==null || r==None) Logger.info("[tinderbot] Liked user "+rec._id)
           else Logger.info("[tinderbot] Matched with user "+rec._id)
       }
@@ -73,8 +93,8 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
       else if (rec.photos.size==1) dislikeUser("sparse photos")
       else if (lastSeenAgo > (day*3)) dislikeUser("hasn't been active for %s days".format((lastSeenAgo/day)))
       else if (!photoCriteria(rec.photos)) dislikeUser("failed photo criteria")
-      else if (rec.bio.matches("no.{0,15}hookups")) likeUser
-      else if (autoLike) likeUser
+      else if (rec.bio.matches("no.{0,15}hookups")) likeUser("claiming friendship only")
+      else if (autoLike) likeUser("auto-liked")
       else Logger.info("[tinderbot] Ignored recommended user "+rec._id)
 
 
