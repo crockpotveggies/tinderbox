@@ -19,7 +19,7 @@ window.App = function() {
     o.associateImg = ko.observable(data.associateImg);
     o.lastSeen = ko.observable(moment(data.created).fromNow());
     setInterval(function() {
-      o.lastSeen(moment(o.ping_time()).fromNow());
+      o.lastSeen(moment(o.created()).fromNow());
     }, 60000);
   }
   _.stateModel = function(data) {
@@ -63,6 +63,7 @@ window.App = function() {
         if(data!=null && data.length!=0) {
           var d = $.map(data, function(item){ return new _.logModel(item) });
           _.logs(d);
+          _.logs.reverse();
         }
       },
       error: function() {
