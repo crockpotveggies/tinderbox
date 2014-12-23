@@ -34,6 +34,11 @@ GET     /t/:xauthtoken/recommendations            controllers.Recommendations.re
 GET     /t/:xauthtoken/like/:userId               controllers.Recommendations.like(xauthtoken: String, userId: String)
 GET     /t/:xauthtoken/dislike/:userId            controllers.Recommendations.dislike(xauthtoken: String, userId: String)
 
+GET     /t/:xauthtoken/discovery                  controllers.Profile.discovery(xauthtoken: String)
+GET     /t/:xauthtoken/profile                    controllers.Profile.getProfile(xauthtoken: String)
+POST    /t/:xauthtoken/profile/position           controllers.Profile.updatePosition(xauthtoken: String)
+POST    /t/:xauthtoken/profile/discovery          controllers.Profile.updateDiscovery(xauthtoken: String)
+
 # Analytics
 POST    /analytics/chart/iso/:bucketType/:offset  controllers.Analytics.isoBuckets(bucketType: String, offset: Int)
 

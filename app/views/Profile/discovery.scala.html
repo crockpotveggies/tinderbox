@@ -1,0 +1,65 @@
+@(session: utils.tinder.model.TinderAuth)(implicit request: RequestHeader)
+@main(
+  title = "Discovery Preferences",
+  js = "",
+  extraTags = List("""<script src="/assets/js/app/discovery.js"></script>"""),
+  session = session
+) {
+<div class="wrapper wrapper-content animated fadeInUp">
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <a class="btn btn-white btn-xs pull-right" data-bind="click: $root.savePosition, visible: $root.position()!=null">Save</a>
+          <h5>Location</h5>
+        </div>
+        <div class="ibox-content no-padding">
+          <!-- ko if: position()!=null -->
+          <div id="map" data-bind="map: $root.position, style:{width:'100%',height:'300px'}"></div>
+          <!-- /ko -->
+          <!-- ko if: position()==null -->
+          <center>
+            <p>&nbsp;</p>
+            <p class="font-bold">Tinder didn't return an active location for you.</p>
+            <p><a data-bind="click: $root.fixPosition">Click here to fix.</a></p>
+            <p>&nbsp;</p>
+          </center>
+          <!-- /ko -->
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <a class="btn btn-white btn-xs pull-right" data-bind="click: $root.saveSearch">Save</a>
+          <h5>Search Preferences</h5>
+        </div>
+        <div class="ibox-content">
+          <p class="font-bold">Age Range</p>
+          <div data-bind="slider: $root.ageRange, sliderOptions: {start:[20,28],range:{min:18, max:60},step:1,behaviour:'drag'}"></div>
+          <p><br>
+            <small data-bind="text: $root.ageRange()[0].toString().split('.')[0]"></small> <small class="pull-right" data-bind="text: $root.ageRange()[1].toString().split('.')[0]"></small>
+          </p>
+          <div data-bind="with: search">
+            <p class="font-bold">Distance</p>
+            <div data-bind="slider: distance_filter, sliderOptions: {start:10,range:{min:1, max:30},step:1}"></div>
+            <p><br>
+              <small data-bind="text: distance_filter().toString().split('.')[0]+'mi'"></small>
+            </p>
+            <p>&nbsp;</p>
+            <p class="font-bold">Interested In</p>
+            <label> <input type="checkbox" name="interested_in" class="i-checks" data-bind="checkedValue: 1, checked: interested_in"> Girls </label>
+            &nbsp; &nbsp; &nbsp;
+            <label> <input type="checkbox" name="interested_in" class="i-checks" data-bind="checkedValue: 0, checked: interested_in"> Guys </label>
+            <p>&nbsp;</p>
+            <p class="font-bold">I am a</p>
+            <label> <input type="radio" name="gender" class="i-checks" data-bind="checkedValue: 1, checked: gender"> Girl </label>
+            &nbsp; &nbsp; &nbsp;
+            <label> <input type="radio" name="gender" class="i-checks" data-bind="checkedValue: 0, checked: gender"> Guy </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

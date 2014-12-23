@@ -238,6 +238,26 @@ class TinderApi(
   }
 
   /**
+   * Updates the discovery preferences for this user
+   * @param ageMin
+   * @param ageMax
+   * @param distance
+   * @param gender
+   * @param interestedIn
+   */
+  def updateDiscoveryPreferences(ageMin: Int, ageMax: Int, distance: Int, gender: Int, interestedIn: List[Int]) = {
+    tinderPost[model.User]("profile",
+      Json.obj(
+        "age_filter_min" -> ageMin,
+        "age_filter_max" -> ageMax,
+        "distance_filter" -> distance,
+        "gender" -> gender,
+        "interested_in" -> interestedIn
+      )
+    )
+  }
+
+  /**
    * Get the current user's profile.
    */
   def getProfile = {

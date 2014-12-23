@@ -139,3 +139,9 @@
 .ibox-matchmaker-title h5 {
   float: none
 }
+
+
+.map {
+  height: 300px;
+  width: 100%;
+}

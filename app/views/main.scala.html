@@ -13,8 +13,7 @@
     <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
     <link href="@routes.Assets.at("font-awesome/css/font-awesome.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/plugins/iCheck/custom.css")" rel="stylesheet">
-    <link href="@routes.Assets.at("css/plugins/summernote/summernote.css")" rel="stylesheet">
-    <link href="@routes.Assets.at("css/plugins/summernote/summernote-bs3.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/plugins/nouislider/jquery.nouislider.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/animate.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/style.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/overrides.css")" rel="stylesheet">
@@ -57,6 +56,9 @@
           <li class="">
             <a href="@routes.Bot.bot(session.token)"><i class="fa fa-cubes"></i> <span class="nav-label">TinderBot</span></a>
           </li>
+          <li class="">
+            <a href="@routes.Profile.discovery(session.token)"><i class="fa fa-binoculars"></i> <span class="nav-label">Discovery</span></a>
+          </li>
         </ul>
 
       </div>
@@ -98,12 +100,14 @@
     </div>
 
     <!-- Mainly scripts -->
+    <script src="http://maps.google.com/maps/api/js?sensor=false&.js"></script>
     <script src="@routes.Assets.at("js/libs/jquery-2.1.1.js")"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/sammy.js/0.7.6/sammy.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+    <script src="@routes.Assets.at("js/libs/knockout.min.js")"></script>
     <script src="@routes.Assets.at("js/libs/bootstrap.min.js")"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment-with-locales.min.js"></script>
     <script src="@routes.Assets.at("js/libs/plugins/peity/jquery.peity.min.js")"></script>
+    <script src="@routes.Assets.at("js/libs/plugins/nouislider/jquery.nouislider.min.js")"></script>
 
     <!-- Custom and plugin javascript -->
     <script src="@routes.Assets.at("js/libs/inspinia.js")"></script>
