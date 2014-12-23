@@ -119,6 +119,40 @@ window.App = function() {
     }
   });
 
+  // Match chart analytics
+  _.matchDailyChart = ko.observableArray([]);
+  _.selectedMatchAnalytics = ko.computed(function() {
+    try {
+      var matches = _.matches()
+      var matchId = _.selectedMatchId()
+      var tzOffset = new Date().getTimezoneOffset() / 60;
+
+      for (i = 0; i < matches.length; i++) {
+        if(matches[i]._id()==_.selectedMatchId()) {
+          var messages = matches[i].messages();
+          var timestamps = $.map(messages, function(item) { if(item.from()!=getUserId()) return item.created_date(); });
+          $.ajax({
+            url: "/analytics/chart/iso/daily/"+tzOffset,
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({dates: timestamps}),
+            success: function(data) {
+              _.matchDailyChart(data);
+              setTimeout(function(){ $(".line").peity("line"); }, 100)
+            },
+            error: function() {
+              _.matchDailyChart([0]);
+              setTimeout(function(){ $(".line").peity("line"); }, 100)
+            }
+          });
+        }
+      }
+    } catch(e) {
+      console.error(e)
+    }
+  });
+
   _.messageDraft = ko.observable("");
   _.sendMessage = function(data, event) {
     $.post("/t/"+getAuthToken()+"/messages/send/"+_.selectedMatchId(), {message: _.messageDraft()}, function(newMessage) {

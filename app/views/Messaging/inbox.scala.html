@@ -49,14 +49,15 @@
       <h2>
         <img class="message-from-photo img-circle" data-bind="attr:{src: mainPhoto}" alt="">
         <span data-bind="text: name"></span>
-        <!-- ko if: distance_mi()!=null -->
-        <small><span data-bind="text: distance_mi"></span>mi</small>
-        <!-- /ko -->
+        <span class="line" data-bind="text: $root.matchDailyChart().toString()"></span>
       </h2>
       <div class="mail-tools message-from-lastseen">
         <h3>
           <span class="font-noraml message-last-seen">
             seen <span data-bind="text: lastSeen"></span>
+            <!-- ko if: distance_mi()!=null -->
+            <small><span data-bind="text: distance_mi"></span>mi</small>
+            <!-- /ko -->
           </span>
           <div class="pull-right message-header-photos" data-bind="foreach: photos">
             <span data-bind="visible: $index()!=0">

@@ -34,6 +34,9 @@ GET     /t/:xauthtoken/recommendations            controllers.Recommendations.re
 GET     /t/:xauthtoken/like/:userId               controllers.Recommendations.like(xauthtoken: String, userId: String)
 GET     /t/:xauthtoken/dislike/:userId            controllers.Recommendations.dislike(xauthtoken: String, userId: String)
 
+# Analytics
+POST    /analytics/chart/iso/:bucketType/:offset  controllers.Analytics.isoBuckets(bucketType: String, offset: Int)
+
 # Bot
 GET     /t/:xauthtoken/bot                        controllers.Bot.bot(xauthtoken: String)
 GET     /bot/state                                controllers.Bot.state

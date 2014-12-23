@@ -3,7 +3,7 @@ tinderbox
 
 Another @crockpotveggies experiment.
 
-Tinderbox is an experiment built on the Tinder app API. The purpose of the application is to automate the filtering Tinder users and collect data to analyze your own success. Tinderbox not only gives you a desktop interface for Tinder, but also provides a bot in the background.
+Tinderbox is an experiment built on the Tinder app API. Tinderbox helps automate the filtering of Tinder users ("swiping left") and collect data to analyze your own success. Tinderbox not only gives you a desktop interface for Tinder, but also provides a bot in the background.
 
 ![Screenshot](https://raw.githubusercontent.com/crockpotveggies/tinderbox/master/public/img/screenshot.jpg)
 
