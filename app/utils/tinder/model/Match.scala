@@ -23,10 +23,25 @@ case class Match(
   val last_activity_date: String,
 
   @(JsonProperty@field)("participants")
-  val participants: List[String],
+  val participants: Option[List[String]],
 
   @(JsonProperty@field)("closed")
-  val closed: Boolean,
+  val closed: Option[Boolean],
+
+  @(JsonProperty@field)("dead")
+  val dead: Option[Boolean],
+
+  @(JsonProperty@field)("message_count")
+  val message_count: Option[Int],
+
+  @(JsonProperty@field)("common_friend_count")
+  val common_friend_count: Option[Int],
+
+  @(JsonProperty@field)("common_like_count")
+  val common_like_count: Option[Int],
+
+  @(JsonProperty@field)("not_following")
+  val not_following: Option[Map[String,Boolean]],
 
   @(JsonProperty@field)("profile")
   var person: Option[ProfileBrief]
@@ -35,5 +50,5 @@ case class Match(
   /**
    * necessary for object instantiation
    */
-  def this() = this("",List(new Message()),"",List(""),false,None)
+  def this() = this("",List(new Message()),"",None,None,None,None,None,None,None,None)
 }

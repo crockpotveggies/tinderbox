@@ -36,9 +36,9 @@
         </div>
         <div class="ibox-content">
           <p class="font-bold">Age Range</p>
-          <div data-bind="slider: $root.ageRange, sliderOptions: {start:[20,28],range:{min:18, max:60},step:1,behaviour:'drag'}"></div>
-          <p><br>
-            <small data-bind="text: $root.ageRange()[0].toString().split('.')[0]"></small> <small class="pull-right" data-bind="text: $root.ageRange()[1].toString().split('.')[0]"></small>
+          <div data-bind="slider: $root.ageRange, sliderOptions: {start:[20,28],range:{min:18, max:60},step:1,behaviour:'drag',connect:true}"></div>
+          <p data-bind="with: search"><br>
+            <small data-bind="text: age_filter_min"></small> <small class="pull-right" data-bind="text: age_filter_max"></small>
           </p>
           <div data-bind="with: search">
             <p class="font-bold">Distance</p>

@@ -5,6 +5,7 @@ import play.api.Play.current
 import scala.collection.mutable.Map
 import scala.concurrent._
 import scala.concurrent.duration._
+import scala.collection.JavaConversions._
 import org.mapdb._
 import utils.tinder.TinderApi
 import utils.tinder.model._

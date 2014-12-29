@@ -36,7 +36,8 @@ object Messaging extends Controller {
     f.map { result =>
       result match {
         case Some(history) =>
-          Ok(generate(history)).as("application/json")
+          val data = history.filterNot { m => m.person==None }
+          Ok(generate(data)).as("application/json")
         case None =>
           BadRequest
       }

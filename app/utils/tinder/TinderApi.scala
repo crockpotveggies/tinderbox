@@ -101,6 +101,7 @@ class TinderApi(
           Right(jsonContext.parse[T](response.body))
         } catch {
           case e: Throwable =>
+            println(e.getCause)
             try {
               // sometimes Tinder wraps these things in a results object
               val res = (response.json \ "results")
@@ -109,7 +110,7 @@ class TinderApi(
               Right(recs)
             } catch {
               case e: Throwable =>
-                println("[Tinder] Parsing failed with: \n" + response.body)
+                //println("[Tinder] Parsing failed with: \n" + response.body)
                 println(stackTrace(e))
                 Left(jsonContext.parse[model.TinderError](response.body))
             }
