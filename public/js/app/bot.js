@@ -78,8 +78,10 @@ window.App = function() {
       dataType: "json",
       success: function(data) {
         if(data!=null && data.length!=0) {
-          var d = $.map(data, function(item){ return new _.logModel(item) });
-          _.logs.unshift(d);
+          $.map(data, function(item){
+            var d = new _.logModel(item);
+            _.logs.unshift(d);
+          });
         }
       },
       error: function() {
@@ -87,6 +89,34 @@ window.App = function() {
       }
     });
   };
+
+  _.like = function(data, event) {
+    $.getJSON("/t/"+getAuthToken()+"/like/"+data.associateId(), function(result) {
+      if(result!=null) alert("It's a match! Head to the inbox to chat.");
+      _.createLog("undo_swipe_dislike", "User reversed a dislike for "+data.associateId()+".", data.associateId(), data.associateImg());
+    });
+  }
+  _.dislike = function(data, event) {
+    $.getJSON("/t/"+getAuthToken()+"/dislike/"+data.associateId(), function(result) {
+      _.createLog("undo_swipe_like", "User reversed a like for "+data.associateId()+".", data.associateId(), data.associateImg());
+    });
+  }
+
+  _.createLog = function(task, log, associateId, associateImg) {
+    $.ajax({
+      url: "/bot/log/"+getUserId(),
+      type: "POST",
+      data: JSON.stringify({created: new Date().getTime(), task: task, log: log, associateId: associateId, associateImg: associateImg}),
+      contentType: "text/plain",
+      success: function() {
+        console.log("Successfully created bot log.");
+      },
+      error: function() {
+        console.warn("Bot log creation failed.")
+      }
+    })
+  }
+
   // set a timer for automatically retrieving updates
   _.updateIntervalErrors = 0;
   _.updateInterval = setInterval(function() {

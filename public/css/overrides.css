@@ -140,6 +140,13 @@
   float: none
 }
 
+.feed-element .btn-undo {
+  display: none;
+}
+.feed-element:hover .btn-undo {
+  display: inline;
+}
+
 
 .map {
   height: 300px;

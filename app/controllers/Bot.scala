@@ -11,7 +11,7 @@ import play.api.mvc._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka.system
 import com.codahale.jerkson.Json._
-import models.bot.{BotState, BotCommand}
+import models.bot.{BotLog, BotState, BotCommand}
 import services.{TinderBot, TinderService}
 
 
@@ -53,6 +53,17 @@ object Bot extends Controller {
    */
   def userLogUpdates(userId: String) = Action.async { implicit request =>
     val f = future { TinderBot.fetchLogUpdates(userId) }
+    f.map { result => Ok(generate(result)).as("application/json") }
+  }
+
+  /**
+   * Manually create a bot log. Useful for reversing bot actions.
+   *
+   * @note You will need to send a raw json string in the BotLog class format.
+   */
+  def createLog(userId: String) = Action.async(parse.text) { implicit request =>
+    val log = com.codahale.jerkson.Json.parse[BotLog](request.body)
+    val f = future { TinderBot.writeLog(userId, log) }
     f.map { result => Ok(generate(result)).as("application/json") }
   }
 
