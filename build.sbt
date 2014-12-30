@@ -45,6 +45,8 @@ libraryDependencies ++= Seq(
   jdbc,
   anorm,
   cache,
+  "edu.stanford.nlp"              %  "stanford-corenlp"           % "3.3.1",
+  "edu.stanford.nlp"              %  "stanford-corenlp"           % "3.3.1" classifier "models",
   "org.mapdb"                     %  "mapdb"                      % "1.0.6",
   "com.cloudphysics"              %% "jerkson"                    % "0.6.3",
   "com.fasterxml.jackson.module"  %  "jackson-module-scala_2.10"  % "2.4.4",

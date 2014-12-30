@@ -2,17 +2,81 @@
 @main(
   title = "Tinder Dashboard",
   js = "",
-  extraTags = List(),
+  extraTags = List("""<script src="/assets/js/app/dashboard.js"></script>"""),
   session = session
 ) {
-<div class="row">
-  <div class="col-lg-12">
-    <div class="wrapper wrapper-content">
-      <div class="middle-box text-center animated fadeInRightBig">
-        <h2 class="font-bold">Welcome</h2>
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-lg-12">
+      <table class="table">
+        <tbody>
+        <tr>
+          <td>
+            <button type="button" class="btn btn-danger m-r-sm" data-bind="text: totalMatches"></button>
+            Total Matches
+          </td>
+          <td>
+            <button type="button" class="btn btn-primary m-r-sm" data-bind="text: totalMessages"></button>
+            Total Messages
+          </td>
+          <td>
+            <button type="button" class="btn btn-info m-r-sm" data-bind="text: longTalks"></button>
+            Long Talks
+          </td>
+          <td>
+            <button type="button" class="btn btn-success m-r-sm" data-bind="text: botTasks"></button>
+            Bot Tasks
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-        <div class="error-desc">
-          <p>You are logged in</p>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Match Sentiment</h5>
+        </div>
+        <div class="ibox-content">
+          <div class="text-center">
+            <canvas id="sentimentChart" height="140"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Latest Bot Tasks</h5>
+        </div>
+        <div class="ibox-content">
+          <div class="row m-t-sm">
+            <div class="col-lg-12">
+              <div class="panel blank-panel">
+                <div class="panel-body">
+                  <div class="feed-activity-list" data-bind="foreach: logs">
+                    <div class="feed-element">
+                      <a href="javascript:;" class="pull-left">
+                        <img alt="image" class="img-circle" data-bind="attr: {src: associateImg }">
+                      </a>
+                      <div class="media-body ">
+                        <small class="pull-right">
+                          <span data-bind="text: lastSeen"></span> &nbsp;
+                          <i class="fa fa-envelope" data-bind="visible: task().contains('message')"></i>
+                          <i class="fa fa-heart-o" data-bind="visible: task()=='swipe_dislike'"></i>
+                          <i class="fa fa-heart" data-bind="visible: task()=='swipe_like'"></i>
+                        </small>
+                        <span data-bind="text: log"></span><br>
+                        <small class="text-muted" data-bind="text: createdDate"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

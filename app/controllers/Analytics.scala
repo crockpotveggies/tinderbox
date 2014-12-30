@@ -4,6 +4,7 @@ import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
+import services.AnalyticsService
 import scala.concurrent.future
 import scala.concurrent.ExecutionContext.Implicits._
 import com.codahale.jerkson.Json._
@@ -17,7 +18,7 @@ object Analytics extends Controller {
    */
   def isoBuckets(bucketType: String, timezoneOffset: Int) = Action.async(parse.json){ implicit request =>
     val f = future {
-      val dates = (request.body \ "dates").as[List[String]]
+      var dates = (request.body \ "dates").as[List[String]]
       bucketType match {
         case "daily" =>
           Ok(generate(DateToChart.isoDailyBuckets(dates, timezoneOffset)))
@@ -29,6 +30,21 @@ object Analytics extends Controller {
 
     }
     f.map { result => result }
+  }
+
+  /**
+   * Retrieve message sentiment analytics.
+   */
+  def messageSentiments(xAuthToken: String) = Action.async { implicit request =>
+    val f = future { AnalyticsService.fetchSentiments(xAuthToken) }
+    f.map { result =>
+      result match {
+        case Some(data) =>
+          Ok(generate(data)).as("application/json")
+        case None =>
+          BadRequest
+      }
+    }
   }
 
 }

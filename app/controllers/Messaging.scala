@@ -29,6 +29,27 @@ object Messaging extends Controller {
   }
 
   /**
+   * A summary of message numbers.
+   */
+  def messageSummaries(xAuthToken: String) = Action.async { implicit request =>
+    val f = future { UpdatesService.fetchHistory(xAuthToken) }
+    f.map { result =>
+      result match {
+        case Some(history) =>
+          val messages = history.map(_.messages).flatten.size
+          val matches = history.size
+          val extendedConversations = history.map(_.messages).filter { m => m.size > 7 }.size
+
+          Ok(generate(
+            Map("total_matches" -> matches, "total_messages" -> messages, "long_talks" -> extendedConversations)
+          )).as("application/json")
+        case None =>
+          BadRequest
+      }
+    }
+  }
+
+  /**
    * Get all message history for a user.
    */
   def messages(xAuthToken: String) = Action.async { implicit request =>
