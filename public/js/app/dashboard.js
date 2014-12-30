@@ -64,7 +64,6 @@ window.App = function() {
           var latest = data.reverse().slice(0, 4)
           var d = $.map(latest, function(item){ return new _.logModel(item) });
           _.logs(d);
-          _.logs.reverse();
           _.botTasks(data.length)
         }
       },
@@ -104,19 +103,19 @@ window.App = function() {
       var sentimentData = [
         {
         value: positive,
-        color: "#d9edc2",
+        color: "green",
         highlight: "#1ab394",
         label: "Positive"
         },
         {
         value: neutral,
-        color: "#dedede",
+        color: "gray",
         highlight: "#1ab394",
         label: "Neutral"
         },
         {
         value: negative,
-        color: "#f9dbdb",
+        color: "red",
         highlight: "#1ab394",
         label: "Negative"
         }

@@ -2,6 +2,7 @@ package services
 
 import java.util.concurrent.ConcurrentNavigableMap
 import play.api.Logger
+import play.api.Play.current
 import scala.collection.mutable.Map
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -14,6 +15,8 @@ import utils.tinder.model._
  * Manages state in-memory of sessions for Tinder.
  */
 object TinderService {
+  // if we don't set the ClassLoader it will be stuck in SBT
+  Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
 
   /**
    * Current active tokens.

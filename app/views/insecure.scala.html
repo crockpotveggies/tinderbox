@@ -2,41 +2,58 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+  <head>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="shortcut icon" type="image/x-icon" href="@routes.Assets.at("img/favicon.ico")">
+    <link rel="shortcut icon" type="image/x-icon" href="@routes.Assets.at("img/favicon.ico")">
 
-  <title>@title</title>
+    <title>@title</title>
 
-  <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
-  <link href="@routes.Assets.at("font-awesome/css/font-awesome.css")" rel="stylesheet">
-  <link href="@routes.Assets.at("css/plugins/iCheck/custom.css")" rel="stylesheet">
-  <link href="@routes.Assets.at("css/animate.css")" rel="stylesheet">
-  <link href="@routes.Assets.at("css/style.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("font-awesome/css/font-awesome.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/plugins/iCheck/custom.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/animate.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/style.css")" rel="stylesheet">
 
-</head>
+  </head>
 
-<body class="gray-bg">
-
-@content
-
-<!-- Mainly scripts -->
-<script src="@routes.Assets.at("js/jquery-2.1.1.js")"></script>
-<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
-<!-- iCheck -->
-<script src="js/plugins/iCheck/icheck.min.js"></script>
-<script>
-        $(document).ready(function(){
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+  <body class="gray-bg">
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '464891386855067',
+          xfbml      : false,
+          version    : 'v2.1'
         });
+      };
+
+      (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
     </script>
-</body>
+
+    @content
+
+    <!-- Mainly scripts -->
+    <script src="@routes.Assets.at("js/libs/jquery-2.1.1.js")"></script>
+    <script src="@routes.Assets.at("js/libs/bootstrap.min.js")"></script>
+    <!-- iCheck -->
+    <script src="@routes.Assets.at("js/libs/plugins/iCheck/icheck.min.js")"></script>
+    <script>
+      $(document).ready(function(){
+        $('.i-checks').iCheck({
+          checkboxClass: 'icheckbox_square-green',
+          radioClass: 'iradio_square-green',
+        });
+      });
+    </script>
+  </body>
 
 </html>
 

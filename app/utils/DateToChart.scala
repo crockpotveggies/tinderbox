@@ -31,19 +31,26 @@ object DateToChart {
       }
       .sortBy( d => d )
 
-    val lowest = dates.head
-    val highest = dates.last
-    val length = highest - lowest
+    // if there are enough dates to display
+    if(dates.size > 2) {
+      val lowest = dates.head
+      val highest = dates.last
+      val length = highest - lowest
 
-    val groups = dates.groupBy( d => d ).toArray
+      val groups = dates.groupBy(d => d).toArray
 
-    val buckets = new Array[Int](length)
-    var i = 0
-    while (i < length) {
-      buckets(i) = groups(i)._2.size
-      i += 1
+      val buckets = new Array[Int](length)
+      var i = 0
+      while (i < length) {
+        buckets(i) = groups(i)._2.size
+        i += 1
+      }
+      buckets
+
+    // otherwise return an empty list
+    } else {
+      Array(0,0,0,0,0)
     }
-    buckets
   }
 
   /**

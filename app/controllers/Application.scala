@@ -36,42 +36,29 @@ object Application extends Controller {
   }
 
   /**
-   * Home page let's you select active Tinder sessions or create one.
+   * Update the user's current location.
    */
-  val authForm = Form(
-    mapping(
-      "facebook_token" -> text,
-      "facebook_id" -> text
-    )(FBAuth.apply)(FBAuth.unapply)
-  )
-  def authenticate = Action.async { implicit request =>
-    authForm.bindFromRequest.fold(
-      formWithErrors => {
-        val f = future { views.html.Application.index(Some("There were errors in the credentials.")) }
-        f.map { result => BadRequest(result) }
-      },
-      fbAuth => {
-        new TinderApi().authorize(fbAuth.facebook_token, fbAuth.facebook_id).map { result =>
-          result match {
-            case Left(error) =>
-              BadRequest(views.html.Application.index(Some(error.error)))
+  def authenticate = Action.async(parse.json) { implicit request =>
+    val facebook_token = (request.body \ "facebook_token").as[String]
+    val facebook_id = (request.body \ "facebook_id").as[String]
 
-            case Right(auth) =>
-              TinderService.storeSession(auth)
-              Logger.info("Logging in user "+auth.user.name)
-              Redirect(routes.Application.dashboard(auth.token))
-          }
-        }
+    val f = new TinderApi().authorize(facebook_token, facebook_id)
+    f.map { result =>
+      result match {
+        case Right(result) =>
+          Ok(generate(result)).as("application/json")
+        case Left(e) =>
+          BadRequest
       }
-    )
+    }
   }
 
   /**
    * Ends the current session
    */
-  def logout(xAuthToken: String) = Action.async { implicit request =>
+  def logout(xAuthToken: String) = Action { implicit request =>
     val f = future { TinderService.deleteSession(xAuthToken) }
-    f.map { result => Ok(views.html.Application.index()) }
+    Redirect(routes.Application.index())
   }
 
   /**

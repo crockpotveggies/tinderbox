@@ -4,7 +4,7 @@
 <div class="middle-box text-center loginscreen animated fadeInDown">
   <div>
     <div>
-      <h1 class="logo-name"><img src="@routes.Assets.at("img/favicon.png")" alt="Spora"></h1>
+      <h1 class="logo-name"><img src="@routes.Assets.at("img/favicon.png")" alt=""></h1>
     </div>
 
     @errorMsg.map { msg =>
@@ -15,17 +15,91 @@
     }
 
     <h2>Start Tinderbox</h2>
-    <p>Enter your Facebook access token and your Facebook ID below. You can get an access token <a href="https://www.facebook.com/dialog/oauth?client_id=464891386855067&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=basic_info,email,public_profile,user_about_me,user_activities,user_birthday,user_education_history,user_friends,user_interests,user_likes,user_location,user_photos,user_relationship_details&response_type=token" target="_blank">here</a>.</p>
+    <p>Enter your Facebook access token and your Facebook ID below. You can get an access token <button onclick="loadFBLogin()" class="btn btn-xs btn-default">here</button>.</p>
 
-    <form class="m-t" role="form" action="@routes.Application.authenticate" method="POST">
+    <div class="m-t form" role="form">
       <div class="form-group">
-        <input type="text" class="form-control" placeholder="FB Token" required="" name="facebook_token">
+        <input type="text" class="form-control" placeholder="FB Token" required="" name="facebook_token" id="facebook_token">
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" placeholder="FB ID" required="" name="facebook_id">
+        <input type="text" class="form-control" placeholder="FB ID" required="" name="facebook_id" id="facebook_id">
       </div>
-      <button type="submit" class="btn btn-primary block full-width m-b">Authorize</button>
-    </form>
+      <button onclick="authorizeTinderbox()" class="btn btn-primary block full-width m-b" id="btn_auth">Authorize</button>
+    </duv>
   </div>
 </div>
+
+<script>
+  // authenticates Tinderbox
+  window.authorizeTinderbox = function() {
+    $("#btn_auth").text("Please Wait...");
+    var token = $("#facebook_token").val();
+    var id = $("#facebook_token").val();
+    $.ajax({
+      url: "/authenticate",
+      type: "POST",
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify({facebook_token: token, facebook_id: id}),
+      success: function(data) {
+        window.location.href = "/t/"+data.token+"/dashboard";
+      },
+      error: function() {
+        $("#btn_auth").text("Something went wrong");
+      }
+    });
+  }
+
+  // loads a FB auth dialog
+  window.loadFBLogin = function() {
+    var fbUrl = "https://www.facebook.com/dialog/oauth?client_id=464891386855067&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=basic_info,email,public_profile,user_about_me,user_activities,user_birthday,user_education_history,user_friends,user_interests,user_likes,user_location,user_photos,user_relationship_details&response_type=token";
+    var fbWindow = window.open(fbUrl, 'FBLogin', 'width=500,height=380,top=100,left=100');
+  }
+
+  // cleans a Facebook URL into a token
+  window.cleanFBFragment = function(fragment) {
+    try {
+      // try extracting the token from the URL fragment
+      if(fragment.length > 1) {
+        var brokenToken = fragment.split("access_token=")[1];
+        var token = brokenToken.split("&")[0];
+        return token;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // checks the token input
+  window.fbFragmentInterval = setInterval(function() {
+    // check if there's a URL fragment in the token field
+    var token = cleanFBFragment($("#facebook_token").val());
+    if(typeof token=="string") {
+      $("#facebook_token").val(token);
+    }
+  }, 500);
+
+  // checks if a Facebook token is ready to be called to grab ID
+  window.loadFBID = setInterval(function() {
+    try {
+      var token = $("#facebook_token").val();
+
+      if(token.length > 10) {
+        // now let's see if we can perform an API call to grab the ID
+        FB.api('/me', {access_token: token}, function(response) {
+          console.log(response);
+          $("#facebook_id").val(response.id);
+
+          // clear the interval once finished
+          clearInterval(loadFBID);
+        });
+      }
+
+    } catch(e) {
+      console.warn(e);
+    }
+  }, 1000);
+</script>
 }
