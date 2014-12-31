@@ -20,6 +20,8 @@ import java.text.{SimpleDateFormat, DateFormat}
  * Stores analysis of messages and swipes.
  */
 object AnalyticsService {
+  // if we don't set the ClassLoader it will be stuck in SBT
+  Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
 
   /**
    * History and notification storage

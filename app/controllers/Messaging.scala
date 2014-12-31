@@ -53,13 +53,28 @@ object Messaging extends Controller {
    * Get all message history for a user.
    */
   def messages(xAuthToken: String) = Action.async { implicit request =>
-    val f = future { UpdatesService.fetchHistory(xAuthToken) }
-    f.map { result =>
-      result match {
-        case Some(history) =>
-          val data = history.filterNot { m => m.person==None }
+    val f1 = future { UpdatesService.fetchHistory(xAuthToken) }
+    val f2 = future { UpdatesService.fetchUnreadCounts(xAuthToken) }
+
+    val result = for {
+      history <- f1
+      counts <- f2
+    } yield (history, counts)
+
+    // check if unread counts are available, and merge
+    result.map { r =>
+      r match {
+        case (Some(h), Some(c)) =>
+          val data = h
+            .filterNot { m => m.person == None}
+            .map{ m => m.message_count = c.get(m._id); m }
           Ok(generate(data)).as("application/json")
-        case None =>
+
+        case (Some(h), None) =>
+          val data = h.filterNot { m => m.person == None}
+          Ok(generate(data)).as("application/json")
+
+        case _ =>
           BadRequest
       }
     }
@@ -74,7 +89,8 @@ object Messaging extends Controller {
     val f = future { UpdatesService.fetchUpdates(xAuthToken) }
     f.map { result =>
       result match {
-        case Some((u, n, c)) => Ok(generate(Map("messages" -> u, "notifications" -> n, "unread_counts" -> c)))
+        case (Some(n), Some(c)) => Ok(generate(Map("notifications" -> n, "unread_counts" -> c)))
+        case (None, None) => Ok(generate(Map("notifications" -> None, "unread_counts" -> None)))
         case _ => NotModified
       }
     }

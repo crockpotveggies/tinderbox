@@ -1,10 +1,13 @@
 package services
 
+import akka.actor.{Props, Actor}
 import play.api.Logger
 import play.api.Play.current
+import play.api.libs.concurrent.Akka
 import scala.collection.mutable.Map
 import scala.concurrent._
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits._
 import scala.collection.JavaConversions._
 import org.mapdb._
 import utils.tinder.TinderApi
@@ -18,6 +21,8 @@ import java.text.{SimpleDateFormat, DateFormat}
  * A service that pulls, caches, and notifies of updates.
  */
 object UpdatesService {
+  // if we don't set the ClassLoader it will be stuck in SBT
+  Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
 
   /**
    * History and notification storage
@@ -31,9 +36,23 @@ object UpdatesService {
   /**
    * Required for timing updates properly
    */
-  private var lastActivity: ConcurrentNavigableMap[String, Date] = MapDB.db.getTreeMap("last_activity")
+  private val lastActivity: ConcurrentNavigableMap[String, Date] = MapDB.db.getTreeMap("last_activity")
 
-  // timed actors for retrieving updates will go here
+  /**
+   * Actor for performing batch processing of message sentiments.
+   */
+  private class UpdatesTask extends Actor {
+    def receive = {
+      case "tick" =>
+        TinderService.activeSessions.foreach { s => syncUpdates(s) }
+        Logger.debug("[mapdb] Database committer has persisted data to disk.")
+    }
+  }
+  private val updateActor = Akka.system.actorOf(Props[UpdatesTask], name = "UpdatesTask")
+  private val updateService = {
+    Akka.system.scheduler.schedule(0 seconds, 40 seconds, updateActor, "tick")
+  }
+
 
   /**
    * Performs a full update of the history cache.
@@ -66,9 +85,11 @@ object UpdatesService {
   private def syncUpdates(xAuthToken: String): Option[(Map[String, List[Message]], List[Notification], Map[String, Int])] = {
     // just in case...
     Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
+    Logger.debug("[updates] Fetching updates from Tinder API")
+
     // grab updates and process them accordingly
     val tinderApi = new TinderApi(Some(xAuthToken))
-    val result = Await.result(tinderApi.getUpdates(fetchLastActivity(xAuthToken).getOrElse(new Date())), 10 seconds)
+    val result = Await.result(tinderApi.getUpdates(fetchLastActivity(xAuthToken).getOrElse(new Date())), 40 seconds)
     result match {
       case Left(error) =>
         Logger.error("An error occurred retrieving full history for %s.".format(xAuthToken))
@@ -76,7 +97,7 @@ object UpdatesService {
         None
       case Right(history) =>
         val messages = Map(history.matches.map( m => (m._id, m.messages)).toMap.toSeq: _*)
-        // first update match history TODO
+        // first update match history
         history.matches.foreach { m =>
           putMessages(xAuthToken, m._id, m.messages)
         }
@@ -108,6 +129,8 @@ object UpdatesService {
             }
         }
         unreadCounts.put(xAuthToken, unreads)
+
+        if(history.matches.size>0) Logger.info("[updates] Retrieved %s updates from Tinder API" format history.matches.size)
         Some((messages, notificationList, unreads))
     }
   }
@@ -165,8 +188,8 @@ object UpdatesService {
    * @param xAuthToken
    * @return
    */
-  def fetchUpdates(xAuthToken: String): Option[(Map[String, List[Message]], List[Notification], Map[String, Int])] = {
-    syncUpdates(xAuthToken)
+  def fetchUpdates(xAuthToken: String): (Option[List[Notification]], Option[Map[String, Int]]) = {
+    (fetchNotifications(xAuthToken), fetchUnreadCounts(xAuthToken))
   }
 
   /**

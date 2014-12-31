@@ -32,7 +32,7 @@ case class Match(
   val dead: Option[Boolean],
 
   @(JsonProperty@field)("message_count")
-  val message_count: Option[Int],
+  var message_count: Option[Int],
 
   @(JsonProperty@field)("common_friend_count")
   val common_friend_count: Option[Int],

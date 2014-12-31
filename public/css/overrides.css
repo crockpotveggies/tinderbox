@@ -58,6 +58,7 @@
   margin-right: 10px;
   font-size: 8px;
   padding: 3px 5px;
+  color: #FFF !important;
 }
 .inbox-message-list li img {
   width: 43px;

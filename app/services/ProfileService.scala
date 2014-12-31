@@ -1,23 +1,26 @@
 package services
 
 import play.api.Logger
+import play.api.Play.current
 import scala.collection.mutable.Map
 import scala.concurrent._
 import scala.concurrent.duration._
 import org.mapdb._
 import utils.tinder.TinderApi
 import utils.tinder.model._
-import java.util.NavigableMap
+import java.util.concurrent.ConcurrentNavigableMap
 
 /**
  * Intermediary for caching user profiles.
  */
 object ProfileService {
+  // if we don't set the ClassLoader it will be stuck in SBT
+  Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
 
   /**
    * User cache object.
    */
-  private val users: NavigableMap[String, Profile] = MapDB.db.getTreeMap("profile_cache")
+  private val users: ConcurrentNavigableMap[String, Profile] = MapDB.db.getTreeMap("profile_cache")
 
   /**
    * Retrieve a user from cache.

@@ -30,8 +30,6 @@ class MessageAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef) exten
         case Some(matches) =>
           // just in case
           Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
-          // make sure updates have first been synced
-          UpdatesService.fetchUpdates(xAuthToken).getOrElse("Do nothing.")
           // find empty conversations and create an intro task
           matches.filter( m => m.messages.size==0 ).foreach { m =>
             Logger.debug("[tinderbot] Creating new message intro task for match %s" format m._id)

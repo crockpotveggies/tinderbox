@@ -24,7 +24,7 @@ window.App = function() {
     o.person = ko.observable(new _.personModel(match.person))
     o.last_activity_date = ko.observable(match.last_activity_date);
     o.participants = ko.observableArray(match.participants);
-    o.unread_count = ko.observable(0)
+    o.unread_count = ko.observable(match.message_count);
     o.messagePreview = ko.observable((match.messages.length!=0 ? match.messages[match.messages.length-1].message.slice(0, 15)+"..." : ""));
     o.getEnhancedProfile = function() {
       $.getJSON("/t/"+getAuthToken()+"/profile/"+o.participants()[0], function(data) {
@@ -69,9 +69,11 @@ window.App = function() {
   /*
    * ViewModels
    */
+  _.refresh = ko.observable(0);
   _.matches = ko.observableArray([]);
   _.matchesGetter = ko.computed(function() {
     $('.loader-global').show()
+    _.refresh();
     $.ajax({
       url: "/t/"+getAuthToken()+"/messages",
       type: "GET",
@@ -130,22 +132,26 @@ window.App = function() {
       for (i = 0; i < matches.length; i++) {
         if(matches[i]._id()==_.selectedMatchId()) {
           var messages = matches[i].messages();
-          var timestamps = $.map(messages, function(item) { if(item.from()!=getUserId()) return item.created_date(); });
-          $.ajax({
-            url: "/analytics/chart/iso/daily/"+tzOffset,
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({dates: timestamps}),
-            success: function(data) {
-              _.matchDailyChart(data);
-              setTimeout(function(){ $(".line").peity("line"); }, 100)
-            },
-            error: function() {
-              _.matchDailyChart([0]);
-              setTimeout(function(){ $(".line").peity("line"); }, 100)
+          var timestamps = $.map(messages, function(item) { if(item.from()!=getUserId()) return item.created_date().split("T")[0]; });
+
+          if(timestamps.length==0) {
+            _.matchDailyChart([0]);
+            setTimeout(function(){ $(".line").peity("line"); }, 300);
+
+          } else {
+            var counts = {};
+            counts[moment().format("YYYY-MM-DD")] = 0;
+            for(var x = 0; x< timestamps.length; x++) {
+              var num = timestamps[x];
+              counts[num] = counts[num] ? counts[num]+1 : 1;
             }
-          });
+            var intervals = [];
+            for(count in counts) { intervals.push(counts[count]); }
+
+            _.matchDailyChart(intervals);
+            _.matchDailyChart.reverse();
+            setTimeout(function(){ $(".line").peity("line"); }, 300);
+          }
         }
       }
     } catch(e) {
@@ -169,16 +175,17 @@ window.App = function() {
       type: "GET",
       dataType: "json",
       success: function(data) {
-        // iterate through matches and update messages & read counts
-        $.map(_.matches(), function(match) {
-          var matchId = match._id();
-          if(typeof data.unread_counts[matchId]!="undefined" && matchId!=_.selectedMatchId()) match.unread_count(data.unread_counts[matchId])
-          if(typeof data.messages[matchId]!="undefined") {
-            var newMessages = $.map(data.messages[matchId], function(m) { return new _.messageModel(m); });
-            match.messages(newMessages)
-            match.messages.reverse();
+        // check if there are any updates
+        if(typeof data.unread_counts!="undefined" && data.unread_counts!=null) {
+          var count = 0;
+          for(i in data.unread_counts) {
+            count += data.unread_counts[i];
           }
-        });
+          if(count>0) {
+            _.refresh.valueHasMutated();
+            console.log("Received "+count+" new updates.")
+          }
+        }
       },
       error : function() {
         _.updateIntervalErrors += 1;

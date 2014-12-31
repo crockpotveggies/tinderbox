@@ -41,7 +41,6 @@ POST    /t/:xauthtoken/profile/position           controllers.Profile.updatePosi
 POST    /t/:xauthtoken/profile/discovery          controllers.Profile.updateDiscovery(xauthtoken: String)
 
 # Analytics
-POST    /analytics/chart/iso/:bucketType/:offset  controllers.Analytics.isoBuckets(bucketType: String, offset: Int)
 GET     /t/:xauthtoken/analytics/sentiments       controllers.Analytics.messageSentiments(xauthtoken: String)
 
 # Bot
