@@ -1,24 +1,35 @@
 package utils
 
 import play.api.Logger
-
+import play.api.Play.current
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
-
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.classification.NaiveBayes
 
 object SparkMLLibUtility {
+  // if we don't set the ClassLoader it will be stuck in SBT
+  Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
 
+  /**
+   * Default configuration for MLLib.
+   */
   val conf = new SparkConf(false) // skip loading external settings
     .setMaster("local[4]") // run locally with enough threads
     .setAppName("firstSparkApp")
     .set("spark.logConf", "true")
     .set("spark.driver.host", "localhost")
 
+  /**
+   * Default context for Spark.
+   */
   val context = new SparkContext(conf)
 
+  /**
+   * If you want to try out MLLib in action, use this example.
+   * @param fileLocation
+   */
   def SparkMLLibExample(fileLocation: String): Double = {
 
     Logger.info("["+fileLocation+"] Beginning training")

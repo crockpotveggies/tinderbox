@@ -34,6 +34,9 @@ class MessageIntroTask(val xAuthToken: String, val tinderBot: ActorRef, val m: M
     case "tick" =>
       // choose the message
       val intro = funIntros(Random.nextInt(funIntros.size)).replace("{name}", m.person.map(_.name).getOrElse(""))
+      // double-check that the conversation is still empty (prevents duplicates)
+      val messageCount = UpdatesService.fetchHistory(xAuthToken).get.filter(m => m._id==m._id).head.messages.size
+      if(messageCount > 0) throw new java.io.IOException("Message introduction already made, cancelling intro.")
       // send the message
       new TinderApi(Some(xAuthToken)).sendMessage(m._id, intro).map { result =>
         result match {

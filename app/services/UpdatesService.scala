@@ -90,6 +90,7 @@ object UpdatesService {
     // grab updates and process them accordingly
     val tinderApi = new TinderApi(Some(xAuthToken))
     val result = Await.result(tinderApi.getUpdates(fetchLastActivity(xAuthToken).getOrElse(new Date())), 40 seconds)
+    val session = TinderService.fetchSession(xAuthToken).get
     result match {
       case Left(error) =>
         Logger.error("An error occurred retrieving full history for %s.".format(xAuthToken))
@@ -104,12 +105,21 @@ object UpdatesService {
         history.last_activity_date.map{ date => lastActivity.put(xAuthToken, tinderApi.ISO8601.parse(date)) }
         // then create notifications
         val notificationList = history.matches.map { m =>
+          // make sure we only notify based on sender's messages
+          val fromMessages = m
+            .messages
+            .filterNot( x => x.from==session.user._id )
+            .filterNot { x =>
+              val createdMillis = new Date(x.created_date).getTime
+              val lastMillis = lastActivity.get(xAuthToken).getTime
+              createdMillis < lastMillis
+            }
           new Notification(
             "messages",
             m._id,
             m.person.map(_.name).getOrElse("Someone"),
-            "%s sent you %s messages.".format(m.person.map(_.name).getOrElse("Someone"), m.messages.size),
-            m.messages.size
+            "%s sent you %s messages.".format(m.person.map(_.name).getOrElse("Someone"), fromMessages.size),
+            fromMessages.size
           )
         }
         notifications.put(xAuthToken, notificationList)

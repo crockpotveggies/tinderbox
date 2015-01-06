@@ -42,6 +42,21 @@ Currently I'm not offering any support, but if there's enough interest I'd consi
 - Find a bug? It's OK to file an issue - I may not follow up on it.
 - Want a feature? Please don't open an issue, instead contribute and open a pull request.
 
+### Facial Analysis and Predictions
+
+Tinderbox attempts to make a prediction based on profiles you've previously liked. This is done using elementary Machine Learning methods. Tinderbox will examine previous likes/dislikes and develop a model based on colors found within faces of profiles. The more likes/dislikes made, the more accurate the model will become.
+
+> Currently, the prediction being made is very elementary and uses analysis of color values of a person's face. Apache Spark is used in the background to develop a model for "yes" faces
+> and a model for "no" faces, and then compares the fitness of a new face against the yes/no models. The analysis is very basic so not all recommendations will be accurate. The method
+> behind this involves creating Voronoi Cells of RGB color values found in each face. The new face being compared against the yes/no models uses a Mean Squared Error test, and if one model
+> fits better than the other a final recommendation of "like" or "dislike" is made.
+
+The recommendation system could use some work since the mapping of color values may not be necessarily the best method to making a recommendation of "like" or "dislike".
+
+### Auto-Messaging
+
+Tinderbox has built-in automated messaging. The built in "Tinderbot" looks for conversations with zero messages and sends a random opener from a pre-set list of introductions. Future updates plan on introducing a message tree and developing responses based on sentiment.
+
 ### Word from the Author
 
 Tinderbox is the first bot I've built to interact on my behalf. Since it is a tool that automates a lot of the Tinder experience, be forewarned not everyone appreciates being met through a robot. And they certainly don't appreciate if you decide to use this code to spam the Tinder world.

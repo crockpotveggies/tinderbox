@@ -50,6 +50,9 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
               // analyze recommendations
               botThrottle ! Props(new RecommendationsTask(xAuthToken, self))
               Logger.debug("[tinderbot] created new Recommendation task for token " + xAuthToken)
+              // analyze faces
+              botThrottle ! Props(new FacialCheckTask(xAuthToken, self))
+              Logger.debug("[tinderbot] created new Facial Check task for token " + xAuthToken)
               // analyze messages
               botThrottle ! Props(new MessageAnalysisTask(xAuthToken, self))
               Logger.debug("[tinderbot] created new Message Analysis task for token " + xAuthToken)
@@ -121,7 +124,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   private def makeSleep {
     botThrottle ! SetTarget(None)
     state = new BotState(false, "sleeping")
-    Thread.sleep(90000)
+    Thread.sleep(10000)
     makeRun
   }
 
@@ -140,7 +143,7 @@ object TinderBot {
    */
   val context = {
     Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
-    Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 30, taskSleepThreshold = 40)), "TinderBot")
+    Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 100, taskSleepThreshold = 300)), "TinderBot")
   }
 
   /**
