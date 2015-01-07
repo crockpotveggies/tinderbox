@@ -5,6 +5,7 @@ import models.bot.tasks.recommendation
 import services.FacialAnalysisService
 import utils.FacialDetection
 import utils.tinder.model.Photo
+import utils.ImageUtil
 import utils.SparkMLLibUtility.context
 
 
@@ -15,11 +16,11 @@ import utils.SparkMLLibUtility.context
  */
 object FacialRecommendation {
   def makeComparison(userId: String, photos: List[Photo]): Option[Boolean] = {
-    val rgbValues = photos.map { photo =>
+    val grayValues = photos.map { photo =>
       val faces = FacialDetection(photo.url)
-      recommendation.FacialAnalysis.getRGBValues(faces.extractFaces)
+      ImageUtil.getNormalizedGrayValues(faces.extractFaces)
     }
-    val kMeansCenters = recommendation.FacialAnalysis.kMeans(rgbValues.flatten)
+    val kMeansCenters = recommendation.FacialAnalysis.kMeans(grayValues.flatten)
     val kMeans = context.parallelize(kMeansCenters)
     val yesCost = FacialAnalysisService.yes_kmeans.get.computeCost(kMeans)
     val noCost = FacialAnalysisService.no_kmeans.get.computeCost(kMeans)
@@ -31,7 +32,7 @@ object FacialRecommendation {
     // Threshold for MSE is set to 6000
     if(yesCost < 6000.00 && noCost < 6000.00) {
       val costDifference = (yesCost-noCost).abs
-      if(costDifference > 700.00) {
+      if(costDifference > 400.00) {
         val recommendation = yesCost < noCost
         Logger.debug("[tinderbot] Recommendation is %s for user %s." format (recommendation, userId))
         Some(recommendation)

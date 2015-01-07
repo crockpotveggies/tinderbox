@@ -67,7 +67,7 @@ window.App = function() {
     });
   });
   _.recsAppender = function() {
-    $('.loader-global').show()
+    $('.loader-global').show();
     $.ajax({
       url: "/t/"+getAuthToken()+"/recommendations",
       type: "GET",
@@ -86,14 +86,18 @@ window.App = function() {
   }
 
   _.like = function(data, event) {
+    $('.loader-global').show();
     $.getJSON("/t/"+getAuthToken()+"/like/"+data._id(), function(result) {
       if(result!=null) alert("It's a match! Head to the inbox to chat.")
       _.recs.remove(data);
+      $('.loader-global').hide();
     });
   }
   _.dislike = function(data, event) {
+    $('.loader-global').show();
     $.getJSON("/t/"+getAuthToken()+"/dislike/"+data._id(), function(result) {
       _.recs.remove(data);
+      $('.loader-global').hide();
     });
   }
 

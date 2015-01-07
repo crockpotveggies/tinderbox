@@ -6,6 +6,7 @@ import scala.concurrent.ExecutionContext.Implicits._
 import utils.FacialDetection
 import utils.tinder.model._
 import utils.tinder.TinderApi
+import utils.ImageUtil
 import services.FacialAnalysisService
 
 /**
@@ -28,7 +29,7 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val ma
           case Right(profile) =>
             val rgbValues = profile.photos.map { photo =>
               val faces = FacialDetection(photo.url)
-              recommendation.FacialAnalysis.getRGBValues(faces.extractFaces)
+              ImageUtil.getNormalizedGrayValues(faces.extractFaces)
             }
             val kMeans = recommendation.FacialAnalysis.kMeans(rgbValues.flatten)
 

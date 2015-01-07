@@ -12,6 +12,7 @@ import scala.collection.JavaConversions._
 import org.mapdb._
 import utils.tinder.TinderApi
 import utils.tinder.model._
+import utils.TimeUtil
 import models.{MatchUpdate, Notification}
 import java.util.concurrent.ConcurrentNavigableMap
 import java.util.{TimeZone, Date}
@@ -97,6 +98,10 @@ object UpdatesService {
         Logger.error("Reason: "+error.error)
         None
       case Right(history) =>
+        // check if blocks need to be removed
+        history.blocks.foreach { blockId =>
+          deleteMessages(xAuthToken, blockId)
+        }
         val messages = Map(history.matches.map( m => (m._id, m.messages)).toMap.toSeq: _*)
         // first update match history
         history.matches.foreach { m =>
@@ -109,16 +114,11 @@ object UpdatesService {
           val fromMessages = m
             .messages
             .filterNot( x => x.from==session.user._id )
-            .filterNot { x =>
-              val createdMillis = new Date(x.created_date).getTime
-              val lastMillis = lastActivity.get(xAuthToken).getTime
-              createdMillis < lastMillis
-            }
           new Notification(
             "messages",
             m._id,
             m.person.map(_.name).getOrElse("Someone"),
-            "%s sent you %s messages.".format(m.person.map(_.name).getOrElse("Someone"), fromMessages.size),
+            "New messages from %s.".format(m.person.map(_.name).getOrElse("a Tinderer")),
             fromMessages.size
           )
         }
@@ -146,6 +146,15 @@ object UpdatesService {
   }
 
   /**
+   * Force an update of message history.
+   * @param xAuthToken
+   */
+  def forceHistorySync(xAuthToken: String) {
+    matches.remove(xAuthToken)
+    syncHistory(xAuthToken)
+  }
+
+  /**
    * Updates a list of messages into match history.
    * @param xAuthToken
    * @param matchId
@@ -162,6 +171,20 @@ object UpdatesService {
             val matchList = history.filterNot(m => m._id==matchId) ::: List(newMatch)
             matches.put(xAuthToken, matchList)
         }
+    }
+  }
+
+  /**
+   * Removes a match from conversation.
+   * @param xAuthToken
+   * @param matchId
+   */
+  def deleteMessages(xAuthToken: String, matchId: String) {
+    fetchHistory(xAuthToken) match {
+      case None => // do nothing, might not exist
+      case Some(history) =>
+        val matchList = history.filterNot(m => m._id==matchId)
+        matches.put(xAuthToken, matchList)
     }
   }
 

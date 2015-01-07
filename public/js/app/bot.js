@@ -93,12 +93,22 @@ window.App = function() {
   _.like = function(data, event) {
     $.getJSON("/t/"+getAuthToken()+"/like/"+data.associateId(), function(result) {
       if(result!=null) alert("It's a match! Head to the inbox to chat.");
-      _.createLog("undo_swipe_dislike", "User reversed a dislike for "+data.associateId()+".", data.associateId(), data.associateImg());
+      if(data.task()=="swipe_ignore") {
+        _.createLog("undo_swipe_dislike", "User liked previously ignored user "+data.associateId()+".", data.associateId(), data.associateImg());
+      }
+      else {
+        _.createLog("undo_swipe_dislike", "User reversed a dislike for "+data.associateId()+".", data.associateId(), data.associateImg());
+      }
     });
   }
   _.dislike = function(data, event) {
     $.getJSON("/t/"+getAuthToken()+"/dislike/"+data.associateId(), function(result) {
-      _.createLog("undo_swipe_like", "User reversed a like for "+data.associateId()+".", data.associateId(), data.associateImg());
+      if(data.task()=="swipe_ignore") {
+        _.createLog("undo_swipe_like", "User disliked previously ignored user "+data.associateId()+".", data.associateId(), data.associateImg());
+      }
+      else {
+        _.createLog("undo_swipe_like", "User reversed a like for "+data.associateId()+".", data.associateId(), data.associateImg());
+      }
     });
   }
 

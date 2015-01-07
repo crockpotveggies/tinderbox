@@ -6,6 +6,7 @@ import java.awt.Rectangle
 import javax.imageio.ImageIO
 import jviolajones.Detector
 import scala.collection.JavaConversions._
+import utils.ImageUtil
 
 /**
  * Facial detection using the Viola-Jones algorithm.
@@ -37,6 +38,19 @@ class FacialDetection(val fileName: String) extends App {
     val bufferedImage = ImageIO.read(sourceIO)
 
     faces.map { face => bufferedImage.getSubimage(face.x, face.y, face.width, face.height) }
+  }
+
+  /**
+   * Extracts a list of grayscale faces from source image. Useful for alternative methods of
+   * image analysis and recognition.
+   */
+  def extractGrayscaleFaces: List[BufferedImage] = {
+    val faces = detectFaces
+    val bufferedImage = ImageIO.read(sourceIO)
+
+    faces.map { face =>
+      ImageUtil.toGrayscale(bufferedImage.getSubimage(face.x, face.y, face.width, face.height))
+    }
   }
 }
 

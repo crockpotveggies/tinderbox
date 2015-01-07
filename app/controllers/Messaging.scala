@@ -32,6 +32,7 @@ object Messaging extends Controller {
    * A summary of message numbers.
    */
   def messageSummaries(xAuthToken: String) = Action.async { implicit request =>
+    val forceHistory = future { UpdatesService.forceHistorySync(xAuthToken) }
     val f = future { UpdatesService.fetchHistory(xAuthToken) }
     f.map { result =>
       result match {

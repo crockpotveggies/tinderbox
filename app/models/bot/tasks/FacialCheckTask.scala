@@ -27,7 +27,7 @@ class FacialCheckTask(val xAuthToken: String, val tinderBot: ActorRef) extends T
       // active session for token
       val session = TinderService.fetchSession(xAuthToken).get
 
-      // grab message history
+      // grab message history and analyze each match as a "yes"
       UpdatesService.fetchHistory(xAuthToken) match {
         case None =>
           Logger.debug("[tinderbot] Message history was empty.")
@@ -45,34 +45,28 @@ class FacialCheckTask(val xAuthToken: String, val tinderBot: ActorRef) extends T
                 createFacialAnalysisTask(matchUser, "yes")
             }
           }
+      }
 
-          // now check the bot logs for users who need analysis
-          TinderBot.fetchLog(session.user._id).foreach { log =>
+      // check the manual selection data from the user to see if any need processing
+      FacialAnalysisService.fetchYesNoData(session.user._id) match {
+        case None =>
+          Logger.warn("[tinderbot] No manual yes/no data available, recommendations may be inaccurate.")
+
+        case Some(data) =>
+          data.foreach { case (matchUser, isLike) =>
             try {
-              log.task match {
-                case "undo_swipe_dislike" =>
-                  FacialAnalysisService.fetchYesVector(log.associateId.get) match {
+              isLike match {
+                case true =>
+                  FacialAnalysisService.fetchYesVector(matchUser) match {
                     case Some(o) => // do nothing
-                    case None =>
-                      createFacialAnalysisTask(log.associateId.get, "yes")
+                    case None => createFacialAnalysisTask(matchUser, "yes")
                   }
 
-                case "undo_swipe_like" =>
-                  FacialAnalysisService.fetchNoVector(log.associateId.get) match {
+                case false =>
+                  FacialAnalysisService.fetchNoVector(matchUser) match {
                     case Some(o) => // do nothing
-                    case None =>
-                      createFacialAnalysisTask(log.associateId.get, "no")
+                    case None => createFacialAnalysisTask(matchUser, "no")
                   }
-
-                case "swipe_dislike" =>
-                  FacialAnalysisService.fetchNoVector(log.associateId.get) match {
-                    case Some(o) => // do nothing
-                    case None =>
-                      createFacialAnalysisTask(log.associateId.get, "no")
-                  }
-
-                case _ =>
-                  // do nothing
               }
 
             } catch {

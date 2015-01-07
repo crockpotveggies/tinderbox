@@ -47,12 +47,14 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
         case 0 =>
           if(state.state=="running") {
             TinderService.activeSessions.foreach { xAuthToken =>
-              // analyze recommendations
-              botThrottle ! Props(new RecommendationsTask(xAuthToken, self))
-              Logger.debug("[tinderbot] created new Recommendation task for token " + xAuthToken)
               // analyze faces
               botThrottle ! Props(new FacialCheckTask(xAuthToken, self))
               Logger.debug("[tinderbot] created new Facial Check task for token " + xAuthToken)
+
+              // analyze recommendations
+              botThrottle ! Props(new RecommendationsTask(xAuthToken, self))
+              Logger.debug("[tinderbot] created new Recommendation task for token " + xAuthToken)
+              
               // analyze messages
               botThrottle ! Props(new MessageAnalysisTask(xAuthToken, self))
               Logger.debug("[tinderbot] created new Message Analysis task for token " + xAuthToken)
@@ -92,7 +94,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   /**
    * Throttler and processor do all of the processing.
    */
-  val botThrottle = context.actorOf(Props(new BotThrottle(1 msgsPer (10 seconds), Some(self))), "BotThrottle")
+  val botThrottle = context.actorOf(Props(new BotThrottle(1 msgsPer (20 seconds), Some(self))), "BotThrottle")
   val botSupervisor = context.actorOf(Props(new BotSupervisor(self)), "BotSupervisor")
 
   /**
