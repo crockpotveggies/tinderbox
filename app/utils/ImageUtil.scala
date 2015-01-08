@@ -116,4 +116,18 @@ object ImageUtil {
     javax.imageio.ImageIO.write(meanImage, "gif", file);
   }
 
+  /**
+   * Writes an image to a file from a buffered image.
+   * @param filename
+   * @param image
+   * @param overwrite
+   */
+  def writeBufferedImage(filename: String, image: BufferedImage, overwrite: Boolean=true): Unit = {
+    val file = new java.io.File(filename)
+    if(overwrite && file.exists()) {
+      file.delete()
+    }
+    javax.imageio.ImageIO.write(image, "gif", file);
+  }
+
 }

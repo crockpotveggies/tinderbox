@@ -43,7 +43,7 @@ object FacialAnalysisService {
 
 
   /*
-   * Below are several functions for manipulating data used for facial analysis.
+   * Functions for storing likes/dislikes.
    */
   def storeYesNoData(userId: String, matchUser: String, isLike: Boolean) {
     yesno_data.get(userId) match {
@@ -64,6 +64,9 @@ object FacialAnalysisService {
     }
   }
 
+  /*
+   * Functions for retrieving processed face pixels for likes/dislikes.
+   */
   def fetchYesPixels(userId: String, matchUser: String): Option[Array[Double]] = yes_pixels.get(userId) match {
     case null => None
     case pixels =>
