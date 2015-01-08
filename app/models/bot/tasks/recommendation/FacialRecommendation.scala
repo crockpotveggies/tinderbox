@@ -43,12 +43,14 @@ object FacialRecommendation {
         noDistances += noDistance
       }
 
+      // calculate the average distance
+      yesDistances = yesDistances / facePixels.size
+      noDistances = noDistances / facePixels.size
+
+      Logger.debug("[tinderbot] Comparison for user %s yielded distances of y=%s n=%s." format(userId, yesDistances, noDistances))
+
       // a good threshold for distance is 70.0 since anything higher may be a false positive
       if(yesDistances < 70.0 || noDistances < 70.0) {
-        yesDistances = yesDistances / facePixels.size
-        noDistances = noDistances / facePixels.size
-
-        Logger.debug("[tinderbot] Comparison for user %s yielded costs of y=%s n=%s." format(userId, yesDistances, noDistances))
         Some(yesDistances < noDistances)
 
       } else {

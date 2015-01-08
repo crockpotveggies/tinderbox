@@ -127,16 +127,33 @@ object FacialAnalysisService {
    */
   def computeAverageFace(userId: String, dataType: String): (Array[Double], DoubleMatrix2D) = {
     // note that placeholder pixels are filtered to not corrupt the eigenfaces
-    val vectors = dataType match {
-      case "yes" => fetchYesPixels(userId).get.map { kv => kv._2 }.filterNot{ a => a.size==0 }.toList
-      case "no" => fetchNoPixels(userId).get.map { kv => kv._2 }.filterNot{ a => a.size==0 }.toList
+    val raw = dataType match {
+      case "yes" => fetchYesPixels(userId).get.filterNot{ kv => kv._2.size==0 }.toList
+      case "no" => fetchNoPixels(userId).get.filterNot{ kv => kv._2.size==0 }.toList
     }
+
+    // check that all models meet the pixel spec, and erase those that don't
+    val filtered = raw
+        .filter { kv => kv._2.size!=(DEFAULT_FACE_SIZE * DEFAULT_FACE_SIZE) }
+        .map { kv => resetModels(userId, kv._1) }
+    // return models that are valid
+    val vectors = raw.filter { kv => kv._2.size==(DEFAULT_FACE_SIZE * DEFAULT_FACE_SIZE) }.map { kv => kv._2 }
 
     Logger.debug("[recommendations] Found %s pixel sets for %s models." format (vectors.size, dataType))
     if(vectors.size == 0) { throw new java.io.IOException("Pixel lists (type %s) are empty." format dataType) }
+
+    // merge all of the models into a single pixel matrix and compute the average
     val pixelMatrix = MatrixHelpers.mergePixelMatrices(vectors, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
-    val averageFace = EigenFaces.computeAverageFace(pixelMatrix)
-    (averageFace, EigenFaces.computeEigenFaces(pixelMatrix, averageFace))
+    val averagePixels = EigenFaces.computeAverageFace(pixelMatrix)
+    // normalizing the image helps prevent "fading" from false positives as the model develops
+    val averagePixelsNormalized = {
+      ImageUtil.getImagePixels(
+        new utils.ImageNormalizer().getNormalizedValues(
+          ImageUtil.reconstructImage(averagePixels, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
+        ), DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE
+      )
+    }
+    (averagePixelsNormalized, EigenFaces.computeEigenFaces(pixelMatrix, averagePixelsNormalized))
   }
 
   /**

@@ -55,6 +55,24 @@ object ImageUtil {
   }
 
   /**
+   * Convenience method for grabbing pixel doubles from any buffered image.
+   * @param image
+   * @param width
+   * @param height
+   */
+  def getImagePixels(image: BufferedImage, width: Int, height: Int): Array[Double] = {
+    // convert to grayscale image
+    val bytePixels: Array[Byte] = (image.getRaster.getDataBuffer.asInstanceOf[DataBufferByte]).getData
+    val doublePixels: Array[Double] = new Array[Double](bytePixels.length)
+
+    (0 to (doublePixels.length-1)).foreach { i =>
+      doublePixels(i) = (bytePixels(i) & 255).asInstanceOf[Double]
+    }
+
+    doublePixels
+  }
+
+  /**
    * Normalizes a list of RGB values so that pixels are evenly distributed.
    * @param images
    * @return
@@ -91,6 +109,25 @@ object ImageUtil {
   }
 
   /**
+   * Reconstructs a buffered image from a double pixel array.
+   * @param imagePixels
+   * @param width
+   * @param height
+   */
+  def reconstructImage(imagePixels: Array[Double], width: Int, height: Int): BufferedImage = {
+    val meanImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
+    val raster = meanImage.getRaster()
+
+    // convert byte array to byte array
+    val pixels = new Array[Int](imagePixels.length)
+    (0 to (imagePixels.length-1)).foreach { i =>
+      pixels(i) = imagePixels(i).toInt
+    }
+    raster.setPixels(0, 0, width, height, pixels)
+    meanImage
+  }
+
+  /**
    * Writes an image to a file from a pixel array.
    * @param filename
    * @param imagePixels
@@ -99,15 +136,7 @@ object ImageUtil {
    * @param overwrite
    */
   def writeImage(filename: String, imagePixels: Array[Double], width: Int, height: Int, overwrite: Boolean=true): Unit = {
-    val meanImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-    val raster = meanImage.getRaster();
-
-    // convert byte array to byte array
-    val pixels = new Array[Int](imagePixels.length)
-    (0 to (imagePixels.length-1)).foreach { i =>
-      pixels(i) = imagePixels(i).toInt
-    }
-    raster.setPixels(0, 0, width, height, pixels)
+    val meanImage = reconstructImage(imagePixels, width, height)
 
     val file = new java.io.File(filename)
     if(overwrite && file.exists()) {
