@@ -1,12 +1,14 @@
-package utils
+package utils.face
 
+import java.awt.Rectangle
 import java.awt.image.BufferedImage
 import java.net.URL
-import java.awt.Rectangle
 import javax.imageio.ImageIO
+
 import jviolajones.Detector
-import scala.collection.JavaConversions._
 import utils.ImageUtil
+
+import scala.collection.JavaConversions._
 
 /**
  * Facial detection using the Viola-Jones algorithm.

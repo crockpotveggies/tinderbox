@@ -2,11 +2,12 @@ package models.bot.tasks.recommendation
 
 import play.api.Logger
 import models.bot.tasks.recommendation
-import services.FacialAnalysisService
-import utils.FacialDetection
-import utils.tinder.model.Photo
+import services.{SparkService, FacialAnalysisService}
+import services.FacialAnalysisService.DEFAULT_FACE_SIZE
 import utils.ImageUtil
-import utils.SparkMLLibUtility.context
+import utils.face.{EigenFaces, FacialDetection}
+import utils.tinder.model.Photo
+import SparkService.context
 
 
 /**
@@ -15,33 +16,44 @@ import utils.SparkMLLibUtility.context
  * @return an optional boolean representing "yes" or "no"
  */
 object FacialRecommendation {
-  def makeComparison(userId: String, photos: List[Photo]): Option[Boolean] = {
-    val grayValues = photos.map { photo =>
+
+  /**
+   * Makes a comparison by examining similarity using EigenFaces distance to yes/no models.
+   * @param userId
+   * @param matchUser
+   * @param photos
+   */
+  def makeComparison(userId: String, matchUser: String, photos: List[Photo]): Option[Boolean] = {
+    val facePixels = photos.map { photo =>
       val faces = FacialDetection(photo.url)
-      ImageUtil.getNormalizedGrayValues(faces.extractFaces)
-    }
-    val kMeansCenters = recommendation.FacialAnalysis.kMeans(grayValues.flatten)
-    val kMeans = context.parallelize(kMeansCenters)
-    val yesCost = FacialAnalysisService.yes_kmeans.get.computeCost(kMeans)
-    val noCost = FacialAnalysisService.no_kmeans.get.computeCost(kMeans)
+      if(faces.countFaces==1) { faces.extractFaces.map( face => ImageUtil.getNormalizedImagePixels(face, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)) }
+      else List()
+    }.flatten
 
-    Logger.debug("[tinderbot] Comparison for user %s yielded costs of y=%s n=%s." format (userId, yesCost, noCost))
+    var yesDistances: Double = 0.0
+    var noDistances: Double = 0.0
 
-    // If there's a large variance (i.e.: the image doesn't match either model of yes or no) we simply ignore
-    // "true" statement means that a "yes" is recommended
-    // Threshold for MSE is set to 6000
-    if(yesCost < 6000.00 && noCost < 6000.00) {
-      val costDifference = (yesCost-noCost).abs
-      if(costDifference > 400.00) {
-        val recommendation = yesCost < noCost
-        Logger.debug("[tinderbot] Recommendation is %s for user %s." format (recommendation, userId))
-        Some(recommendation)
-      } else {
-        None
+    try {
+      facePixels.map { pixels =>
+        val yesModels = FacialAnalysisService.yes_models.get(userId)
+        val noModels = FacialAnalysisService.no_models.get(userId)
+        val yesDistance = EigenFaces.computeDistance(yesModels._1, yesModels._2, pixels)
+        val noDistance = EigenFaces.computeDistance(noModels._1, noModels._2, pixels)
+        yesDistances += yesDistance
+        noDistances += noDistance
       }
-    } else {
-      Logger.debug("[tinderbot] Recommendation was not significant enough for user %s." format userId)
-      None
+
+      yesDistances = yesDistances / facePixels.size
+      noDistances = noDistances / facePixels.size
+
+      Logger.debug("[tinderbot] Comparison for user %s yielded costs of y=%s n=%s." format(userId, yesDistances, noDistances))
+      Some(yesDistances < noDistances)
+
+    } catch {
+      case e: Throwable =>
+        Logger.debug("[tinderbot] Recommendation was not significant enough for user %s." format userId)
+        None
     }
   }
+
 }

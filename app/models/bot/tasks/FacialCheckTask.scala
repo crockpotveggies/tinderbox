@@ -16,17 +16,16 @@ class FacialCheckTask(val xAuthToken: String, val tinderBot: ActorRef) extends T
     self ! "tick"
   }
 
+  val session = TinderService.fetchSession(xAuthToken).get
+
   private def createFacialAnalysisTask(matchUser: String, swipeType: String) {
     Logger.debug("[tinderbot] Creating facial analysis task for user %s swipe type %s" format (matchUser, swipeType))
-    val task = Props(new FacialAnalysisTask(xAuthToken, tinderBot, matchUser, swipeType))
+    val task = Props(new FacialAnalysisTask(xAuthToken, tinderBot, session.user._id, matchUser, swipeType))
     tinderBot ! task
   }
 
   def receive = {
     case "tick" =>
-      // active session for token
-      val session = TinderService.fetchSession(xAuthToken).get
-
       // grab message history and analyze each match as a "yes"
       UpdatesService.fetchHistory(xAuthToken) match {
         case None =>
@@ -39,7 +38,7 @@ class FacialCheckTask(val xAuthToken: String, val tinderBot: ActorRef) extends T
           // iterate through each user in conversations if analysis already exists
           matches.filterNot( m => m.person==None ).foreach { m =>
             val matchUser = m.person.get._id
-            FacialAnalysisService.fetchYesVector(matchUser) match {
+            FacialAnalysisService.fetchYesPixels(session.user._id, matchUser) match {
               case Some(o) => // do nothing
               case None =>
                 createFacialAnalysisTask(matchUser, "yes")
@@ -57,13 +56,13 @@ class FacialCheckTask(val xAuthToken: String, val tinderBot: ActorRef) extends T
             try {
               isLike match {
                 case true =>
-                  FacialAnalysisService.fetchYesVector(matchUser) match {
+                  FacialAnalysisService.fetchYesPixels(session.user._id, matchUser) match {
                     case Some(o) => // do nothing
                     case None => createFacialAnalysisTask(matchUser, "yes")
                   }
 
                 case false =>
-                  FacialAnalysisService.fetchNoVector(matchUser) match {
+                  FacialAnalysisService.fetchNoPixels(session.user._id, matchUser) match {
                     case Some(o) => // do nothing
                     case None => createFacialAnalysisTask(matchUser, "no")
                   }

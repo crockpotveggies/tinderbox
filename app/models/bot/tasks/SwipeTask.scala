@@ -4,12 +4,12 @@ import akka.actor._
 import models.bot.BotLog
 import play.api.Logger
 import services.{FacialAnalysisService, TinderBot, TinderService}
+import utils.face.FacialDetection
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits._
 import java.util.Date
 import utils.tinder.TinderApi
 import utils.tinder.model._
-import utils.FacialDetection
 
 /**
  * Worker task that processes recommendations.
@@ -25,6 +25,8 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
 
   private val tinderApi = new TinderApi(Some(xAuthToken))
 
+  private val user = TinderService.fetchSession(xAuthToken).get
+
   private def dislikeUser(reason: String) = {
     tinderApi.swipeNegative(rec._id).map { result =>
       result match {
@@ -32,7 +34,6 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
           Logger.error("[tinderbot] Swipe task had an error on Tinder: "+e.error)
 
         case Right(r) =>
-          val user = TinderService.fetchSession(xAuthToken).get
           val log = BotLog(
             System.currentTimeMillis(),
             "swipe_dislike",
@@ -54,7 +55,6 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
           Logger.error("[tinderbot] Swipe task had an error on Tinder: "+e.error)
 
         case Right(r) =>
-          val user = TinderService.fetchSession(xAuthToken).get
           val log = BotLog(
             System.currentTimeMillis(),
             "swipe_like",
@@ -70,7 +70,6 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
   }
 
   private def ignoreUser(reason: String) = {
-    val user = TinderService.fetchSession(xAuthToken).get
     val log = BotLog(
       System.currentTimeMillis(),
       "swipe_ignore",
@@ -115,7 +114,7 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
       else if (rec.bio.matches("no.{0,15}hookups")) likeUser("claiming friendship only")
       else if (autoLike) likeUser("auto-liked")
       else {
-        recommendation.FacialRecommendation.makeComparison(rec._id, rec.photos) match {
+        recommendation.FacialRecommendation.makeComparison(user.user._id, rec._id, rec.photos) match {
           case Some(true) => likeUser("face matched positive recommendation criteria")
           case Some(false) => dislikeUser("face did not match recommendation criteria")
           case None => ignoreUser("not enough data for decision")

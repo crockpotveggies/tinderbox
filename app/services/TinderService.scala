@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentNavigableMap
 import play.api.Logger
 import play.api.Play.current
 import scala.collection.mutable.Map
+import scala.collection.JavaConversions._
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits._
@@ -64,6 +65,13 @@ object TinderService {
    */
   def activeSessions = {
     sessions.keySet()
+  }
+
+  /**
+   * Retreieve all active user IDs
+   */
+  def activeUsers = {
+    sessions.values().map(_.user).map(_._id)
   }
 
 }

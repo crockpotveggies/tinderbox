@@ -1,14 +1,13 @@
-package utils
+package services
 
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.mllib.classification.NaiveBayes
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.mllib.regression.LabeledPoint
 import play.api.Logger
 import play.api.Play.current
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkConf
-import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.mllib.classification.NaiveBayes
 
-object SparkMLLibUtility {
+object SparkService {
   // if we don't set the ClassLoader it will be stuck in SBT
   Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
 

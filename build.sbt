@@ -56,7 +56,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka"             %% "akka-slf4j"                 % "2.2.3",
   "org.apache.spark"              %% "spark-streaming-twitter"    % "1.1.0",
   "org.apache.spark"              %% "spark-sql"                  % "1.1.0",
-  "org.apache.spark"              %% "spark-mllib"                % "1.1.0"
+  "org.apache.spark"              %% "spark-mllib"                % "1.1.0",
+  "org.imgscalr"                  %  "imgscalr-lib"               % "4.2",
+  "colt"                          %  "colt"                       % "1.2.0"
   )     
 
 play.Project.playScalaSettings

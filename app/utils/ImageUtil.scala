@@ -1,9 +1,9 @@
 package utils
 
 import java.awt.Color
-import java.awt.image.BufferedImage
+import java.awt.image.{DataBufferByte, BufferedImage}
+import org.imgscalr.Scalr
 import play.api.Logger
-import scala.collection.JavaConversions._
 
 
 /**
@@ -31,6 +31,27 @@ object ImageUtil {
     }
 
     grayImg
+  }
+
+  /**
+   * Converts an image to grayscale and retrieves its image pixels.
+   * @param image
+   * @return
+   */
+  def getNormalizedImagePixels(image: BufferedImage, width: Int, height: Int): Array[Double] = {
+    val scaledImage = Scalr.resize(image, Scalr.Method.BALANCED, Scalr.Mode.FIT_TO_HEIGHT, width, height)
+    val greyImage: BufferedImage = new ImageNormalizer().getNormalizedValues(scaledImage)
+
+    // convert to grayscale image
+    val bytePixels: Array[Byte] = (greyImage.getRaster.getDataBuffer.asInstanceOf[DataBufferByte]).getData
+
+    val doublePixels: Array[Double] = new Array[Double](bytePixels.length)
+
+    (0 to (doublePixels.length-1)).foreach { i =>
+      doublePixels(i) = (bytePixels(i) & 255).asInstanceOf[Double]
+    }
+
+    doublePixels
   }
 
   /**
@@ -67,6 +88,32 @@ object ImageUtil {
         }.flatten
       }.flatten
     }.flatten
+  }
+
+  /**
+   * Writes an image to a file from a pixel array.
+   * @param filename
+   * @param imagePixels
+   * @param width
+   * @param height
+   * @param overwrite
+   */
+  def writeImage(filename: String, imagePixels: Array[Double], width: Int, height: Int, overwrite: Boolean=true): Unit = {
+    val meanImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+    val raster = meanImage.getRaster();
+
+    // convert byte array to byte array
+    val pixels = new Array[Int](imagePixels.length)
+    (0 to (imagePixels.length-1)).foreach { i =>
+      pixels(i) = imagePixels(i).toInt
+    }
+    raster.setPixels(0, 0, width, height, pixels)
+
+    val file = new java.io.File(filename)
+    if(overwrite && file.exists()) {
+      file.delete()
+    }
+    javax.imageio.ImageIO.write(meanImage, "gif", file);
   }
 
 }

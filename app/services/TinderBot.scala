@@ -54,7 +54,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
               // analyze recommendations
               botThrottle ! Props(new RecommendationsTask(xAuthToken, self))
               Logger.debug("[tinderbot] created new Recommendation task for token " + xAuthToken)
-              
+
               // analyze messages
               botThrottle ! Props(new MessageAnalysisTask(xAuthToken, self))
               Logger.debug("[tinderbot] created new Message Analysis task for token " + xAuthToken)

@@ -1,22 +1,19 @@
 package services
 
 import akka.actor.{Props, Actor}
+import cern.colt.matrix.DoubleMatrix2D
+import cern.colt.matrix.impl.DenseDoubleMatrix2D
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
-import utils.SparkMLLibUtility
+import utils.ErrorWriter
+import utils.face.{EigenFaces, MatrixHelpers}
+import utils.ImageUtil
 import scala.collection.mutable.Map
-import scala.concurrent._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.collection.JavaConversions._
-import org.mapdb._
-import utils.tinder.TinderApi
-import utils.tinder.model._
-import models.bot.tasks.recommendation.FacialAnalysis
 import java.util.concurrent.ConcurrentNavigableMap
-import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
-import org.apache.spark.mllib.linalg.Vector
 
 /**
  * A service that analyzes profiles for future recommendations.
@@ -24,6 +21,9 @@ import org.apache.spark.mllib.linalg.Vector
 object FacialAnalysisService {
   // if we don't set the ClassLoader it will be stuck in SBT
   Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
+
+  // constants
+  val DEFAULT_FACE_SIZE = 200
 
   /**
    * User-picked yes/no's are stored here.
@@ -37,9 +37,9 @@ object FacialAnalysisService {
    *
    * @note These vectors are cached here for convenience.
    */
-  private val yes_vectors: ConcurrentNavigableMap[String, Array[Vector]] = MapDB.db.getTreeMap("no_vectors_grayscale")
+  private val yes_pixels: ConcurrentNavigableMap[String, Map[String, Array[Double]]] = MapDB.db.getTreeMap("no_vectors_pixels")
 
-  private val no_vectors: ConcurrentNavigableMap[String, Array[Vector]] = MapDB.db.getTreeMap("yes_vectors_grayscale")
+  private val no_pixels: ConcurrentNavigableMap[String, Map[String, Array[Double]]] = MapDB.db.getTreeMap("yes_vectors_pixels")
 
 
   /*
@@ -64,71 +64,99 @@ object FacialAnalysisService {
     }
   }
 
-  def fetchYesVector(userId: String): Option[Array[Vector]] = yes_vectors.get(userId) match {
+  def fetchYesPixels(userId: String, matchUser: String): Option[Array[Double]] = yes_pixels.get(userId) match {
     case null => None
-    case vectors => Some(vectors)
+    case pixels =>
+      pixels.get(matchUser)
   }
 
-  def storeYesVector(userId: String, vectors: Array[Vector]) = yes_vectors.put(userId, vectors)
-
-  def fetchNoVector(userId: String): Option[Array[Vector]] = no_vectors.get(userId) match {
+  def fetchYesPixels(userId: String): Option[Map[String, Array[Double]]] = yes_pixels.get(userId) match {
     case null => None
-    case vectors => Some(vectors)
+    case data =>
+      Some(data)
   }
 
-  def storeNoVector(userId: String, vectors: Array[Vector]) = no_vectors.put(userId, vectors)
+  def appendYesPixels(userId: String, matchUser: String, pixels: Array[Double]) = fetchYesPixels(userId) match {
+    case None => yes_pixels.put(userId, Map(matchUser -> pixels))
+    case Some(data) =>
+      data.put(matchUser, pixels)
+      yes_pixels.put(userId, data)
+  }
+
+
+  def fetchNoPixels(userId: String, matchUser: String): Option[Array[Double]] = no_pixels.get(userId) match {
+    case null => None
+    case pixels =>
+      pixels.get(matchUser)
+  }
+
+  def fetchNoPixels(userId: String): Option[Map[String, Array[Double]]] = no_pixels.get(userId) match {
+    case null => None
+    case data =>
+      Some(data)
+  }
+
+  def appendNoPixels(userId: String, matchUser: String, pixels: Array[Double]) = fetchNoPixels(userId) match {
+    case None => no_pixels.put(userId, Map(matchUser -> pixels))
+    case Some(data) =>
+      data.put(matchUser, pixels)
+      no_pixels.put(userId, data)
+  }
+
+  /*
+   * Models used to calculate EigenFace distance.
+   */
+  val yes_models: ConcurrentNavigableMap[String, (Array[Double], DoubleMatrix2D)] = MapDB.db.getTreeMap("yes_eigen_models")
+
+  val no_models: ConcurrentNavigableMap[String, (Array[Double], DoubleMatrix2D)] = MapDB.db.getTreeMap("no_eigen_models")
 
   /**
-   * k-means model for "yes" faces.
+   * Helper method for developing a new eigen faces model.
    */
-  var yes_kmeans: Option[KMeansModel] = trainKMeans("yes")
-
-  /**
-   * k-means model for "no" faces
-   */
-  var no_kmeans: Option[KMeansModel] = trainKMeans("no")
-
-  /**
-   * Helper method for developing a new k-means model.
-   */
-  def trainKMeans(dataType: String): Option[KMeansModel] = {
+  def computeAverageFace(userId: String, dataType: String): (Array[Double], DoubleMatrix2D) = {
+    // note that placeholder pixels are filtered to not corrupt the eigenfaces
     val vectors = dataType match {
-      case "yes" => yes_vectors.map { kv => kv._2 }.flatten.toList
-      case "no" => no_vectors.map { kv => kv._2 }.flatten.toList
+      case "yes" => fetchYesPixels(userId).get.map { kv => kv._2 }.filterNot{ a => a.size==0 }.toList
+      case "no" => fetchNoPixels(userId).get.map { kv => kv._2 }.filterNot{ a => a.size==0 }.toList
     }
 
-    // parallelize the data into Spark
-    val data = SparkMLLibUtility.context.parallelize(vectors)
-
-    // Cluster the data into 20 groups
-    val numClusters = FacialAnalysis.KMEANS_CLUSTERS
-    val numIterations = 5
-    try {
-      val clusters = KMeans.train(data, numClusters, numIterations)
-      clusters.clusterCenters.foreach { c => Logger.debug("[recommendations] Cluster center %s of %s for %s kmeans model is %s." format (clusters.clusterCenters.indexOf(c), numClusters, dataType, c.toString))}
-      Some(clusters)
-
-    } catch {
-      case _ =>
-        Logger.warn("[recommendations] No data to train for %s." format dataType)
-        None
-    }
+    Logger.debug("[recommendations] Found %s pixel sets for %s models." format (vectors.size, dataType))
+    if(vectors.size == 0) { throw new java.io.IOException("Pixel lists (type %s) are empty." format dataType) }
+    val pixelMatrix = MatrixHelpers.mergePixelMatrices(vectors, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
+    val averageFace = EigenFaces.computeAverageFace(pixelMatrix)
+    (averageFace, EigenFaces.computeEigenFaces(pixelMatrix, averageFace))
   }
 
   /**
    * Actor for performing batch processing of k-means models.
    */
-  private class KMeansTask extends Actor {
+  private class FaceAnalysisTask extends Actor {
     def receive = {
       case "tick" =>
-        yes_kmeans = trainKMeans("yes")
-        no_kmeans = trainKMeans("no")
-        Logger.debug("[recommendations] k-means models have been trained.")
+        TinderService.activeUsers.foreach { userId =>
+          try {
+            // generate and save the models
+            val yesModels = computeAverageFace(userId, "yes")
+            yes_models.put(userId, yesModels)
+            val noModels = computeAverageFace(userId, "no")
+            no_models.put(userId, noModels)
+
+            // create the image that represents the mean image
+            ImageUtil.writeImage("mean_yes_model.gif", yesModels._1, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
+            ImageUtil.writeImage("mean_no_model.gif", noModels._1, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
+
+            Logger.debug("[recommendations] Face models have been developed for user %s." format userId)
+
+          } catch {
+            case e: Throwable =>
+              Logger.warn("[recommendations] Could not yet build face models for user %s because: \n%s" format (userId, ErrorWriter.writeString(e)))
+          }
+        }
     }
   }
-  private val kMeansActor = Akka.system.actorOf(Props[KMeansTask], name = "KMeansTask")
-  private val kMeansService = {
-    Akka.system.scheduler.schedule(20 seconds, 5 minutes, kMeansActor, "tick")
+  private val faceAnalysisActor = Akka.system.actorOf(Props[FaceAnalysisTask], name = "FaceAnalysisService")
+  private val faceAnalysisService = {
+    Akka.system.scheduler.schedule(20 seconds, 5 minutes, faceAnalysisActor, "tick")
   }
 
 }
