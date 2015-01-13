@@ -53,7 +53,7 @@ Tinderbox attempts to make a prediction based on profiles you've previously like
 > either a yes/no model determines whether a "like" or "dislike" will be made. Each face is normalized and grayscaled before being added to
 > the EigenFaces model.
 
-The recommendation system could use some work since it is useful to combine EigenFaces methods with other analysis systems.
+The recommendation system could use some work since it is useful to combine EigenFaces methods with other analysis systems. If you're finding that auto likes/dislikes are not meeting your standards, you can erase the facial modeling data using the "Clear Models" button on the dashboard.
 
 ### Auto-Messaging
 

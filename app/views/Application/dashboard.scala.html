@@ -35,13 +35,43 @@
 
   <div class="row">
     <div class="col-lg-6">
-      <div class="ibox float-e-margins">
-        <div class="ibox-title">
-          <h5>Match Sentiment</h5>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>Match Sentiment</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="text-center">
+                <canvas id="sentimentChart" height="140"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="ibox-content">
-          <div class="text-center">
-            <canvas id="sentimentChart" height="140"></canvas>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <a class="btn btn-white btn-xs pull-right" data-bind="click: $root.clearModels">Clear Models</a>
+              <h5>Average Faces</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="text-center">
+                    "Likes"
+                    <img src="/t/@session.token/facial/average/yes" class="img-responsive img-rounded">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="text-center">
+                    "Dislikes"
+                    <img src="/t/@session.token/facial/average/no" class="img-responsive img-rounded">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -73,6 +73,21 @@ window.App = function() {
     });
   });
 
+  _.clearModels = function(){
+    $('.loader-global').show();
+    var r = confirm("Are you sure you want to clear all of your facial analysis data? You will need to like/dislike more people again in order for the bot to function properly.");
+    if(r==true) {
+      $.ajax({
+          url: "/t/"+getAuthToken()+"/facial/reset",
+          type: "DELETE",
+          success: function(result) {
+            $('.loader-global').hide();
+            alert("Facial analysis data successfully erased. Please like/dislike more people to rebuild your models.")
+          }
+      });
+    }
+  }
+
 
 
   /*

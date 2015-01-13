@@ -58,7 +58,7 @@ libraryDependencies ++= Seq(
   "org.apache.spark"              %% "spark-sql"                  % "1.1.0",
   "org.apache.spark"              %% "spark-mllib"                % "1.1.0",
   "org.imgscalr"                  %  "imgscalr-lib"               % "4.2",
-  "colt"                          %  "colt"                       % "1.2.0"
+  "net.sourceforge.parallelcolt"  %  "parallelcolt"               % "0.10.0"
   )     
 
 play.Project.playScalaSettings

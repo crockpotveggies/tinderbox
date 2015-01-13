@@ -9,6 +9,8 @@ import utils.tinder.model._
 import utils.tinder.TinderApi
 import services.FacialAnalysisService
 import services.FacialAnalysisService.DEFAULT_FACE_SIZE
+import services.SparkService
+
 
 /**
  * This task performs a facial analysis by extracting faces and using k-means to analyze RGB values.
@@ -47,6 +49,7 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val us
               // only store data for photos with single faces to ensure it is the face of the user
               if(faces.size==1) {
                 faces.foreach { face =>
+                  // normal processing for eigenfaces
                   val pixels = ImageUtil.getNormalizedImagePixels(face, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
 
                   swipeType match {

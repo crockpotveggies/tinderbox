@@ -1,5 +1,7 @@
 package services
 
+import java.awt.image.BufferedImage
+
 import akka.actor.{Props, Actor}
 import cern.colt.matrix.DoubleMatrix2D
 import cern.colt.matrix.impl.DenseDoubleMatrix2D
@@ -108,9 +110,20 @@ object FacialAnalysisService {
   }
 
   /*
-   * Removes pixels for both yes/no models to prevent duplication.
+   * Functions for resetting models.
    */
-  def resetModels(userId: String, matchUser: String) {
+  def resetModels(userId: String): Unit = {
+    // first erase pixel data
+    yes_pixels.remove(userId)
+    no_pixels.remove(userId)
+    // then erase yesno data
+    yesno_data.remove(userId)
+    // finally erase models
+    yes_models.remove(userId)
+    no_models.remove(userId)
+  }
+
+  def resetModels(userId: String, matchUser: String): Unit = {
     fetchNoPixels(userId) collect { case m: Map[_, _] => m.remove(matchUser); no_pixels.put(userId, m) }
     fetchYesPixels(userId) collect { case m: Map[_, _] => m.remove(matchUser); yes_pixels.put(userId, m) }
   }
@@ -145,7 +158,8 @@ object FacialAnalysisService {
     // merge all of the models into a single pixel matrix and compute the average
     val pixelMatrix = MatrixHelpers.mergePixelMatrices(vectors, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
     val averagePixels = EigenFaces.computeAverageFace(pixelMatrix)
-    // normalizing the image helps prevent "fading" from false positives as the model develops
+
+    // normalize the image for presentation
     val averagePixelsNormalized = {
       ImageUtil.getImagePixels(
         new utils.ImageNormalizer().getNormalizedValues(
@@ -153,7 +167,11 @@ object FacialAnalysisService {
         ), DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE
       )
     }
-    (averagePixelsNormalized, EigenFaces.computeEigenFaces(pixelMatrix, averagePixelsNormalized))
+    // write the image to disk for visualization
+    ImageUtil.writeImage("data/%s_mean_%s_model.gif".format(userId, dataType), averagePixelsNormalized, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
+
+    // return the average pixels and eigen faces
+    (averagePixels, EigenFaces.computeEigenFaces(pixelMatrix, averagePixels))
   }
 
   /**
@@ -169,10 +187,6 @@ object FacialAnalysisService {
             yes_models.put(userId, yesModels)
             val noModels = computeAverageFace(userId, "no")
             no_models.put(userId, noModels)
-
-            // create the image that represents the mean image
-            ImageUtil.writeImage("mean_yes_model.gif", yesModels._1, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
-            ImageUtil.writeImage("mean_no_model.gif", noModels._1, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
 
             Logger.debug("[recommendations] Face models have been developed for user %s." format userId)
 

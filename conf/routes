@@ -43,6 +43,10 @@ POST    /t/:xauthtoken/profile/discovery          controllers.Profile.updateDisc
 # Analytics
 GET     /t/:xauthtoken/analytics/sentiments       controllers.Analytics.messageSentiments(xauthtoken: String)
 
+# Facial Analysis
+GET     /t/:xauthtoken/facial/average/:dataType   controllers.FacialAnalysis.fetchAverageFace(xauthtoken: String, dataType: String)
+DELETE  /t/:xauthtoken/facial/reset               controllers.FacialAnalysis.resetEigenModels(xauthtoken: String)
+
 # Bot
 GET     /t/:xauthtoken/bot                        controllers.Bot.bot(xauthtoken: String)
 GET     /bot/state                                controllers.Bot.state

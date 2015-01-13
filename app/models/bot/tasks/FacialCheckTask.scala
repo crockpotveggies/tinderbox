@@ -27,7 +27,7 @@ class FacialCheckTask(val xAuthToken: String, val tinderBot: ActorRef) extends T
   def receive = {
     case "tick" =>
       // grab message history and analyze each match as a "yes"
-      UpdatesService.fetchHistory(xAuthToken) match {
+      /*UpdatesService.fetchHistory(xAuthToken) match {
         case None =>
           Logger.debug("[tinderbot] Message history was empty.")
 
@@ -44,7 +44,7 @@ class FacialCheckTask(val xAuthToken: String, val tinderBot: ActorRef) extends T
                 createFacialAnalysisTask(matchUser, "yes")
             }
           }
-      }
+      }*/
 
       // check the manual selection data from the user to see if any need processing
       FacialAnalysisService.fetchYesNoData(session.user._id) match {
