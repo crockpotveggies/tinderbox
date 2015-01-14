@@ -1,6 +1,7 @@
 package models.bot.tasks
 
 import akka.actor._
+import models.bot.tasks.message.MessageUtil
 import play.api.Logger
 import scala.util.Random
 import scala.collection.JavaConversions._
@@ -14,7 +15,7 @@ import utils.tinder.model._
 /**
  * This task is specifically meant for opening conversations with zero messages.
  */
-class MessageIntroTask(val xAuthToken: String, val tinderBot: ActorRef, val m: Match) extends TaskActor {
+class MessageReplyTask(val xAuthToken: String, val tinderBot: ActorRef, val matchId: String, val userId: String) extends TaskActor {
 
   override def preStart() = {
     Logger.debug("[tinderbot] Starting message intro task.")
@@ -32,10 +33,19 @@ class MessageIntroTask(val xAuthToken: String, val tinderBot: ActorRef, val m: M
 
   def receive = {
     case "tick" =>
-      // choose the message
-      val intro = funIntros(Random.nextInt(funIntros.size)).replace("{name}", m.person.map(_.name).getOrElse(""))
-      // double-check that the conversation is still empty (prevents duplicates)
-      val messageCount = UpdatesService.fetchHistory(xAuthToken).get.filter(o => o._id==m._id).head.messages.size
+      // double-check that message data is current
+      UpdatesService.forceHistorySync(xAuthToken)
+
+      // retrieve the match
+      val m = UpdatesService.fetchMatch(xAuthToken, matchId).get
+
+      // double-check a reply hasn't been made recently
+      if(!MessageUtil.checkIfReplied(userId, m.messages)) {
+        val treeRoot = MessageUtil.extractIntroMessage(userId, m.messages)
+        val sentiments = MessageUtil.
+      }
+
+
       if(messageCount > 0) throw new java.io.IOException("Message introduction already made, cancelling intro.")
       // send the message
       new TinderApi(Some(xAuthToken)).sendMessage(m._id, intro).map { result =>

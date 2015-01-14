@@ -25,7 +25,7 @@ object UpdatesService {
   // if we don't set the ClassLoader it will be stuck in SBT
   Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
 
-  /**
+  /*
    * History and notification storage
    */
   private val matches: ConcurrentNavigableMap[String, List[Match]] = MapDB.db.getTreeMap("matches")
@@ -34,10 +34,11 @@ object UpdatesService {
 
   private val unreadCounts: ConcurrentNavigableMap[String, Map[String, Int]] = MapDB.db.getTreeMap("unread_counts")
 
-  /**
-   * Required for timing updates properly
-   */
+  // Required for timing updates properly
   private val lastActivity: ConcurrentNavigableMap[String, Date] = MapDB.db.getTreeMap("last_activity")
+
+  // Used for storing stop-gaps to prevent further bot messaging
+  private val match_stopgaps: ConcurrentNavigableMap[String, List[String]] = MapDB.db.getTreeMap("match_stopgaps")
 
   /**
    * Actor for performing batch processing of message sentiments.
@@ -226,6 +227,18 @@ object UpdatesService {
   }
 
   /**
+   * Fetches a specific match from updates history.
+   * @param xAuthToken
+   * @param matchId
+   */
+  def fetchMatch(xAuthToken: String, matchId: String): Option[Match] = {
+    fetchHistory(xAuthToken) match {
+      case None => None
+      case Some(list) => list.find( m => m._id==matchId )
+    }
+  }
+
+  /**
    * Get a list of notifications for a user.
    * @param xAuthToken
    * @return
@@ -268,6 +281,36 @@ object UpdatesService {
       case Some(counts) =>
         counts.put(matchId, 0)
         unreadCounts.put(xAuthToken, counts)
+    }
+  }
+
+  /**
+   * Checks if a stop-gap has been put in place for a match.
+   * @param userId
+   * @param matchId
+   */
+  def hasStopGap(userId: String, matchId: String): Boolean = {
+    match_stopgaps.get(userId) match {
+      case null => false
+      case stopgaps =>
+        stopgaps.find( o => o==matchId ) match {
+          case None => false
+          case Some(o) => true
+        }
+    }
+  }
+
+  /**
+   * Creates a stop-gap for a match to prevent further bot messaging.
+   * @param userId
+   * @param matchId
+   */
+  def createStopGap(userId: String, matchId: String): Unit = {
+    if(!hasStopGap(userId, matchId)) {
+      match_stopgaps.get(userId) match {
+        case null => match_stopgaps.put(userId, List(matchId))
+        case stopgaps => match_stopgaps.put(userId, stopgaps ::: List(matchId))
+      }
     }
   }
 

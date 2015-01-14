@@ -1,6 +1,7 @@
 package models.bot.tasks
 
 import akka.actor._
+import models.bot.tasks.message.MessageUtil
 import play.api.Logger
 import play.api.Play.current
 import scala.collection.JavaConversions._
@@ -30,12 +31,18 @@ class MessageAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef) exten
         case Some(matches) =>
           // just in case
           Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
-          // find empty conversations and create an intro task
-          matches.filter( m => m.messages.size==0 ).foreach { m =>
-            Logger.debug("[tinderbot] Creating new message intro task for match %s" format m._id)
-            val task = Props(new MessageIntroTask(xAuthToken, tinderBot, m))
-            tinderBot ! task
-          }
+
+          val session = TinderService.fetchSession(xAuthToken).get
+
+          // filter conversations without a reply and create analysis task
+          matches
+            .filterNot( m => MessageUtil.checkIfReplied(session.user._id, m.messages) )
+            .filterNot( m => UpdatesService.hasStopGap(session.user._id, m._id) )
+            .foreach { m =>
+              Logger.debug("[tinderbot] Creating new message intro task for match %s" format m._id)
+              val task = Props(new MessageReplyTask(xAuthToken, tinderBot, m._id, session.user._id))
+              tinderBot ! task
+            }
       }
 
       // make sure we properly shut down this actor
