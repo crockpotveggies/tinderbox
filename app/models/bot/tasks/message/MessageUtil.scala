@@ -19,18 +19,49 @@ object MessageUtil {
   }
 
   /**
+   * Compresses two or more repeated messages into a single message.
+   * @param messages
+   */
+  def runLengthConcat(messages: List[Message]): List[Message] = {
+    // utility function for packing messages
+    def pack[A](ls: List[(String, Message)]): List[List[(String, Message)]] = {
+      if (ls.isEmpty) List(List())
+      else {
+        val (packed, next) = ls span { _._1 == ls.head._1 }
+        if (next == Nil) List(packed)
+        else packed :: pack(next)
+      }
+    }
+    // utility function for concatenating the messages
+    def concat(ls: List[List[(String, Message)]]): List[Message] = {
+      ls.map{ sublist =>
+        val concatmessage = sublist.map(_._2).map(_.message).mkString(" ")
+        sublist.last._2.copy(message = concatmessage)
+      }
+    }
+
+    // create ID tuples since users send multiple messages
+    val curried = messages.map( o => (o.from, o))
+
+    // now pack and compress the messages
+    concat(pack(curried))
+  }
+
+  /**
    * Assigns a boolean representing sentiment to each message and returns them in tuples.
    * @param messages
    */
-  def assignSentiment(messages: List[Message]): List[(Message, Boolean)] = {
-    messages.map { m =>
-      val sentiment = MessageSentiment.findSentiment(m.message) match {
-        case MessageSentiment.NEGATIVE => false
-        case MessageSentiment.POSITIVE => true
-        case MessageSentiment.NEUTRAL  => true
+  def assignSentimentDirection(messages: List[Message]): List[(Message, Direction)] = {
+    // it's necessary we concatenate repeated messages, otherwise the tree could be terminated early
+    runLengthConcat(messages)
+      .map { m =>
+        val sentiment = MessageSentiment.findSentiment(m.message) match {
+          case MessageSentiment.NEGATIVE => Left
+          case MessageSentiment.POSITIVE => Right
+          case MessageSentiment.NEUTRAL  => Right
+        }
+        (m, sentiment)
       }
-      (m, sentiment)
-    }
   }
 
   /**

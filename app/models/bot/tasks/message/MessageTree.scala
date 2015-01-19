@@ -19,20 +19,20 @@ import scala.collection.mutable
  */
 case class MessageTree(
   val value: String,
-  val negative: Option[MessageTree] = None,
-  val positive: Option[MessageTree] = None
+  val left: Option[MessageTree] = None,
+  val right: Option[MessageTree] = None
 
 ) {
 
   /**
    * Walk the node using a boolean input.
-   * @param step
+   * @param direction
    * @return
    */
-  def walk(step: Boolean): Option[MessageTree] = {
-    step match {
-      case true => this.positive
-      case false => this.negative
+  def walk(direction: Direction): Option[MessageTree] = {
+    direction match {
+      case Right => this.left
+      case Left => this.right
     }
   }
 }
@@ -40,8 +40,8 @@ case class MessageTree(
 object MessageTree {
   def observe(node: MessageTree, f: MessageTree => Unit): Unit = {
     f(node)
-    node.negative foreach { observe(_, f) }
-    node.positive foreach { observe(_, f) }
+    node.left foreach { observe(_, f) }
+    node.right foreach { observe(_, f) }
   }
 
 
@@ -49,23 +49,13 @@ object MessageTree {
    * Walk the tree and retrieve a child using a sequence of boolean steps.
    * @param tree
    * @param steps
-   * @return
    */
-  def walkTree(tree: MessageTree, steps: Array[Boolean]): Option[MessageTree] = {
-    var walks = 0
-    var node: Option[MessageTree] = Some(tree)
-
-    // TODO: something cleaner than a try/catch
-    try {
-      while (walks < steps.size) {
-        node = node.get.walk(steps(walks))
-        walks += 1
-      }
-    } catch {
-      case e: Throwable =>
-        node = None
-    }
-
-    node
+  def walkTree(tree: MessageTree, steps: List[Direction]): Option[MessageTree] = {
+    val treeWalk: Option[MessageTree] = Some(tree) // workaround for type bug
+    (steps foldLeft treeWalk)((t, direction) => t flatMap (_ walk direction))
   }
 }
+
+sealed abstract class Direction
+object Left extends Direction
+object Right extends Direction
