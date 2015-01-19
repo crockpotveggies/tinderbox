@@ -1,6 +1,7 @@
 package models.bot.tasks
 
 import akka.actor._
+import models.Notification
 import models.bot.tasks.message.{FunMessages, MessageTree, MessageUtil}
 import play.api.Logger
 import scala.util.Random
@@ -22,6 +23,23 @@ class MessageReplyTask(val xAuthToken: String, val tinderBot: ActorRef, val matc
     self ! "tick"
   }
 
+  def createStopGap(m: Match, notify: Boolean) = {
+    // create a stop-gap to prevent future processing
+    UpdatesService.createStopGap(userId, m._id)
+    Logger.debug("[tinderbot] Created stop-gap for conversation with %s." format m.person.map(_.name).getOrElse(m._id))
+
+    if(notify) {
+      val notification = new Notification(
+        "messages",
+        m._id,
+        m.person.map(_.name).getOrElse("Someone"),
+        "A conversation with %s requires your input.".format(m.person.map(_.name).getOrElse("a Tinderer")),
+        1
+      )
+      UpdatesService.appendNotification(xAuthToken, notification)
+    }
+  }
+
   def receive = {
     case "tick" =>
       // double-check that message data is current
@@ -34,36 +52,11 @@ class MessageReplyTask(val xAuthToken: String, val tinderBot: ActorRef, val matc
       if(!MessageUtil.checkIfReplied(userId, m.messages)) {
         // retrieve the tree used to start the conversation
         MessageUtil.extractIntroMessage(userId, m.messages) match {
+          // the conversation is empty, send an opener
           case None =>
-            // the conversation is empty, send an opener
-            val randomOpener = FunMessages.messages(Random.nextInt(FunMessages.messages.size)).value
-            Logger.info("[tinderbot] Sent a message opener to %s using: %s. " format (m._id, randomOpener))
-
-          case Some(treeRoot) =>
-            FunMessages.messages.find(_.value == treeRoot) match {
-              case None =>
-                // create a stop-gap to prevent future processing
-                UpdatesService.createStopGap(userId, m._id)
-                // TODO: create a notification to prompt the user to take over conversation
-                Logger.info("[tinderbot] Conversation with %s requires user input: no tree root found." format m.person.map(_.name).getOrElse(m._id))
-
-              case Some(tree) =>
-                val sentiments = MessageUtil.assignSentimentDirection(m.messages).map(_._2)
-
-                Logger.debug("[tinderbot] Sentiment directions are %s." format sentiments)
-
-                MessageTree.walkTree(tree, sentiments) match {
-                  case None =>
-                    // create a stop-gap to prevent future processing
-                    UpdatesService.createStopGap(userId, m._id)
-                    // TODO: create a notification to prompt the user to take over conversation
-                    Logger.info("[tinderbot] Conversation with %s requires user input." format m.person.map(_.name).getOrElse(m._id))
-
-                  case Some(branch) =>
-                    // reply to the conversation with the next chain in the tree
-                    Logger.debug("WOULD HAVE SENT A MESSAGE REPLY TO %s with: %s" format(m._id, branch.value))
-
-                  /*new TinderApi(Some(xAuthToken)).sendMessage(m._id, branch.value).map { result =>
+            if(m.messages.size==0) {
+              val randomOpener = FunMessages.messages(Random.nextInt(FunMessages.messages.size)).value.replace("{name}", m.person.map(_.name).getOrElse(""))
+              new TinderApi(Some(xAuthToken)).sendMessage(m._id, randomOpener).map { result =>
                 result match {
                   case Left(e) =>
                     Logger.error("[tinderbot] Message Reply task couldn't send a message to %s: %s" format(m._id, e.error))
@@ -79,9 +72,49 @@ class MessageReplyTask(val xAuthToken: String, val tinderBot: ActorRef, val matc
                     )
                     TinderBot.writeLog(user.user._id, log)
                     Logger.info("[tinderbot] Sent a message reply to %s. " format m._id)
-                    Logger.debug("[tinderbot] Message reply was: \"%s...\"" format branch.value.substring(0, 10))
+                    Logger.debug("[tinderbot] Message reply was: \"%s...\"" format randomOpener.substring(0, 10))
                 }
-              }*/
+              }
+            } else {
+              createStopGap(m, true)
+            }
+
+          // there is a distinct conversation tree
+          case Some(treeRoot) =>
+            FunMessages.messages.find(_.value == treeRoot) match {
+              case None =>
+                createStopGap(m, true)
+
+              case Some(tree) =>
+                val sentiments = MessageUtil.assignSentimentDirection(MessageUtil.filterSenderMessages(userId, m.messages)).map(_._2)
+                Logger.debug("[tinderbot] Sentiment directions are %s." format sentiments)
+
+                MessageTree.walkTree(tree, sentiments) match {
+                  // couldn't walk the tree to find a reply
+                  case None =>
+                    createStopGap(m, true)
+
+                  // reply to the conversation with the next branch in the tree
+                  case Some(branch) =>
+                    new TinderApi(Some(xAuthToken)).sendMessage(m._id, branch.value).map { result =>
+                      result match {
+                        case Left(e) =>
+                          Logger.error("[tinderbot] Message Reply task couldn't send a message to %s: %s" format(m._id, e.error))
+
+                        case Right(message) =>
+                          val user = TinderService.fetchSession(xAuthToken).get
+                          val log = BotLog(
+                            System.currentTimeMillis(),
+                            "message_reply",
+                            "Sent message reply to %s.".format(m.person.map(_.name).getOrElse("a user")),
+                            m.person.map(_._id),
+                            Some(m.person.get.photos.head.url)
+                          )
+                          TinderBot.writeLog(user.user._id, log)
+                          Logger.info("[tinderbot] Sent a message reply to %s. " format m._id)
+                          Logger.debug("[tinderbot] Message reply was: \"%s...\"" format branch.value.substring(0, 10))
+                      }
+                    }
                 }
 
             }

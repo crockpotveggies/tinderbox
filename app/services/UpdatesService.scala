@@ -239,6 +239,19 @@ object UpdatesService {
   }
 
   /**
+   * Adds a new notification.
+   * @param xAuthToken
+   * @param n
+   */
+  def appendNotification(xAuthToken: String, n: Notification) = {
+    fetchNotifications(xAuthToken) match {
+      case None => notifications.put(xAuthToken, List(n))
+      case Some(list) =>
+        notifications.put(xAuthToken, list ::: List(n))
+    }
+  }
+
+  /**
    * Get a list of notifications for a user.
    * @param xAuthToken
    * @return

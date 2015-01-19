@@ -3,7 +3,7 @@ tinderbox
 
 Another [@crockpotveggies](https://twitter.com/crockpotveggies) experiment.
 
-Tinderbox is an experiment built on the Tinder app API. Tinderbox helps automate the filtering of Tinder users ("swiping left") and collect data to analyze your own success. Tinderbox not only gives you a desktop interface for Tinder, but also provides a bot in the background.
+Tinderbox is an experiment built on the Tinder app API. Tinderbox is a full Tinder solution that learns who you're attracted to (using machine learning) and also has a built-in bot that can start conversations. It is a full desktop interface for Tinder.
 
 ![Screenshot](https://raw.githubusercontent.com/crockpotveggies/tinderbox/master/public/img/screenshot.jpg)
 
@@ -57,7 +57,7 @@ The recommendation system could use some work since it is useful to combine Eige
 
 ### Auto-Messaging
 
-Tinderbox has built-in automated messaging. The built in "Tinderbot" looks for conversations with zero messages and sends a random opener from a pre-set list of introductions. Future updates plan on introducing a message tree and developing responses based on sentiment.
+Tinderbox has built-in automated messaging. The built in "Tinderbot" looks for conversations that fit patterns within pre-set message trees. The tree directions are based on positive or negative sentiment, and when the conversation no longer fits the tree the bot will notify the user to take over the conversation.
 
 ### Word from the Author
 
