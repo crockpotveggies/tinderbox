@@ -216,14 +216,27 @@ window.App = function() {
     var r = confirm("Are you sure you want to unmatch with this user?");
     if(r==true) {
       $.ajax({
-          url: "/t/"+getAuthToken()+"/unmatch/"+_.selectedMatchId(),
-          type: "DELETE",
-          success: function(result) {
-            _.matches.valueHasMutated();
-            window.location.hash = "all"
-          }
+        url: "/t/"+getAuthToken()+"/unmatch/"+_.selectedMatchId(),
+        type: "DELETE",
+        success: function(result) {
+          _.matches.valueHasMutated();
+          window.location.hash = "all"
+        }
       });
     }
+  }
+  _.addYesNoData = function(data, event) {
+  $('.loader-global').show();
+    var r = confirm("Are you sure you want to add this user to facial analysis models?");
+      if(r==true) {
+        $.ajax({
+          url: "/t/"+getAuthToken()+"/yesno/"+_.selectedMatchId()+"/true",
+          type: "GET",
+          success: function(result) {
+            $('.loader-global').hide();
+          }
+        });
+      }
   }
 
   /*

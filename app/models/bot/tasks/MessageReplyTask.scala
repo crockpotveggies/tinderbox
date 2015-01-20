@@ -71,7 +71,7 @@ class MessageReplyTask(val xAuthToken: String, val tinderBot: ActorRef, val matc
                       Some(m.person.get.photos.head.url)
                     )
                     TinderBot.writeLog(user.user._id, log)
-                    Logger.info("[tinderbot] Sent a message reply to %s. " format m._id)
+                    Logger.info("[tinderbot] Sent a message opener to %s. " format m._id)
                     Logger.debug("[tinderbot] Message reply was: \"%s...\"" format randomOpener.substring(0, 10))
                 }
               }

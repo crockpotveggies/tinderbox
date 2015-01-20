@@ -117,4 +117,19 @@ object Recommendations extends Controller {
     }
   }
 
+  /**
+   * Manual input for adding a profile to yes/no models.
+   * @param xAuthToken
+   * @param userId
+   * @param isLike
+   */
+  def storeYesNoData(xAuthToken: String, userId: String, isLike: Boolean) = Action.async { implicit request =>
+    println("WAS IT A LIKE? "+isLike)
+    val f = future {
+      val session = TinderService.fetchSession(xAuthToken).get
+      FacialAnalysisService.storeYesNoData(session.user._id, userId, isLike)
+    }
+    f.map { result => Ok }
+  }
+
 }
