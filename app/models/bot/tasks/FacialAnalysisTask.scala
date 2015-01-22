@@ -5,6 +5,8 @@ import play.api.Logger
 import utils.ImageUtil
 import utils.face.FacialDetection
 import scala.concurrent.ExecutionContext.Implicits._
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import utils.tinder.model._
 import utils.tinder.TinderApi
 import services.FacialAnalysisService
@@ -36,18 +38,19 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val us
 
   def receive = {
     case "tick" =>
-      new TinderApi(Some(xAuthToken)).getProfile(matchUser).map { result =>
-        result match {
-          case Left(error) =>
-            storePlaceholderPixels
-            Logger.error("[tinderbot] Couldn't retrieve profile for %s for reason %s." format (matchUser, error.toString))
+      val result = Await.result(new TinderApi(Some(xAuthToken)).getProfile(matchUser), 30 seconds)
+      var counts = 0
+      result match {
+        case Left(error) =>
+          storePlaceholderPixels
+          Logger.error("[tinderbot] Couldn't retrieve profile for %s for reason %s." format (matchUser, error.toString))
 
-          case Right(profile) =>
-            var counts = 0
+        case Right(profile) =>
+          try {
             profile.photos.map { photo =>
               val faces = FacialDetection(photo.url).extractFaces
               // only store data for photos with single faces to ensure it is the face of the user
-              if(faces.size==1) {
+              if (faces.size == 1) {
                 faces.foreach { face =>
                   // normal processing for eigenfaces
                   val pixels = ImageUtil.getNormalizedImagePixels(face, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
@@ -65,15 +68,19 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val us
                 }
               }
             }
-
-            // if no data was stored, leave a placeholder so it doesn't get re-processed
-            if(counts==0) {
-              storePlaceholderPixels
-            }
-
-            Logger.info("[tinderbot] Stored %s facial models for user %s." format (counts, matchUser))
-        }
+          } catch {
+            case e: java.lang.NullPointerException =>
+              Logger.error("[tinderbot] Profile for %s returned null (user possibly deleted)." format matchUser)
+          }
       }
+
+      // if no data was stored, leave a placeholder so it doesn't get re-processed
+      if(counts==0) {
+        storePlaceholderPixels
+      } else {
+      }
+
+      Logger.info("[tinderbot] Stored %s facial models for user %s." format (counts, matchUser))
 
       // make sure we properly shut down this actor
       self ! PoisonPill

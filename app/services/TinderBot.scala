@@ -94,7 +94,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   /**
    * Throttler and processor do all of the processing.
    */
-  val botThrottle = context.actorOf(Props(new BotThrottle(1 msgsPer (20 seconds), Some(self))), "BotThrottle")
+  val botThrottle = context.actorOf(Props(new BotThrottle(1 msgsPer (30 seconds), Some(self))), "BotThrottle")
   val botSupervisor = context.actorOf(Props(new BotSupervisor(self)), "BotSupervisor")
 
   /**

@@ -124,7 +124,6 @@ object Recommendations extends Controller {
    * @param isLike
    */
   def storeYesNoData(xAuthToken: String, userId: String, isLike: Boolean) = Action.async { implicit request =>
-    println("WAS IT A LIKE? "+isLike)
     val f = future {
       val session = TinderService.fetchSession(xAuthToken).get
       FacialAnalysisService.storeYesNoData(session.user._id, userId, isLike)
