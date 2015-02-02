@@ -135,6 +135,46 @@
         radioClass: 'iradio_square-green',
       });
 
+      // check notification privileges
+      if (Notification) {
+        if (Notification.permission !== "granted") Notification.requestPermission();
+      }
+
+      // check notifications
+      if (Notification) {
+        window.createNotification = function(notificationCount) {
+          return new Notification('Tinderbox', {
+            icon: '//localhost:9000/assets/img/favicon.png',
+            body: notificationCount + " new notifications for Tinderbox.",
+          });
+        };
+        window.clearNotifications = function() {
+          $.ajax({
+            url: "/t/"+getAuthToken()+"/messages/notifications",
+            type: "DELETE",
+            dataType: "json",
+            success: function(data) { },
+            error: function() {
+              console.warn("Failed to clear user notifications.");
+            }
+          });
+        }
+        window.notificationInterval = setInterval(function() {
+          $.ajax({
+            url: "/t/"+getAuthToken()+"/updates",
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+              if(data.notifications.length > 0) {
+                createNotification(data.notifications.length);
+                clearNotifications();
+              }
+            }
+          });
+        }, 30000);
+      }
+
+
       // check if facial models are valid, and display message if not
       $.ajax({
         url: "/t/"+getAuthToken()+"/facial/validity",
