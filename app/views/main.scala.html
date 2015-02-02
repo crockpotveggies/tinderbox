@@ -129,9 +129,25 @@
     window.getUserImage = function() { return "@session.user.photos.head.url"; }
 
     $(document).ready(function(){
+      // enable icheck where available
       $('.i-checks').iCheck({
-          checkboxClass: 'icheckbox_square-green',
-          radioClass: 'iradio_square-green',
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+      });
+
+      // check if facial models are valid, and display message if not
+      $.ajax({
+        url: "/t/"+getAuthToken()+"/facial/validity",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          if(data) {
+            console.log("Good news, facial data models are valid!");
+          } else {
+            var html = '<div class="alert alert-warning"><b>Heads Up!</b> TinderBot is not yet swiping. Head to Matchmaker and make more swipes to train the bot.</div>'
+            $("div.wrapper.wrapper-content").prepend(html);
+          }
+        }
       });
     });
     </script>
