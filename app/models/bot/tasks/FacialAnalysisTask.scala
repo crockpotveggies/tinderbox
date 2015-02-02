@@ -24,25 +24,13 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val us
     self ! "tick"
   }
 
-  def storePlaceholderPixels {
-    swipeType match {
-      case "yes" =>
-        FacialAnalysisService.appendYesPixels(userId, matchUser, Array[Double]())
-        Logger.debug("[tinderbot] Stored YES placeholder pixels for user %s." format matchUser)
-
-      case "no" =>
-        FacialAnalysisService.appendNoPixels(userId, matchUser, Array[Double]())
-        Logger.debug("[tinderbot] Stored NO placeholder pixels for user %s." format matchUser)
-    }
-  }
-
   def receive = {
     case "tick" =>
       val result = Await.result(new TinderApi(Some(xAuthToken)).getProfile(matchUser), 30 seconds)
       var counts = 0
       result match {
         case Left(error) =>
-          storePlaceholderPixels
+          FacialAnalysisService.resetModels(userId, matchUser)
           Logger.error("[tinderbot] Couldn't retrieve profile for %s for reason %s." format (matchUser, error.toString))
 
         case Right(profile) =>
@@ -57,11 +45,11 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val us
 
                   swipeType match {
                     case "yes" =>
-                      FacialAnalysisService.appendYesPixels(userId, matchUser, pixels)
+                      FacialAnalysisService.appendYesPixels(userId, matchUser, List(pixels))
                       Logger.debug("[tinderbot] Stored YES pixels for an image from user %s." format matchUser)
 
                     case "no" =>
-                      FacialAnalysisService.appendNoPixels(userId, matchUser, pixels)
+                      FacialAnalysisService.appendNoPixels(userId, matchUser, List(pixels))
                       Logger.debug("[tinderbot] Stored NO pixels for an image from user %s." format matchUser)
                   }
                   counts += 1
@@ -76,8 +64,7 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val us
 
       // if no data was stored, leave a placeholder so it doesn't get re-processed
       if(counts==0) {
-        storePlaceholderPixels
-      } else {
+        FacialAnalysisService.resetModels(userId, matchUser)
       }
 
       Logger.info("[tinderbot] Stored %s facial models for user %s." format (counts, matchUser))

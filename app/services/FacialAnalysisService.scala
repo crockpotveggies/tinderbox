@@ -26,6 +26,7 @@ object FacialAnalysisService {
 
   // constants
   val DEFAULT_FACE_SIZE = 200
+  val MINIMUM_MODEL_SIZE = 60
 
   /**
    * User-picked yes/no's are stored here.
@@ -39,9 +40,9 @@ object FacialAnalysisService {
    *
    * @note These vectors are cached here for convenience.
    */
-  private val yes_pixels: ConcurrentNavigableMap[String, Map[String, Array[Double]]] = MapDB.db.getTreeMap("no_vectors_pixels")
+  private val yes_pixels: ConcurrentNavigableMap[String, Map[String, List[Array[Double]]]] = MapDB.db.getTreeMap("no_pixels_source")
 
-  private val no_pixels: ConcurrentNavigableMap[String, Map[String, Array[Double]]] = MapDB.db.getTreeMap("yes_vectors_pixels")
+  private val no_pixels: ConcurrentNavigableMap[String, Map[String, List[Array[Double]]]] = MapDB.db.getTreeMap("yes_pixels_source")
 
 
   /*
@@ -70,43 +71,71 @@ object FacialAnalysisService {
   /*
    * Functions for retrieving processed face pixels for likes/dislikes.
    */
-  def fetchYesPixels(userId: String, matchUser: String): Option[Array[Double]] = yes_pixels.get(userId) match {
+  def fetchYesPixels(userId: String, matchUser: String): Option[List[Array[Double]]] = yes_pixels.get(userId) match {
     case null => None
     case pixels =>
       pixels.get(matchUser)
   }
 
-  def fetchYesPixels(userId: String): Option[Map[String, Array[Double]]] = yes_pixels.get(userId) match {
+  def fetchYesPixels(userId: String): Option[Map[String, List[Array[Double]]]] = yes_pixels.get(userId) match {
     case null => None
     case data =>
       Some(data)
   }
 
-  def appendYesPixels(userId: String, matchUser: String, pixels: Array[Double]) = fetchYesPixels(userId) match {
+  def appendYesPixels(userId: String, matchUser: String, pixels: List[Array[Double]]) = fetchYesPixels(userId) match {
     case None => yes_pixels.put(userId, Map(matchUser -> pixels))
     case Some(data) =>
-      data.put(matchUser, pixels)
-      yes_pixels.put(userId, data)
+      data.get(matchUser) match {
+        case None =>
+          data.put(matchUser, pixels)
+          yes_pixels.put(userId, data)
+        case Some(userData) =>
+          val newData = userData ::: pixels
+          data.put(matchUser, newData)
+          yes_pixels.put(userId, data)
+      }
+
   }
 
-
-  def fetchNoPixels(userId: String, matchUser: String): Option[Array[Double]] = no_pixels.get(userId) match {
+  def fetchNoPixels(userId: String, matchUser: String): Option[List[Array[Double]]] = no_pixels.get(userId) match {
     case null => None
     case pixels =>
       pixels.get(matchUser)
   }
 
-  def fetchNoPixels(userId: String): Option[Map[String, Array[Double]]] = no_pixels.get(userId) match {
+  def fetchNoPixels(userId: String): Option[Map[String, List[Array[Double]]]] = no_pixels.get(userId) match {
     case null => None
     case data =>
       Some(data)
   }
 
-  def appendNoPixels(userId: String, matchUser: String, pixels: Array[Double]) = fetchNoPixels(userId) match {
-    case None => no_pixels.put(userId, Map(matchUser -> pixels))
+  def appendNoPixels(userId: String, matchUser: String, pixels: List[Array[Double]]) = fetchNoPixels(userId) match {
+    case None => no_pixels.put(userId, Map(matchUser ->  pixels))
     case Some(data) =>
-      data.put(matchUser, pixels)
-      no_pixels.put(userId, data)
+      data.get(matchUser) match {
+        case None =>
+          data.put(matchUser, pixels)
+          no_pixels.put(userId, data)
+        case Some(userData) =>
+          val newData = userData ::: pixels
+          data.put(matchUser, newData)
+          no_pixels.put(userId, data)
+      }
+  }
+
+  /*
+   * Check that there are enough models to perform proper calculations
+   */
+  def modelsAreValid(userId: String): Boolean = {
+    val yesModelSize = fetchYesPixels(userId) collect {
+      case l: Map[String, List[Array[Double]]] => l.filterNot{ kv => kv._2.size==0 }.map(_._2).flatten.size
+    } getOrElse 0
+    val noModelSize = fetchNoPixels(userId) collect {
+      case l: Map[String, List[Array[Double]]] => l.filterNot{ kv => kv._2.size==0 }.map(_._2).flatten.size
+    } getOrElse 0
+
+    yesModelSize!=0 || noModelSize!=0
   }
 
   /*
@@ -145,12 +174,8 @@ object FacialAnalysisService {
       case "no" => fetchNoPixels(userId).get.filterNot{ kv => kv._2.size==0 }.toList
     }
 
-    // check that all models meet the pixel spec, and erase those that don't
-    val filtered = raw
-        .filter { kv => kv._2.size!=(DEFAULT_FACE_SIZE * DEFAULT_FACE_SIZE) }
-        .map { kv => resetModels(userId, kv._1) }
     // return models that are valid
-    val vectors = raw.filter { kv => kv._2.size==(DEFAULT_FACE_SIZE * DEFAULT_FACE_SIZE) }.map { kv => kv._2 }
+    val vectors = raw.map { kv => kv._2.filter(_.size==(DEFAULT_FACE_SIZE * DEFAULT_FACE_SIZE)) }.flatten
 
     Logger.debug("[recommendations] Found %s pixel sets for %s models." format (vectors.size, dataType))
     if(vectors.size == 0) { throw new java.io.IOException("Pixel lists (type %s) are empty." format dataType) }

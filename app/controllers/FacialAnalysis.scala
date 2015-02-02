@@ -48,4 +48,19 @@ object FacialAnalysis extends Controller {
     }
   }
 
+  /**
+   * Returns boolean of whether facial models are in a state to be further examined.
+   */
+  def checkModelValidity(xAuthToken: String) = Action.async { implicit request =>
+    val f = future { TinderService.fetchSession(xAuthToken) }
+    f.map { result =>
+      result match {
+        case None => BadRequest
+        case Some(session) =>
+          val state = FacialAnalysisService.modelsAreValid(session.user._id)
+          Ok(state.toString)
+      }
+    }
+  }
+
 }

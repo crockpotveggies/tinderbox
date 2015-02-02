@@ -94,7 +94,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   /**
    * Throttler and processor do all of the processing.
    */
-  val botThrottle = context.actorOf(Props(new BotThrottle(1 msgsPer (30 seconds), Some(self))), "BotThrottle")
+  val botThrottle = context.actorOf(Props(new BotThrottle(1 msgsPer (2 seconds), Some(self))), "BotThrottle")
   val botSupervisor = context.actorOf(Props(new BotSupervisor(self)), "BotSupervisor")
 
   /**
@@ -145,7 +145,7 @@ object TinderBot {
    */
   val context = {
     Thread.currentThread().setContextClassLoader(play.api.Play.classloader)
-    Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 100, taskSleepThreshold = 300)), "TinderBot")
+    Akka.system.actorOf(Props(new TinderBot(taskWarningThreshold = 500, taskSleepThreshold = 1000)), "TinderBot")
   }
 
   /**

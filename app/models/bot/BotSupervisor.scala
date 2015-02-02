@@ -16,6 +16,8 @@ class BotSupervisor(parent: ActorRef) extends Actor {
   override val supervisorStrategy =
     OneForOneStrategy(maxNrOfRetries = 1, withinTimeRange = 1 minute) {
       case e: Exception => {
+        // we need to deliver the run command, otherwise it will be permanently paused
+        parent ! BotCommand("run")
         Logger.error("[tinderbot] Retrying a troubled supervised task: \n"+e.getMessage)
         Restart
       }
@@ -27,6 +29,8 @@ class BotSupervisor(parent: ActorRef) extends Actor {
 
   def receive = {
     case p: Props =>
+      // pause the throttle so we don't have too many concurrent tasks
+      parent ! BotCommand("idle")
       // Actor props sent here will be instantiated and supervised
       Logger.debug("[tinderbot] New task received for supervision")
       context.actorOf(p)

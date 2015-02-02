@@ -1,6 +1,8 @@
 package models.bot.tasks
 
+import play.api.Logger
 import akka.actor._
+import models.bot.BotCommand
 
 /**
  * Template for creating tasks.
@@ -18,5 +20,12 @@ trait TaskActor extends Actor {
    * @return
    */
   def tinderBot: ActorRef
+
+  /**
+   * Implementing the "run" command ensures that TinderBot delivers the next task.
+   */
+  override def postStop(): Unit = {
+    tinderBot ! BotCommand("run")
+  }
 
 }

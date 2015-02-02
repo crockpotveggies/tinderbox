@@ -46,6 +46,7 @@ POST    /t/:xauthtoken/profile/discovery          controllers.Profile.updateDisc
 GET     /t/:xauthtoken/analytics/sentiments       controllers.Analytics.messageSentiments(xauthtoken: String)
 
 # Facial Analysis
+GET     /t/:xauthtoken/facial/validity            controllers.FacialAnalysis.checkModelValidity(xauthtoken: String)
 GET     /t/:xauthtoken/facial/average/:dataType   controllers.FacialAnalysis.fetchAverageFace(xauthtoken: String, dataType: String)
 DELETE  /t/:xauthtoken/facial/reset               controllers.FacialAnalysis.resetEigenModels(xauthtoken: String)
 
