@@ -7,36 +7,53 @@ object FunMessages {
 
   def messages = List(
     MessageTree(
-      value = "{name} are you a fan of avocados?",
+      value = "So Tinder says we think each others hot...",
       right = Some(MessageTree(
-        value = "So if I asked you to have a guacamole party with me you'd do it?",
+        value = "Off to a good start",
         right = None,
         left = None
       )),
       left = Some(MessageTree(
-        value = "Do women love anything more than avocados?",
+        value = "Then you should have swiped left",
         right = None,
         left = None
       ))
     ),
     MessageTree(
-      value = "Can you teach a guy to bake and all that?",
+      value = "You have a nice face",
       right = Some(MessageTree(
-        value = "How about peach crumble in a crock pot?",
-        right = None,
-        left = None
-      )),
-      left = None
-    ),
-    MessageTree(
-      value = "I can't wait to introduce you to my mom!",
-      right = Some(MessageTree(
-        value = "Since mom showed everyone my naked baby pictures, I've been looking fo ways to get her back.",
+        value = "Not many on here",
         right = None,
         left = None
       )),
       left = Some(MessageTree(
-        value = "Please tell me you're at least a fan of moms.",
+        value = "#ByeFelicia",
+        right = None,
+        left = None
+      ))
+    ),
+    MessageTree(
+      value = "You have 30 mins to get to Rodney's in Yaletown",
+      right = Some(MessageTree(
+        value = "lol I wanted to see if you took the bait",
+        right = None,
+        left = None
+      )),
+      left = Some(MessageTree(
+        value = "ok thought I would try!",
+        right = None,
+        left = None
+      ))
+    ),
+    MessageTree(
+      value = "Drink of choice? Vodka or Gin",
+      right = Some(MessageTree(
+        value = "I'm def and Vodka girl myself! There's a wicked tasting menu at Grain in the Hyatt!",
+        right = None,
+        left = None
+      )),
+      left = Some(MessageTree(
+        value = "That's too bad",
         right = None,
         left = None
       ))
