@@ -20,26 +20,13 @@ object FunMessages {
       ))
     ),
     MessageTree(
-      value = "Can you teach a guy to bake and all that?",
-      right = Some(MessageTree(
-        value = "How about peach crumble in a crock pot?",
-        right = None,
-        left = None
-      )),
-      left = None
-    ),
-    MessageTree(
       value = "I can't wait to introduce you to my mom!",
       right = Some(MessageTree(
         value = "Since mom showed everyone my naked baby pictures, I've been looking for ways to get her back.",
         right = None,
         left = None
       )),
-      left = Some(MessageTree(
-        value = "Please tell me you're at least a fan of moms.",
-        right = None,
-        left = None
-      ))
+      left = None
     )
   )
 
