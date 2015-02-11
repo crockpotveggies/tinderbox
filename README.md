@@ -3,6 +3,8 @@ tinderbox
 
 Another [@crockpotveggies](https://twitter.com/crockpotveggies) experiment.
 
+**Heads up!** As soon as you turn on this bot, it WILL start messaging all of your contacts. Please also check out the **Support** section below and the [Wiki](https://github.com/crockpotveggies/tinderbox/wiki) for tips on getting started.
+
 Tinderbox is an experiment built on the Tinder app API. Tinderbox is a full Tinder solution that learns who you're attracted to (using machine learning) and also has a built-in bot that can start conversations. It is a full desktop interface for Tinder.
 
 ![Screenshot](https://raw.githubusercontent.com/crockpotveggies/tinderbox/master/public/img/screenshot.jpg)
