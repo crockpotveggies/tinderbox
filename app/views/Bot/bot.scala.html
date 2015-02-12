@@ -36,11 +36,11 @@
                   </a>
                   <div class="media-body">
                     <small>
-                      <i class="fa fa-envelope" data-bind="visible: task().contains('message')"></i>
+                      <i class="fa fa-envelope" data-bind="visible: task().indexOf('message')"></i>
                       <i class="fa fa-heart-o" data-bind="visible: task()=='swipe_dislike'"></i>
                       <i class="fa fa-heart" data-bind="visible: task()=='swipe_like'"></i>
                       <i class="fa fa-ellipsis-h" data-bind="visible: task()=='swipe_ignore'"></i>
-                      <i class="fa fa-refresh" data-bind="visible: task().contains('undo_')"></i>
+                      <i class="fa fa-refresh" data-bind="visible: task().indexOf('undo_')"></i>
                       &nbsp;
                     </small>
                     <span data-bind="text: log"></span>
