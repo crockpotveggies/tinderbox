@@ -11,11 +11,11 @@ import utils.tinder.model._
 import utils.tinder.TinderApi
 import services.FacialAnalysisService
 import services.FacialAnalysisService.DEFAULT_FACE_SIZE
-import services.SparkService
 
 
 /**
- * This task performs a facial analysis by extracting faces and using k-means to analyze RGB values.
+ * This task performs a facial analysis by extracting faces from user's
+ * images, transforming pixels into a matrix, and merging with models.
  */
 class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val userId: String, val matchUser: String, val swipeType: String) extends TaskActor {
 

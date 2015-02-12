@@ -2,12 +2,11 @@ package models.bot.tasks.recommendation
 
 import play.api.Logger
 import models.bot.tasks.recommendation
-import services.{SparkService, FacialAnalysisService}
+import services.FacialAnalysisService
 import services.FacialAnalysisService.DEFAULT_FACE_SIZE
 import utils.ImageUtil
 import utils.face.{EigenFaces, FacialDetection}
 import utils.tinder.model.Photo
-import SparkService.context
 
 
 /**

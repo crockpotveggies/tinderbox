@@ -54,9 +54,6 @@ libraryDependencies ++= Seq(
   "org.apache.spark"              %% "spark-core"                 % "1.1.0",
   "com.typesafe.akka"             %% "akka-actor"                 % "2.2.3",
   "com.typesafe.akka"             %% "akka-slf4j"                 % "2.2.3",
-  "org.apache.spark"              %% "spark-streaming-twitter"    % "1.1.0",
-  "org.apache.spark"              %% "spark-sql"                  % "1.1.0",
-  "org.apache.spark"              %% "spark-mllib"                % "1.1.0",
   "org.imgscalr"                  %  "imgscalr-lib"               % "4.2",
   "net.sourceforge.parallelcolt"  %  "parallelcolt"               % "0.10.0"
   )     
