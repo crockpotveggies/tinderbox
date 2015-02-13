@@ -29,6 +29,7 @@ window.App = function() {
     o.getEnhancedProfile = function() {
       $.getJSON("/t/"+getAuthToken()+"/profile/"+o.participants()[0], function(data) {
         o.person(new _.personModel(data));
+        $(".message-header-photos span img").ibox();
       });
     }
   }
@@ -105,7 +106,7 @@ window.App = function() {
         success: function() {
           newValue.unread_count(0);
         }
-      })
+      });
     }
   });
   _.selectedMatchId = ko.observable();

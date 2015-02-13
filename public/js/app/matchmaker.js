@@ -59,6 +59,7 @@ window.App = function() {
         if(data!=null) {
           var d = $.map(data, function(item){ return new _.personModel(item) });
           _.recs(d);
+          $(".project-people img").ibox();
         }
       },
       error: function() {
@@ -77,6 +78,7 @@ window.App = function() {
         if(typeof data.message=="undefined") {
           var d = $.map(data, function(item){ return new _.personModel(item) });
           $.map(d, function(item) { _.recs.push(item); });
+          $(".project-people img").ibox();
         }
       },
       error: function() {
