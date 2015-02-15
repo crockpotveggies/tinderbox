@@ -17,7 +17,7 @@ Tinderbox is built on top of [Play!](http://www.playframework.com/) 2.2 and uses
 
 First read the "Running" section below to learn how to start the app.
 
-Tinderbox starts up a server that is accessible in your browser at `http://localhost:9000/`. Once you're inside, note that there a bot running in the background. If you watch the logs in terminal, it will show you debug statements about the moves the bot is taking. There is an action log available in the main interface.
+Tinderbox starts up a server that is accessible in your browser at `http://localhost:9000/`. Once you're inside, note that there is a bot running in the background. If you watch the logs in terminal, it will show you debug statements about the moves the bot is taking. There is an action log available in the main interface.
 
 Most of Tinder's primary functionality has been re-created in Tinderbox. Note that if Tinder updates or changes its API it could potentially break this app.
 
