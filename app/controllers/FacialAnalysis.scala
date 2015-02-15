@@ -22,13 +22,18 @@ object FacialAnalysis extends Controller {
       result match {
         case None => BadRequest
         case Some(session) =>
-          val file = new java.io.File("data/%s_mean_%s_model.gif" format (session.user._id, dataType))
-          val fileContent: Enumerator[Array[Byte]] = Enumerator.fromFile(file)
+          try {
+            val file = new java.io.File("data/%s_mean_%s_model.gif" format(session.user._id, dataType))
+            val fileContent: Enumerator[Array[Byte]] = Enumerator.fromFile(file)
 
-          SimpleResult(
-            header = ResponseHeader(200, Map(CONTENT_LENGTH -> file.length.toString)),
-            body = fileContent
-          )
+            SimpleResult(
+              header = ResponseHeader(200, Map(CONTENT_LENGTH -> file.length.toString)),
+              body = fileContent
+            )
+          } catch {
+            case e: java.io.FileNotFoundException =>
+              Redirect("/assets/img/user-generic.png")
+          }
       }
     }
   }
