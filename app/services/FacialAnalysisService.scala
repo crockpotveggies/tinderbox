@@ -46,7 +46,7 @@ object FacialAnalysisService {
 
 
   /*
-   * Functions for storing likes/dislikes.
+   * Functions for managing likes/dislikes, later used to compile facial analysis tasks.
    */
   def storeYesNoData(userId: String, matchUser: String, isLike: Boolean) {
     resetModels(userId, matchUser)
@@ -65,6 +65,16 @@ object FacialAnalysisService {
         None
       case data =>
         Some(data)
+    }
+  }
+
+  def resetYesNoData(userId: String, matchUser: String) {
+    yesno_data.get(userId) match {
+      case null =>
+        None
+      case data =>
+        data.remove(matchUser)
+        yesno_data.put(userId, data)
     }
   }
 
@@ -153,6 +163,7 @@ object FacialAnalysisService {
   }
 
   def resetModels(userId: String, matchUser: String): Unit = {
+    resetYesNoData(userId, matchUser)
     fetchNoPixels(userId) collect { case m: Map[_, _] => m.remove(matchUser); no_pixels.put(userId, m) }
     fetchYesPixels(userId) collect { case m: Map[_, _] => m.remove(matchUser); yes_pixels.put(userId, m) }
   }

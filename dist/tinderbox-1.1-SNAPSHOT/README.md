@@ -3,7 +3,7 @@ tinderbox
 
 Another [@crockpotveggies](https://twitter.com/crockpotveggies) experiment.
 
-**Heads up!** As soon as you turn on this bot, it WILL start messaging all of your contacts. Please also check out the **Support** section below and the [Wiki](https://github.com/crockpotveggies/tinderbox/wiki) for tips on getting started. Want to customize the messages? Edit this [file  here](https://github.com/crockpotveggies/tinderbox/blob/master/app/models/bot/tasks/message/FunMessages.scala).
+**Heads up!** As soon as you turn on this bot, it WILL start messaging all of your contacts. Please also check out the **Support** section below and the [Wiki](https://github.com/crockpotveggies/tinderbox/wiki) for tips on getting started. Want to customize the messages? Edit this [file  here](https://github.com/crockpotveggies/tinderbox/blob/master/app/models/bot/tasks/message/FunMessages.scala) then re-build the app using [these instructions](https://github.com/crockpotveggies/tinderbox/wiki/Editing-the-Code).
 
 ## What is Tinderbox?
 
@@ -25,14 +25,23 @@ Most of Tinder's primary functionality has been re-created in Tinderbox. Note th
 
 There are a few ways to run the code:
 
-1. (For OSX) Use the .app launcher for OSX (you can drag and drop this into the Dock, too!)
-2. (For OSX/Linux) Run the following command from the root of the project directory:
+####Use the OSX app launcher
+(For OSX only) Use the .app launcher for OSX (you can drag and drop this into the Dock, too!)
+![App Launcher](https://raw.githubusercontent.com/crockpotveggies/tinderbox/master/public/img/screenshots/app-launcher.png)
+
+####Use the startup scripts
+Before you run the startup scripts, fetch the Stanford NLP models. You can do this automatically by running:
 ```
-bash dist/bin/tinderbox
+bash lib/fetch_nlp_models
 ```
-2. (For Windows) Run the following command from the root of the project directory:
+
+Then for OSX/Linux run the following command from the root of the project directory:
 ```
-dist/bin/tinderbox.bat
+bash dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox
+```
+Or Windows, run the following command from the root of the project directory:
+```
+dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox.bat
 ```
 
 **Please note:** Tinderbox was not tested on a Windows platform. There's no guarantee the software will behave the same as a UNIX machine.
@@ -73,7 +82,7 @@ Tinderbox is the first bot I've built to interact on my behalf. Since it is a to
 
 ## Editing the Code
 
-Check out this wiki page about editing the code:
+Check out [this wiki page](https://github.com/crockpotveggies/tinderbox/wiki/Editing-the-Code) for instructions on editing the code and building the app.
 
 ## License
 
