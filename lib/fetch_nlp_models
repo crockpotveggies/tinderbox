@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ! -f dist/tinderbox-1.1-SNAPSHOT/lib/edu.stanford.nlp.stanford-corenlp-3.3.1-models.jar ]
+then
+    echo "Downloading StanfordNLP models..."
+    curl -o dist/tinderbox-1.1-SNAPSHOT/lib/edu.stanford.nlp.stanford-corenlp-3.3.1-models.jar http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.3.1/stanford-corenlp-3.3.1-models.jar
+    echo "Download complete."
+fi

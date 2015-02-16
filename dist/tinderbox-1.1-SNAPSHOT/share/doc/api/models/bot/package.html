@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>bot - models.bot</title>
+          <meta name="description" content="bot - models.bot" />
+          <meta name="keywords" content="bot models.bot" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'models.bot.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="models">models</a></p>
+        <h1>bot</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bot</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="models.bot.BotCommand" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BotCommandextendsProductwithSerializable"></a>
+      <a id="BotCommand:BotCommand"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BotCommand.html"><span class="name">BotCommand</span></a><span class="params">(<span name="command">command: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Execute commands for the bot.</p>
+    </li><li name="models.bot.BotLog" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BotLogextendsProductwithSerializable"></a>
+      <a id="BotLog:BotLog"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BotLog.html"><span class="name">BotLog</span></a><span class="params">(<span name="created">created: <span class="extype" name="scala.Long">Long</span></span>, <span name="task">task: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="log">log: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="associateId">associateId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="associateImg">associateImg: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents user-controlled state of the bot.</p>
+    </li><li name="models.bot.BotState" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BotStateextendsProductwithSerializable"></a>
+      <a id="BotState:BotState"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BotState.html"><span class="name">BotState</span></a><span class="params">(<span name="keepActive">keepActive: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="state">state: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents user-controlled state of the bot.</p>
+    </li><li name="models.bot.BotSupervisor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BotSupervisorextendsActor"></a>
+      <a id="BotSupervisor:BotSupervisor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BotSupervisor.html"><span class="name">BotSupervisor</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Supervisor that overlooks child actors making requests to
+external API services
+</p>
+    </li><li name="models.bot.BotThrottle" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BotThrottleextendsActorwithFSM[models.bot.BotThrottle.State,models.bot.BotThrottle.Data]"></a>
+      <a id="BotThrottle:BotThrottle"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BotThrottle.html"><span class="name">BotThrottle</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <span class="extype" name="akka.actor.FSM">FSM</span>[<span class="extype" name="models.bot.BotThrottle.State">State</span>, <span class="extype" name="models.bot.BotThrottle.Data">Data</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A throttler that uses a timer to control the message delivery rate.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="models.bot.Throttler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Throttler"></a>
+      <a id="Throttler:Throttler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Throttler$.html"><span class="name">Throttler</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">A <em>throttler</em> is an actor that is defined through a <em>target actor</em> and a <em>rate</em>
+(of type <span class="extype" name="akka.contrib.throttle.Throttler.Rate">akka.contrib.throttle.Throttler.Rate</span>).</em></em></em></p>
+    </li><li name="models.bot.tasks" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tasks"></a>
+      <a id="tasks:tasks"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="tasks/package.html"><span class="name">tasks</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../lib/template.js"></script>
+    </body>
+      </html>

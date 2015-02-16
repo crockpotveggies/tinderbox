@@ -1,0 +1,378 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>model - utils.tinder.model</title>
+          <meta name="description" content="model - utils.tinder.model" />
+          <meta name="keywords" content="model utils.tinder.model" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'utils.tinder.model.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="utils">utils</a>.<a href="../package.html" class="extype" name="utils.tinder">tinder</a></p>
+        <h1>model</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">model</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="utils.tinder.model.FBAuth" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FBAuthextendsProductwithSerializable"></a>
+      <a id="FBAuth:FBAuth"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FBAuth.html"><span class="name">FBAuth</span></a><span class="params">(<span name="facebook_token">facebook_token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="facebook_id">facebook_id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Facebook creds object for authenticating with Tinder.</p>
+    </li><li name="utils.tinder.model.Location" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LocationextendsProductwithSerializable"></a>
+      <a id="Location:Location"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Location.html"><span class="name">Location</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A location object, usually for cities.</p>
+    </li><li name="utils.tinder.model.Match" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MatchextendsProductwithSerializable"></a>
+      <a id="Match:Match"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Match.html"><span class="name">Match</span></a><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="messages">messages: <span class="extype" name="scala.List">List</span>[<a href="Message.html" class="extype" name="utils.tinder.model.Message">Message</a>]</span>, <span name="last_activity_date">last_activity_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="participants">participants: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>, <span name="closed">closed: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>, <span name="dead">dead: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>, <span name="message_count">message_count: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="common_friend_count">common_friend_count: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="common_like_count">common_like_count: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="not_following">not_following: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Boolean">Boolean</span>]]</span>, <span name="person">person: <span class="extype" name="scala.Option">Option</span>[<a href="ProfileBrief.html" class="extype" name="utils.tinder.model.ProfileBrief">ProfileBrief</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A match object in a list of updates.</p>
+    </li><li name="utils.tinder.model.MatchData" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MatchDataextendsProductwithSerializable"></a>
+      <a id="MatchData:MatchData"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MatchData.html"><span class="name">MatchData</span></a><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="messages">messages: <span class="extype" name="scala.List">List</span>[<a href="Message.html" class="extype" name="utils.tinder.model.Message">Message</a>]</span>, <span name="message_count">message_count: <span class="extype" name="scala.Int">Int</span></span>, <span name="common_friend_count">common_friend_count: <span class="extype" name="scala.Int">Int</span></span>, <span name="common_like_count">common_like_count: <span class="extype" name="scala.Int">Int</span></span>, <span name="last_activity_date">last_activity_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="created_date">created_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="participants">participants: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="closed">closed: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="pending">pending: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="following">following: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="following_moments">following_moments: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="dead">dead: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Shows whether a like resulted in a match</p>
+    </li><li name="utils.tinder.model.MatchResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MatchResultextendsProductwithSerializable"></a>
+      <a id="MatchResult:MatchResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MatchResult.html"><span class="name">MatchResult</span></a><span class="params">(<span name="match">match: <a href="MatchData.html" class="extype" name="utils.tinder.model.MatchData">MatchData</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Shows whether a like resulted in a match</p>
+    </li><li name="utils.tinder.model.Message" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageextendsProductwithSerializable"></a>
+      <a id="Message:Message"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Message.html"><span class="name">Message</span></a><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="from">from: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="to">to: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="match_id">match_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sent_date">sent_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="message">message: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="created_date">created_date: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a user-to-user message</p>
+    </li><li name="utils.tinder.model.MessageOutgoingResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageOutgoingResultextendsProductwithSerializable"></a>
+      <a id="MessageOutgoingResult:MessageOutgoingResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MessageOutgoingResult.html"><span class="name">MessageOutgoingResult</span></a><span class="params">(<span name="from">from: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="to">to: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="message">message: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="created_date">created_date: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Response from server after sending message.</p>
+    </li><li name="utils.tinder.model.Photo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PhotoextendsProductwithSerializable"></a>
+      <a id="Photo:Photo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Photo.html"><span class="name">Photo</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="main">main: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Any">Any</span>]</span>, <span name="fileName">fileName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="extension">extension: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="processedFiles">processedFiles: <span class="extype" name="scala.List">List</span>[<a href="ProcessedFile.html" class="extype" name="utils.tinder.model.ProcessedFile">ProcessedFile</a>]</span>, <span name="shape">shape: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="crop">crop: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="ydistance_percent">ydistance_percent: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="yoffset_percent">yoffset_percent: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="xoffset_percent">xoffset_percent: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="xdistance_percent">xdistance_percent: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A photo in a user's profile.</p>
+    </li><li name="utils.tinder.model.Position" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PositionextendsAnyRef"></a>
+      <a id="Position:Position"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Position.html"><span class="name">Position</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A set of location coordinates.</p>
+    </li><li name="utils.tinder.model.PositionResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PositionResultextendsProductwithSerializable"></a>
+      <a id="PositionResult:PositionResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PositionResult.html"><span class="name">PositionResult</span></a><span class="params">(<span name="status">status: <span class="extype" name="scala.Int">Int</span></span>, <span name="error">error: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Result from updating a user position</p>
+    </li><li name="utils.tinder.model.ProcessedFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ProcessedFileextendsProductwithSerializable"></a>
+      <a id="ProcessedFile:ProcessedFile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ProcessedFile.html"><span class="name">ProcessedFile</span></a><span class="params">(<span name="width">width: <span class="extype" name="scala.Int">Int</span></span>, <span name="height">height: <span class="extype" name="scala.Int">Int</span></span>, <span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A processed photo, usually thumbnails of different sizes.</p>
+    </li><li name="utils.tinder.model.Profile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ProfileextendsProductwithSerializable"></a>
+      <a id="Profile:Profile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Profile.html"><span class="name">Profile</span></a><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bio">bio: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="birth_date">birth_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="birth_date_info">birth_date_info: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="common_friend_count">common_friend_count: <span class="extype" name="scala.Int">Int</span></span>, <span name="common_friends">common_friends: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="common_like_count">common_like_count: <span class="extype" name="scala.Int">Int</span></span>, <span name="common_likes">common_likes: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="distance_mi">distance_mi: <span class="extype" name="scala.Int">Int</span></span>, <span name="gender">gender: <span class="extype" name="scala.Int">Int</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="photos">photos: <span class="extype" name="scala.List">List</span>[<a href="Photo.html" class="extype" name="utils.tinder.model.Photo">Photo</a>]</span>, <span name="ping_time">ping_time: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a profile of another user.</p>
+    </li><li name="utils.tinder.model.ProfileBrief" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ProfileBriefextendsProductwithSerializable"></a>
+      <a id="ProfileBrief:ProfileBrief"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ProfileBrief.html"><span class="name">ProfileBrief</span></a><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bio">bio: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="birth_date">birth_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="gender">gender: <span class="extype" name="scala.Int">Int</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="photos">photos: <span class="extype" name="scala.List">List</span>[<a href="Photo.html" class="extype" name="utils.tinder.model.Photo">Photo</a>]</span>, <span name="ping_time">ping_time: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A shortened profile class used in match info.</p>
+    </li><li name="utils.tinder.model.RecommendationResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RecommendationResultextendsProductwithSerializable"></a>
+      <a id="RecommendationResult:RecommendationResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RecommendationResult.html"><span class="name">RecommendationResult</span></a><span class="params">(<span name="status">status: <span class="extype" name="scala.Int">Int</span></span>, <span name="results">results: <span class="extype" name="scala.List">List</span>[<a href="RecommendedUser.html" class="extype" name="utils.tinder.model.RecommendedUser">RecommendedUser</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a list of recommendations.</p>
+    </li><li name="utils.tinder.model.RecommendedUser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RecommendedUserextendsProductwithSerializable"></a>
+      <a id="RecommendedUser:RecommendedUser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RecommendedUser.html"><span class="name">RecommendedUser</span></a><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bio">bio: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="birth_date">birth_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="birth_date_info">birth_date_info: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="common_friend_count">common_friend_count: <span class="extype" name="scala.Int">Int</span></span>, <span name="common_friends">common_friends: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="common_like_count">common_like_count: <span class="extype" name="scala.Int">Int</span></span>, <span name="common_likes">common_likes: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="distance_mi">distance_mi: <span class="extype" name="scala.Int">Int</span></span>, <span name="gender">gender: <span class="extype" name="scala.Int">Int</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="photos">photos: <span class="extype" name="scala.List">List</span>[<a href="Photo.html" class="extype" name="utils.tinder.model.Photo">Photo</a>]</span>, <span name="ping_time">ping_time: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a single user in a recommendation queue.</p>
+    </li><li name="utils.tinder.model.TinderAuth" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TinderAuthextendsProductwithSerializable"></a>
+      <a id="TinderAuth:TinderAuth"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TinderAuth.html"><span class="name">TinderAuth</span></a><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="globals">globals: <a href="TinderGlobals.html" class="extype" name="utils.tinder.model.TinderGlobals">TinderGlobals</a></span>, <span name="user">user: <a href="User.html" class="extype" name="utils.tinder.model.User">User</a></span>, <span name="versions">versions: <a href="TinderVersion.html" class="extype" name="utils.tinder.model.TinderVersion">TinderVersion</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A response when authenticating containing info about the current token.</p>
+    </li><li name="utils.tinder.model.TinderError" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TinderErrorextendsProductwithSerializable"></a>
+      <a id="TinderError:TinderError"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TinderError.html"><span class="name">TinderError</span></a><span class="params">(<span name="status">status: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="error">error: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents an error from the Tinder API.</p>
+    </li><li name="utils.tinder.model.TinderGlobals" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TinderGlobalsextendsProductwithSerializable"></a>
+      <a id="TinderGlobals:TinderGlobals"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TinderGlobals.html"><span class="name">TinderGlobals</span></a><span class="params">(<span name="boost_decay">boost_decay: <span class="extype" name="scala.Int">Int</span></span>, <span name="boost_down">boost_down: <span class="extype" name="scala.Int">Int</span></span>, <span name="boost_up">boost_up: <span class="extype" name="scala.Int">Int</span></span>, <span name="invite_type">invite_type: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="kontagent">kontagent: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="matchmaker_default_message">matchmaker_default_message: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="recs_interval">recs_interval: <span class="extype" name="scala.Int">Int</span></span>, <span name="recs_size">recs_size: <span class="extype" name="scala.Int">Int</span></span>, <span name="share_default_text">share_default_text: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sparks">sparks: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="updates_interval">updates_interval: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Global variables for a Tinder app.</p>
+    </li><li name="utils.tinder.model.TinderStatus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TinderStatusextendsProductwithSerializable"></a>
+      <a id="TinderStatus:TinderStatus"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TinderStatus.html"><span class="name">TinderStatus</span></a><span class="params">(<span name="status">status: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a status result from the Tinder API.</p>
+    </li><li name="utils.tinder.model.TinderVersion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TinderVersionextendsAnyRef"></a>
+      <a id="TinderVersion:TinderVersion"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TinderVersion.html"><span class="name">TinderVersion</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Tinder version variables.</p>
+    </li><li name="utils.tinder.model.Update" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UpdateextendsProductwithSerializable"></a>
+      <a id="Update:Update"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Update.html"><span class="name">Update</span></a><span class="params">(<span name="matches">matches: <span class="extype" name="scala.List">List</span>[<a href="Match.html" class="extype" name="utils.tinder.model.Match">Match</a>]</span>, <span name="blocks">blocks: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="deleted_lists">deleted_lists: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]]</span>, <span name="last_activity_date">last_activity_date: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="lists">lists: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents history in user timeline.</p>
+    </li><li name="utils.tinder.model.User" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UserextendsAnyRef"></a>
+      <a id="User:User"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="User.html"><span class="name">User</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Information about the active user.</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+    </body>
+      </html>

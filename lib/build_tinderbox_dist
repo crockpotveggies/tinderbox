@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ ! -f README.md ]
+then
+    echo "ERROR: You must run this script from the root project folder (looks like 'bash lib/build_tinderbox_dist')."
+else
+    echo "DIST: Removing any old dist files."
+    rm -Rf dist
+    echo "DIST: Compiling Tinderbox project."
+    sbt compile
+    echo "DIST: Creating universal distribution."
+    sbt dist
+    echo "DIST: Unzipping to new dist folder."
+    unzip target/universal/tinderbox-1.1-SNAPSHOT.zip -d dist
+    rm dist/tinderbox-1.1-SNAPSHOT/lib/edu.stanford.nlp.stanford-corenlp-3.3.1-models.jar
+fi

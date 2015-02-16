@@ -15,7 +15,7 @@ Tinderbox is built on top of [Play!](http://www.playframework.com/) 2.2 and uses
 
 ### Getting Started
 
-First read the "Running" section below to learn how to start the app.
+Read the "Running" section below to learn how to start the app.
 
 Tinderbox starts up a server that is accessible in your browser at `http://localhost:9000/`. Once you're inside, note that there is a bot running in the background. If you watch the logs in terminal, it will show you debug statements about the moves the bot is taking. There is an action log available in the main interface.
 
@@ -23,15 +23,19 @@ Most of Tinder's primary functionality has been re-created in Tinderbox. Note th
 
 ### Running
 
-Commands to run this Application:
+There are a few ways to run the code:
 
-1. sbt clean
-2. sbt compile
-3. sbt run
+1. (For OSX) Use the .app launcher for OSX (you can drag and drop this into the Dock, too!)
+2. (For OSX/Linux) Run the following command from the root of the project directory:
+```
+bash dist/bin/tinderbox
+```
+2. (For Windows) Run the following command from the root of the project directory:
+```
+dist/bin/tinderbox.bat
+```
 
-Note: 
-> Scala Build Tool (SBT) is the preferred method of running this applications. You will need to install [SBT](http://www.scala-sbt.org/) before running the app.
-> SBT will automatically download Play! and also pick up changes in the code if you wish to use them.
+**Please note:** Tinderbox was not tested on a Windows platform. There's no guarantee the software will behave the same as a UNIX machine.
 
 ### Authenticating with Tinder
 
@@ -39,14 +43,14 @@ You will need to authorize using a Facebook `access_token` and also with your Fa
 
 Tinderbox will automatically attempt to find your Facebook ID once you copy and paste your `access_token`. If it doesn't appear within one second you'll need to manually enter it. For convenience, you can also paste the entire URL from the Facebook authentication URL and the app will auto-extract your `access_token`.
 
-### Support
+## Support
 
 Currently I'm not offering any support, but if there's enough interest I'd consider helping others contribute to the code.
 
 - Find a bug? It's OK to file an issue - I may not follow up on it.
 - Want a feature? Please don't open an issue, instead contribute and open a pull request.
 
-### Facial Analysis and Predictions
+## Facial Analysis and Predictions
 
 Tinderbox attempts to make a prediction based on profiles you've previously liked. This is done using elementary Machine Learning methods. Tinderbox will examine previous likes/dislikes and develop a model based on colors found within faces of profiles. The more likes/dislikes made, the more accurate the model will become.
 
@@ -59,16 +63,22 @@ Tinderbox attempts to make a prediction based on profiles you've previously like
 
 The recommendation system could use some work since it is useful to combine EigenFaces methods with other analysis systems. If you're finding that auto likes/dislikes are not meeting your standards, you can erase the facial modeling data using the "Clear Models" button on the dashboard.
 
-### Auto-Messaging
+## Auto-Messaging
 
 Tinderbox has built-in automated messaging. The built in "Tinderbot" looks for conversations that fit patterns within pre-set message trees. The tree directions are based on positive or negative sentiment, and when the conversation no longer fits the tree the bot will notify the user to take over the conversation.
 
-### Word from the Author
+## Word from the Author
 
 Tinderbox is the first bot I've built to interact on my behalf. Since it is a tool that automates a lot of the Tinder experience, be forewarned not everyone appreciates being met through a robot. And they certainly don't appreciate if you decide to use this code to spam the Tinder world.
 
-### License
+## Editing the Code
+
+Check out this wiki page about editing the code:
+
+## License
 
 Tinderbox is distributed under the Creative Commons Attribution-NonCommercial 3.0 license, a human readable version is available at [https://creativecommons.org/licenses/by-nc/3.0/](https://creativecommons.org/licenses/by-nc/3.0/).
 
 Because the Tinder API hasn't been officially released as a public API, Tinderbox is licensed for non-commercial reasons only. I have no affiliation with Tinder, and you use this repository at your own risk. Please think before mixing this code with something that could be considered abusive of the Tinder API.
+
+Please note this software comes with NO Warranty.
