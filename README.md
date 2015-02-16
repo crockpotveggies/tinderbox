@@ -31,7 +31,7 @@ There are a few ways to run the code:
 ```
 bash dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox
 ```
-2. (For Windows) Run the following command from the root of the project directory:
+3. (For Windows) Run the following command from the root of the project directory:
 ```
 dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox.bat
 ```
