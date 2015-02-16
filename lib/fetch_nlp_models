@@ -3,6 +3,19 @@
 if [ ! -f dist/tinderbox-1.1-SNAPSHOT/lib/edu.stanford.nlp.stanford-corenlp-3.3.1-models.jar ]
 then
     echo "Downloading StanfordNLP models..."
-    curl -o dist/tinderbox-1.1-SNAPSHOT/lib/edu.stanford.nlp.stanford-corenlp-3.3.1-models.jar http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.3.1/stanford-corenlp-3.3.1-models.jar
+    eval curl -o dist/tinderbox-1.1-SNAPSHOT/lib/edu.stanford.nlp.stanford-corenlp-3.3.1-models.jar http://central.maven.org/maven2/edu/stanford/nlp/stanford-corenlp/3.3.1/stanford-corenlp-3.3.1-models.jar
+    err=$?
+    if [ $err -ne 0 ]
+    then
+        echo "#############"
+        echo "### ERROR ###"
+        echo "#############"
+        echo "Something went wrong when retrieving StanfordNLP models!"
+        echo "Message analysis will fail in Tinderbox. Removing any fragments..."
+        rm dist/tinderbox-1.1-SNAPSHOT/lib/edu.stanford.nlp.stanford-corenlp-3.3.1-models.jar
+        echo "Removed models JAR file fragment."
+        exit
+    fi
+    
     echo "Download complete."
 fi
