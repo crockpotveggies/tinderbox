@@ -25,13 +25,21 @@ Most of Tinder's primary functionality has been re-created in Tinderbox. Note th
 
 There are a few ways to run the code:
 
-1. (For OSX) Use the .app launcher for OSX (you can drag and drop this into the Dock, too!)
+####Use the OSX app launcher
+(For OSX only) Use the .app launcher for OSX (you can drag and drop this into the Dock, too!)
 ![App Launcher](https://raw.githubusercontent.com/crockpotveggies/tinderbox/master/public/img/screenshots/app-launcher.png)
-2. (For OSX/Linux) Run the following command from the root of the project directory:
+
+####Use the startup scripts
+Before you run the startup scripts, fetch the Stanford NLP models. You can do this automatically by running:
+```
+bash lib/fetch_nlp_models
+```
+
+Then for OSX/Linux run the following command from the root of the project directory:
 ```
 bash dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox
 ```
-3. (For Windows) Run the following command from the root of the project directory:
+Or Windows, run the following command from the root of the project directory:
 ```
 dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox.bat
 ```
