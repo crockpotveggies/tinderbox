@@ -28,11 +28,11 @@ There are a few ways to run the code:
 1. (For OSX) Use the .app launcher for OSX (you can drag and drop this into the Dock, too!)
 2. (For OSX/Linux) Run the following command from the root of the project directory:
 ```
-bash dist/bin/tinderbox
+bash dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox
 ```
 2. (For Windows) Run the following command from the root of the project directory:
 ```
-dist/bin/tinderbox.bat
+dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox.bat
 ```
 
 **Please note:** Tinderbox was not tested on a Windows platform. There's no guarantee the software will behave the same as a UNIX machine.
