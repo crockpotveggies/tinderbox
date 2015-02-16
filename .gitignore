@@ -9,7 +9,6 @@ tmp
 .cache
 .target/
 .git/
-bin
 .settings
 .sbt
 .DS_Store
