@@ -82,7 +82,7 @@ Tinderbox is the first bot I've built to interact on my behalf. Since it is a to
 
 ## Editing the Code
 
-Check out this wiki page about editing the code:
+Check out [this wiki page](https://github.com/crockpotveggies/tinderbox/wiki/Editing-the-Code) for instructions on editing the code and building the app.
 
 ## License
 
