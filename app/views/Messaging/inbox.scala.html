@@ -69,14 +69,16 @@
       </div>
       <div class="clearfix"></div>
       <div class="mail-message">
-        <div class="input-group">
-          <input type="text" class="form-control input-md" name="message" placeholder="Write a message" data-bind="textInput: $root.messageDraft">
-          <div class="input-group-btn">
-            <button type="submit" class="btn btn-md btn-primary" data-bind="click: $root.sendMessage">
-              Send
-            </button>
+	<form data-bind="submit: $root.sendMessage">
+          <div class="input-group">
+            <input type="text" class="form-control input-md" name="message" placeholder="Write a message" data-bind="textInput: $root.messageDraft">
+            <div class="input-group-btn">
+              <button type="submit" class="btn btn-md btn-primary">
+                Send
+              </button>
+            </div>
           </div>
-        </div>
+	</form>
       </div>
     </div>
     <div class="mail-box">

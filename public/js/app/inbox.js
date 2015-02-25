@@ -168,6 +168,7 @@ window.App = function() {
         if(match.participants()[0]==newMessage.to) match.messages.unshift(new _.messageModel(newMessage));
       });
     });
+    return false;
   }
 
   _.getUpdates = function() {
