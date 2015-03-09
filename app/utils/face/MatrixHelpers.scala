@@ -86,7 +86,6 @@ object MatrixHelpers {
     val rowCount = pixelMatrix.length
     val columnCount = pixelMatrix(0).length
 
-    val meanColumn = computeMeanColumn(pixelMatrix)
     val covarianceMatrix = Array.ofDim[Double](columnCount, columnCount)
 
     (0 to (columnCount-1)).foreach { i =>
