@@ -48,9 +48,11 @@ dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox.bat
 
 ### Authenticating with Tinder
 
-You will need to authorize using a Facebook `access_token` and also with your Facebook ID. The login page has a link for you to create an access token. Copy the token from Facebook's URL and paste it in the Tinderbox login.
+You will need to authorize using a Facebook `access_token` and also with your Facebook ID. The login page has a link for you to create an access token. Copy the token from Facebook's URL and paste it in the Tinderbox login. (Note that FB security measures obscure the access token after a second or two, so you have to be fast with the copy to clipboard.)
 
 Tinderbox will automatically attempt to find your Facebook ID once you copy and paste your `access_token`. If it doesn't appear within one second you'll need to manually enter it. For convenience, you can also paste the entire URL from the Facebook authentication URL and the app will auto-extract your `access_token`.
+
+Note: in some cases the Facebook ID cannot be obtained, and you can get your FB ID from [findmyfacebookid.com](http://findmyfacebookid.com/). It will look like a long ~10 digit number.
 
 ## Support
 
