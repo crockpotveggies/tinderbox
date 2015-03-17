@@ -81,19 +81,21 @@ class MessageReplyTask(val xAuthToken: String, val tinderBot: ActorRef, val matc
 
           // there is a distinct conversation tree
           case Some(treeRoot) =>
-            FunMessages.messages.find(_.value == treeRoot) match {
+            val theTreeRoot = treeRoot.replace(m.person.map(_.name).getOrElse(""),"{name}")
+            FunMessages.messages.find(_.value == theTreeRoot) match {
               case None =>
                 createStopGap(m, true)
+                Logger.info("Created stop gap because there was no distinct conversation tree.")
 
               case Some(tree) =>
-                val sentiments = MessageUtil.assignSentimentDirection(MessageUtil.filterSenderMessages(userId, m.messages)).map(_._2)
-                Logger.debug("[tinderbot] Sentiment directions are %s." format sentiments)
+                val sentiments =  MessageUtil.assignSentimentDirection(MessageUtil.filterSenderMessages(userId, m.messages)).map(_._2)
+                Logger.debug("[tinderbot] Reply directions are %s." format sentiments)
 
                 MessageTree.walkTree(tree, sentiments) match {
                   // couldn't walk the tree to find a reply
                   case None =>
                     createStopGap(m, true)
-
+                    Logger.info("Created stop gap because couldn't walk the tree to find a reply")
                   // reply to the conversation with the next branch in the tree
                   case Some(branch) =>
                     new TinderApi(Some(xAuthToken)).sendMessage(m._id, branch.value).map { result =>
@@ -112,7 +114,7 @@ class MessageReplyTask(val xAuthToken: String, val tinderBot: ActorRef, val matc
                           )
                           TinderBot.writeLog(user.user._id, log)
                           Logger.info("[tinderbot] Sent a message reply to %s. " format m._id)
-                          Logger.debug("[tinderbot] Message reply was: \"%s...\"" format branch.value.substring(0, 10))
+                          Logger.debug("[tinderbot] Message reply was: %s. " format branch.value)
                       }
                     }
                 }
