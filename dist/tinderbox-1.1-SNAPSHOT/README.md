@@ -3,7 +3,7 @@ tinderbox
 
 Another [@crockpotveggies](https://twitter.com/crockpotveggies) experiment.
 
-**Heads up!** As soon as you turn on this bot, it WILL start messaging all of your contacts. Please also check out the **Support** section below and the [Wiki](https://github.com/crockpotveggies/tinderbox/wiki) for tips on getting started. Want to customize the messages? Edit this [file  here](https://github.com/crockpotveggies/tinderbox/blob/master/app/models/bot/tasks/message/FunMessages.scala) then re-build the app using [these instructions](https://github.com/crockpotveggies/tinderbox/wiki/Editing-the-Code).
+**Heads up!** As soon as you turn on this bot, it WILL start messaging all of your contacts. Please also check out the **Support** section below and the [Wiki](https://github.com/crockpotveggies/tinderbox/wiki) for tips on getting started. You will probably want to customize the messages. To do so, edit this [file](https://github.com/crockpotveggies/tinderbox/blob/master/app/models/bot/tasks/message/FunMessages.scala) then re-build the app using [these instructions](https://github.com/crockpotveggies/tinderbox/wiki/Editing-the-Code).
 
 ## What is Tinderbox?
 
@@ -48,9 +48,11 @@ dist/tinderbox-1.1-SNAPSHOT/bin/tinderbox.bat
 
 ### Authenticating with Tinder
 
-You will need to authorize using a Facebook `access_token` and also with your Facebook ID. The login page has a link for you to create an access token. Copy the token from Facebook's URL and paste it in the Tinderbox login.
+You will need to authorize using a Facebook `access_token` and also with your Facebook ID. The login page has a link for you to create an access token. Copy the token from Facebook's URL and paste it in the Tinderbox login. (Note that FB security measures obscure the access token after a second or two, so you have to be fast with the copy to clipboard.)
 
 Tinderbox will automatically attempt to find your Facebook ID once you copy and paste your `access_token`. If it doesn't appear within one second you'll need to manually enter it. For convenience, you can also paste the entire URL from the Facebook authentication URL and the app will auto-extract your `access_token`.
+
+Note: in some cases the Facebook ID cannot be obtained, and you can get your FB ID from [findmyfacebookid.com](http://findmyfacebookid.com/). It will look like a long ~10 digit number.
 
 ## Support
 
