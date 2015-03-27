@@ -166,9 +166,11 @@
             type: "GET",
             dataType: "json",
             success: function(data) {
-              if(data.notifications.length > 0) {
-                createNotification(data.notifications.length);
-                clearNotifications();
+              if(data.notifications !== null) {
+                if(data.notifications.length > 0) {
+                  createNotification(data.notifications.length);
+                  clearNotifications();
+                }
               }
             }
           });
