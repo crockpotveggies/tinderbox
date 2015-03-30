@@ -58,4 +58,10 @@ libraryDependencies ++= Seq(
   "net.sourceforge.parallelcolt"  %  "parallelcolt"               % "0.10.0"
   )     
 
+initialize := {
+  val required = "1.7"
+  val current  = sys.props("java.specification.version")
+  assert(current == required, s"Unsupported JDK: java.specification.version $current != $required")
+}
+
 play.Project.playScalaSettings
