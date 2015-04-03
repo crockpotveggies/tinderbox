@@ -50,8 +50,7 @@ object Global extends GlobalSettings {
      |    ===============================
      |    A handy tool for automating and
      |    analyzing the Tinder App
-      
-        
+
   """).reset() )
 
   }

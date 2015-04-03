@@ -17,7 +17,7 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
  * put the message `msg` into an internal queue and eventually send all queued messages to the target, at
  * a speed that respects the given rate. If no target is currently defined then the messages will be queued
  * and will be delivered as soon as a target gets set.
- * 
+ *
  * Code based on Akka Contrib TimerBasedThrottler. Copyright Typesafe.
  *
  * A throttler understands actor messages of type
@@ -113,7 +113,7 @@ object Throttler {
    * systems that may need to restart themselves or report the current status of a processing task.
    */
   case class SetMonitor(monitor: Option[ActorRef])
-  
+
   /**
    * Indicates a message queue is empty.
    *
@@ -254,7 +254,7 @@ class BotThrottle(var rate: Rate, var monitor: Option[ActorRef]) extends Actor w
       goto(Active) using deliverMessages(d.copy(target = t))
     case Event(SetTarget(t), d) =>
       stay using d.copy(target = t)
-      
+
     // Set the monitor
     case Event(SetMonitor(m), d) =>
       this.monitor = m
@@ -296,7 +296,7 @@ class BotThrottle(var rate: Rate, var monitor: Option[ActorRef]) extends Actor w
     // Set the target (when the new target is not None)
     case Event(SetTarget(t @ Some(_)), d) =>
       stay using d.copy(target = t)
-      
+
     // Set the monitor
     case Event(SetMonitor(m), d) =>
       this.monitor = m
@@ -338,12 +338,12 @@ class BotThrottle(var rate: Rate, var monitor: Option[ActorRef]) extends Actor w
     case Active -> Idle => stopTimer()
   }
 
-  initialize  
+  initialize
   startMonitoring
 
   private def startTimer(rate: Rate) = setTimer("morePermits", Tick, rate.duration, true)
   private def stopTimer() = cancelTimer("morePermits")
-  
+
   private def startMonitoring() {
     setTimer("monitorQueue", Check, Duration(20, TimeUnit.SECONDS), true)
     log.info("[throttle] monitoring reports will be sent to %s" format this.monitor.toString)
