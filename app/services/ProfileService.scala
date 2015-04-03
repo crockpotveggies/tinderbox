@@ -34,7 +34,7 @@ object ProfileService {
         val result = Await.result(tinderApi.getProfile(userId), 10 seconds)
         result match {
           case Left(error) =>
-            Logger.error("Something went wrong when fetching profile for "+userId+": "+error.error)
+            Logger.error("Something went wrong when fetching profile for " + userId + ": " + error.error)
             None
           case Right(profile) =>
             storeProfile(userId, profile)

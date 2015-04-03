@@ -31,7 +31,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   def receive = {
     // send commands to the bot
     case BotCommand(command) =>
-      Logger.info("[tinderbot] Received command: "+command)
+      Logger.info("[tinderbot] Received command: " + command)
       command match {
         case "idle" => makeIdle
         case "run" => makeRun

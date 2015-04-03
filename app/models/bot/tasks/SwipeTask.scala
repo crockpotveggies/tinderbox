@@ -31,7 +31,7 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
     tinderApi.swipeNegative(rec._id).map { result =>
       result match {
         case Left(e) =>
-          Logger.error("[tinderbot] Swipe task had an error on Tinder: "+e.error)
+          Logger.error("[tinderbot] Swipe task had an error on Tinder: " + e.error)
 
         case Right(r) =>
           val log = BotLog(
@@ -42,8 +42,8 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
             Some(rec.photos.head.url)
           )
           TinderBot.writeLog(user.user._id, log)
-          Logger.info("[tinderbot] Disliked user "+rec._id)
-          Logger.debug("[tinderbot] User was disliked because: "+reason)
+          Logger.info("[tinderbot] Disliked user " + rec._id)
+          Logger.debug("[tinderbot] User was disliked because: " + reason)
       }
     }
   }
@@ -52,7 +52,7 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
     tinderApi.swipePositive(rec._id).map { result =>
       result match {
         case Left(e) =>
-          Logger.error("[tinderbot] Swipe task had an error on Tinder: "+e.error)
+          Logger.error("[tinderbot] Swipe task had an error on Tinder: " + e.error)
 
         case Right(r) =>
           val log = BotLog(
@@ -63,8 +63,8 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
             Some(rec.photos.head.url)
           )
           TinderBot.writeLog(user.user._id, log)
-          if(r==null || r==None) Logger.info("[tinderbot] Liked user "+rec._id)
-          else Logger.info("[tinderbot] Matched with user "+rec._id)
+          if(r==null || r==None) Logger.info("[tinderbot] Liked user " + rec._id)
+          else Logger.info("[tinderbot] Matched with user " + rec._id)
       }
     }
   }
@@ -78,7 +78,7 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
       Some(rec.photos.head.url)
     )
     TinderBot.writeLog(user.user._id, log)
-    Logger.info("[tinderbot] Ignored recommended user "+rec._id)
+    Logger.info("[tinderbot] Ignored recommended user " + rec._id)
   }
 
   private def photoCriteria(photos: List[Photo]): Boolean = {

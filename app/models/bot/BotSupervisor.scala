@@ -18,7 +18,7 @@ class BotSupervisor(parent: ActorRef) extends Actor {
       case e: Exception => {
         // we need to deliver the run command, otherwise it will be permanently paused
         parent ! BotCommand("run")
-        Logger.error("[tinderbot] Retrying a troubled supervised task: \n"+e.getMessage)
+        Logger.error("[tinderbot] Retrying a troubled supervised task: \n" + e.getMessage)
         Restart
       }
     }

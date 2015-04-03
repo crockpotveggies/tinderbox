@@ -70,7 +70,7 @@ class FacialCheckTask(val xAuthToken: String, val tinderBot: ActorRef) extends T
 
             } catch {
               case e: Exception =>
-                Logger.error("An error occured while analyzing bot logs: "+e.getCause)
+                Logger.error("An error occured while analyzing bot logs: " + e.getCause)
             }
           }
       }

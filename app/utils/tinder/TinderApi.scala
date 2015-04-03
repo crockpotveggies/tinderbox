@@ -55,7 +55,7 @@ class TinderApi(
    * @param data an object containing extra values
    */
   def tinderGet[T](path: String, data: Option[JsObject]=None)(implicit m: Manifest[T]): Future[Either[model.TinderError,T]]  = {
-    val url = TINDER_HOST+"/"+path
+    val url = TINDER_HOST + "/" + path
     val requestHolder: TinderRequest = TinderWS
       .url(url)
       .withHeaders(tinderHeaders: _*)
@@ -91,7 +91,7 @@ class TinderApi(
    * @param data an object containing extra values
    */
   def tinderPost[T](path: String, data: JsObject)(implicit m: Manifest[T]): Future[Either[model.TinderError,T]] = {
-    val url = TINDER_HOST+"/"+path
+    val url = TINDER_HOST + "/" + path
     TinderWS
       .url(url)
       .withHeaders(tinderHeaders: _*)
@@ -123,7 +123,7 @@ class TinderApi(
    * @param path the relative path
    */
   def tinderDelete[T](path: String)(implicit m: Manifest[T]): Future[Either[model.TinderError,T]] = {
-    val url = TINDER_HOST+"/"+path
+    val url = TINDER_HOST + "/" + path
     TinderWS
       .url(url)
       .withHeaders(tinderHeaders: _*)
@@ -145,7 +145,7 @@ class TinderApi(
    * @param limit the maximum number of profiles to fetch
    */
   def getRecommendations(limit: Int) = {
-    val url = TINDER_HOST+"/user/recs"
+    val url = TINDER_HOST + "/user/recs"
     TinderWS
       .url(url)
       .withHeaders(tinderHeaders: _*)
@@ -157,7 +157,7 @@ class TinderApi(
         Right(recs)
       } catch {
         case e: Exception =>
-          println("[Tinder] Parsing failed with: \n"+response.body)
+          println("[Tinder] Parsing failed with: \n" + response.body)
           println(stackTrace(e))
           Left(jsonContext.parse[model.TinderError](response.body))
       }
@@ -170,7 +170,7 @@ class TinderApi(
    * @param message the message to send
    */
   def sendMessage(matchId: String, message: String) = {
-    tinderPost[model.MessageOutgoingResult]("user/matches/"+matchId, Json.obj("message" -> message))
+    tinderPost[model.MessageOutgoingResult]("user/matches/" + matchId, Json.obj("message" -> message))
   }
 
   /**
@@ -178,7 +178,7 @@ class TinderApi(
    * @param userId the id of the user
    */
   def swipeNegative(userId: String) = {
-    tinderGet[model.MatchResult]("pass/"+userId)
+    tinderGet[model.MatchResult]("pass/" + userId)
   }
 
   /**
@@ -186,7 +186,7 @@ class TinderApi(
    * @param userId the id of the user
    */
   def swipePositive(userId: String) = {
-    tinderGet[model.MatchResult]("like/"+userId)
+    tinderGet[model.MatchResult]("like/" + userId)
   }
 
   /**
@@ -200,7 +200,7 @@ class TinderApi(
       r match {
         case Left(e) =>
           println("[Tinder] Something has gone wrong while authenticating Tinder.")
-          println("[Tinder] Error was: \n"+e.error)
+          println("[Tinder] Error was: \n" + e.error)
         case Right(auth) =>
           xAuthToken = Some(auth.token)
           userId = Some(auth.user._id)
@@ -270,7 +270,7 @@ class TinderApi(
    * @param userId the id of the user
    */
   def getProfile(userId: String) = {
-    tinderGet[model.Profile]("user/"+userId)
+    tinderGet[model.Profile]("user/" + userId)
   }
 
   /**
@@ -279,7 +279,7 @@ class TinderApi(
    * @param causeId the reason for reporting (1=spam, 2=offensive)
    */
   def reportUser(userId: String, causeId: Int) = {
-    tinderPost[model.TinderStatus]("report/"+userId, Json.obj("cause" -> causeId))
+    tinderPost[model.TinderStatus]("report/" + userId, Json.obj("cause" -> causeId))
   }
 
   /**
@@ -287,7 +287,7 @@ class TinderApi(
    * @param matchId the match ID of user's conversation
    */
   def unmatch(matchId: String) = {
-    tinderDelete[model.TinderStatus]("user/matches/"+matchId)
+    tinderDelete[model.TinderStatus]("user/matches/" + matchId)
   }
 
   def ISO8601 = {

@@ -68,7 +68,7 @@ object UpdatesService {
     result match {
       case Left(error) =>
         Logger.error("An error occurred retrieving full history for %s.".format(xAuthToken))
-        Logger.error("Reason: "+error.error)
+        Logger.error("Reason: " + error.error)
         None
       case Right(history) =>
         // update the last activity variable
@@ -96,7 +96,7 @@ object UpdatesService {
     result match {
       case Left(error) =>
         Logger.error("An error occurred retrieving full history for %s.".format(xAuthToken))
-        Logger.error("Reason: "+error.error)
+        Logger.error("Reason: " + error.error)
         None
       case Right(history) =>
         // check if blocks need to be removed
@@ -136,7 +136,7 @@ object UpdatesService {
                 case None => 0
                 case Some(o) => o.size
               }
-              (n._1, countAppend+n._2 )
+              (n._1, countAppend + n._2)
             }
         }
         unreadCounts.put(xAuthToken, unreads)
