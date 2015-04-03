@@ -6,6 +6,15 @@ val javacvVersion = "0.9"
 
 val javacppVersion = "0.9"
 
+scalacOptions ++= Seq(
+  "-feature",
+  "-unchecked",
+  "-deprecation",
+  "-Xlint",
+  "-Ywarn-all",
+  "-language:postfixOps"
+)
+
 // Some dependencies like `javacpp` are packaged with maven-plugin packaging
 classpathTypes += "maven-plugin"
 

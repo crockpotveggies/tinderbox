@@ -106,7 +106,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   /**
    * Stops the bot from processing new tasks.
    */
-  private def makeIdle {
+  private def makeIdle() {
     botThrottle ! SetTarget(None)
     state = new BotState(false, "idle")
   }
@@ -114,7 +114,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
   /**
    * Starts the bot by setting a target.
    */
-  private def makeRun {
+  private def makeRun() {
     botThrottle ! SetTarget(Some(botSupervisor))
     state = new BotState(true, "running")
   }
@@ -123,7 +123,7 @@ class TinderBot(taskWarningThreshold: Int, taskSleepThreshold: Int) extends Acto
    * Puts the bot to sleep for 50 seconds, useful when API limits reached or when we've run
    * out of recommendations.
    */
-  private def makeSleep {
+  private def makeSleep() {
     botThrottle ! SetTarget(None)
     state = new BotState(false, "sleeping")
     Thread.sleep(10000)

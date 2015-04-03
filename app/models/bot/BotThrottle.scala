@@ -344,7 +344,7 @@ class BotThrottle(var rate: Rate, var monitor: Option[ActorRef]) extends Actor w
   private def startTimer(rate: Rate) = setTimer("morePermits", Tick, rate.duration, true)
   private def stopTimer() = cancelTimer("morePermits")
   
-  private def startMonitoring = {
+  private def startMonitoring() {
     setTimer("monitorQueue", Check, Duration(20, TimeUnit.SECONDS), true)
     log.info("[throttle] monitoring reports will be sent to %s" format this.monitor.toString)
   }
