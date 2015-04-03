@@ -26,3 +26,5 @@ public/client-new/js/.DS_Store
 
 beamstream.sublime-project
 beamstream.sublime-workspace
+
+scalastyle-config.xml
