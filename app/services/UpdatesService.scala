@@ -125,12 +125,12 @@ object UpdatesService {
         }
         notifications.put(xAuthToken, notificationList)
         // finally append new notifications to existing read counts
-        val unreads = unreadCounts.get(xAuthToken) match {
-          case null =>
+        val unreads = Option(unreadCounts.get(xAuthToken)) match {
+          case None =>
             Map(notificationList.map { n =>
               (n.associateId, n.size)
             }.toMap.toSeq: _*)
-          case counts =>
+          case Some(counts) =>
             counts.map { n =>
               val countAppend = notificationList.filter(o => o.associateId==n._1).headOption match {
                 case None => 0
@@ -195,10 +195,10 @@ object UpdatesService {
    * @return
    */
   def fetchHistory(xAuthToken: String): Option[List[Match]] = {
-    matches.get(xAuthToken) match {
-      case null =>
+    Option(matches.get(xAuthToken)) match {
+      case None =>
         syncHistory(xAuthToken)
-      case matches =>
+      case Some(matches) =>
         Some(matches)
     }
   }
@@ -208,14 +208,8 @@ object UpdatesService {
    * @param xAuthToken
    * @return
    */
-  def fetchLastActivity(xAuthToken: String): Option[Date] = {
-    lastActivity.get(xAuthToken) match {
-      case null =>
-        None
-      case date =>
-        Some(date)
-    }
-  }
+  def fetchLastActivity(xAuthToken: String): Option[Date] =
+    Option(lastActivity.get(xAuthToken))
 
   /**
    * Get a list of raw updates for a user.
@@ -256,12 +250,8 @@ object UpdatesService {
    * @param xAuthToken
    * @return
    */
-  def fetchNotifications(xAuthToken: String): Option[List[Notification]] = {
-    notifications.get(xAuthToken) match {
-      case null => None
-      case counts => Some(counts)
-    }
-  }
+  def fetchNotifications(xAuthToken: String): Option[List[Notification]] =
+    Option(notifications.get(xAuthToken))
 
   /**
    * Asynchronously clears all notifications for a user.
@@ -276,12 +266,8 @@ object UpdatesService {
    * @param xAuthToken
    * @return
    */
-  def fetchUnreadCounts(xAuthToken: String): Option[Map[String, Int]] = {
-    unreadCounts.get(xAuthToken) match {
-      case null => None
-      case counts => Some(counts)
-    }
-  }
+  def fetchUnreadCounts(xAuthToken: String): Option[Map[String, Int]] =
+    Option(unreadCounts.get(xAuthToken))
 
   /**
    * Asynchronously clears unread count for a specific match ID.
@@ -303,9 +289,9 @@ object UpdatesService {
    * @param matchId
    */
   def hasStopGap(userId: String, matchId: String): Boolean = {
-    match_stopgaps.get(userId) match {
-      case null => false
-      case stopgaps =>
+    Option(match_stopgaps.get(userId)) match {
+      case None => false
+      case Some(stopgaps) =>
         stopgaps.find( o => o==matchId ) match {
           case None => false
           case Some(o) => true
@@ -320,9 +306,9 @@ object UpdatesService {
    */
   def createStopGap(userId: String, matchId: String): Unit = {
     if(!hasStopGap(userId, matchId)) {
-      match_stopgaps.get(userId) match {
-        case null => match_stopgaps.put(userId, List(matchId))
-        case stopgaps => match_stopgaps.put(userId, stopgaps ::: List(matchId))
+      Option(match_stopgaps.get(userId)) match {
+        case None => match_stopgaps.put(userId, List(matchId))
+        case Some(stopgaps) => match_stopgaps.put(userId, stopgaps ::: List(matchId))
       }
     }
   }

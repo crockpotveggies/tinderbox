@@ -78,10 +78,10 @@ object AnalyticsService {
    */
   def fetchSentiments(xAuthToken: String): Option[Map[String, String]] = {
     val session = TinderService.fetchSession(xAuthToken).get
-    messageSentiments.get(session.user._id) match {
-      case null =>
+    Option(messageSentiments.get(session.user._id)) match {
+      case None =>
         Some(syncSentiments(xAuthToken))
-      case sentiments =>
+      case Some(sentiments) =>
         Some(sentiments)
     }
   }

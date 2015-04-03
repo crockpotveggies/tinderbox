@@ -50,29 +50,22 @@ object FacialAnalysisService {
    */
   def storeYesNoData(userId: String, matchUser: String, isLike: Boolean) {
     resetModels(userId, matchUser)
-    yesno_data.get(userId) match {
-      case null =>
+    Option(yesno_data.get(userId)) match {
+      case None =>
         yesno_data.put(userId, Map(matchUser -> isLike))
-      case data =>
+      case Some(data) =>
         data.put(matchUser, isLike)
         yesno_data.put(userId, data)
     }
   }
 
-  def fetchYesNoData(userId: String): Option[Map[String, Boolean]] = {
-    yesno_data.get(userId) match {
-      case null =>
-        None
-      case data =>
-        Some(data)
-    }
-  }
+  def fetchYesNoData(userId: String): Option[Map[String, Boolean]] =
+    Option(yesno_data.get(userId))
 
   def resetYesNoData(userId: String, matchUser: String) {
-    yesno_data.get(userId) match {
-      case null =>
-        None
-      case data =>
+    Option(yesno_data.get(userId)) match {
+      case None => None
+      case Some(data) =>
         data.remove(matchUser)
         yesno_data.put(userId, data)
     }
@@ -81,17 +74,14 @@ object FacialAnalysisService {
   /*
    * Functions for retrieving processed face pixels for likes/dislikes.
    */
-  def fetchYesPixels(userId: String, matchUser: String): Option[List[Array[Double]]] = yes_pixels.get(userId) match {
-    case null => None
-    case pixels =>
+  def fetchYesPixels(userId: String, matchUser: String): Option[List[Array[Double]]] = Option(yes_pixels.get(userId)) match {
+    case None => None
+    case Some(pixels) =>
       pixels.get(matchUser)
   }
 
-  def fetchYesPixels(userId: String): Option[Map[String, List[Array[Double]]]] = yes_pixels.get(userId) match {
-    case null => None
-    case data =>
-      Some(data)
-  }
+  def fetchYesPixels(userId: String): Option[Map[String, List[Array[Double]]]] =
+    Option(yes_pixels.get(userId))
 
   def appendYesPixels(userId: String, matchUser: String, pixels: List[Array[Double]]) = fetchYesPixels(userId) match {
     case None => yes_pixels.put(userId, Map(matchUser -> pixels))
@@ -108,17 +98,14 @@ object FacialAnalysisService {
 
   }
 
-  def fetchNoPixels(userId: String, matchUser: String): Option[List[Array[Double]]] = no_pixels.get(userId) match {
-    case null => None
-    case pixels =>
+  def fetchNoPixels(userId: String, matchUser: String): Option[List[Array[Double]]] = Option(no_pixels.get(userId)) match {
+    case None => None
+    case Some(pixels) =>
       pixels.get(matchUser)
   }
 
-  def fetchNoPixels(userId: String): Option[Map[String, List[Array[Double]]]] = no_pixels.get(userId) match {
-    case null => None
-    case data =>
-      Some(data)
-  }
+  def fetchNoPixels(userId: String): Option[Map[String, List[Array[Double]]]] =
+    Option(no_pixels.get(userId))
 
   def appendNoPixels(userId: String, matchUser: String, pixels: List[Array[Double]]) = fetchNoPixels(userId) match {
     case None => no_pixels.put(userId, Map(matchUser ->  pixels))

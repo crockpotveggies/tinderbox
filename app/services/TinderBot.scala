@@ -162,9 +162,9 @@ object TinderBot {
    * @return
    */
   def fetchLog(userId: String): List[BotLog] = {
-    log.get(userId) match {
-      case null => List()
-      case logs => logs
+    Option(log.get(userId)) match {
+      case None => List()
+      case Some(logs) => logs
     }
   }
 
@@ -174,9 +174,9 @@ object TinderBot {
    * @return
    */
   def fetchLogUpdates(userId: String, flush: Boolean=true): List[BotLog] = {
-    log_update_queue.get(userId) match {
-      case null => List()
-      case logs =>
+    Option(log_update_queue.get(userId)) match {
+      case None => List()
+      case Some(logs) =>
         // once updates are fetched, we optionally flush the queue
         if(flush) log_update_queue.put(userId, List())
         logs

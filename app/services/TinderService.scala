@@ -30,8 +30,8 @@ object TinderService {
    * @return
    */
   def fetchSession(xAuthToken: String): Option[TinderAuth] = {
-    sessions.get(xAuthToken) match {
-      case null =>
+    Option(sessions.get(xAuthToken)) match {
+      case None =>
         Logger.info("Creating new session for xAuthToken %s".format(xAuthToken))
         val tinderApi = new TinderApi(Some(xAuthToken))
         val result = Await.result(tinderApi.getProfile, 10 seconds)
@@ -44,7 +44,7 @@ object TinderService {
             val f = future { storeSession(tinderAuth) }
             Some(tinderAuth)
         }
-      case session => Some(session)
+      case Some(session) => Some(session)
     }
   }
 

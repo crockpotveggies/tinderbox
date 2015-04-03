@@ -28,8 +28,8 @@ object ProfileService {
    * @return
    */
   def fetchProfile(xAuthToken: String, userId: String): Option[Profile] = {
-    users.get(userId) match {
-      case null =>
+    Option(users.get(userId)) match {
+      case None =>
         val tinderApi = new TinderApi(Some(xAuthToken))
         val result = Await.result(tinderApi.getProfile(userId), 10 seconds)
         result match {
@@ -40,7 +40,7 @@ object ProfileService {
             storeProfile(userId, profile)
             Some(profile)
         }
-      case profile => Some(profile)
+      case Some(profile) => Some(profile)
     }
   }
 
