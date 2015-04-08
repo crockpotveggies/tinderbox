@@ -188,7 +188,7 @@
             console.log("Good news, facial data models are valid!");
           } else {
             var html = '<div class="alert alert-warning"><b>Heads Up!</b> TinderBot is not yet swiping. Head to Matchmaker and make more swipes to train the bot.</div>'
-            $("div.wrapper.wrapper-content").prepend(html);
+            $("#page-wrapper > div.wrapper.wrapper-content").prepend(html);
           }
         }
       });
