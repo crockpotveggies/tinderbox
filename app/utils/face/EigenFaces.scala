@@ -1,6 +1,5 @@
 package utils.face
 
-import scala.collection.JavaConversions._
 import cern.colt.matrix.DoubleMatrix2D
 import cern.colt.matrix.impl.DenseDoubleMatrix2D
 
@@ -22,8 +21,7 @@ object EigenFaces {
    */
   def computeEigenFaces(pixelMatrix: Array[Array[Double]], meanColumn: Array[Double]): DoubleMatrix2D = {
     val diffMatrix = MatrixHelpers.computeDifferenceMatrixPixels(pixelMatrix, meanColumn)
-    val covarianceMatrix = MatrixHelpers.computeCovarianceMatrix(pixelMatrix, diffMatrix)
-    val eigenVectors = MatrixHelpers.computeEigenVectors(covarianceMatrix)
+    val eigenVectors = MatrixHelpers.computeEigenVectors(diffMatrix)
     computeEigenFaces(eigenVectors, diffMatrix)
   }
 

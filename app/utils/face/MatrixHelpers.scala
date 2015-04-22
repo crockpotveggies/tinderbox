@@ -1,12 +1,7 @@
 package utils.face
 
-import java.io.File
-import javax.imageio.ImageIO
-import scala.collection.JavaConversions._
-import java.awt.image.{DataBufferByte, BufferedImage}
-import cern.colt.matrix.DoubleMatrix2D
-import cern.colt.matrix.impl.DenseDoubleMatrix2D
 import cern.colt.matrix.linalg.EigenvalueDecomposition
+import cern.colt.matrix.{DoubleFactory2D, DoubleMatrix2D}
 
 /**
  * Methods for converting image matrices to covariance matrices.
@@ -29,7 +24,7 @@ object MatrixHelpers {
 
     var matrixNo = 0
     matrices.foreach { pixels =>
-      (0 to (pixelLength-1)).foreach { pixelNo =>
+      (0 to (pixelLength - 1)).foreach { pixelNo =>
         pixelMatrix(pixelNo)(matrixNo) = pixels(pixelNo)
       }
       matrixNo += 1
@@ -46,9 +41,9 @@ object MatrixHelpers {
     val meanColumn = new Array[Double](pixelMatrix.length)
     val columnCount = pixelMatrix(0).length
 
-    (0 to (pixelMatrix.length-1)).foreach { i =>
+    (0 to (pixelMatrix.length - 1)).foreach { i =>
       var sum: Double = 0.0
-      (0 to (columnCount-1)).foreach { j =>
+      (0 to (columnCount - 1)).foreach { j =>
         sum += pixelMatrix(i)(j)
       }
       meanColumn(i) = sum / columnCount
@@ -68,8 +63,8 @@ object MatrixHelpers {
 
     val diffMatrixPixels = Array.ofDim[Double](rowCount, columnCount)
 
-    (0 to (pixelMatrix.length-1)).foreach { i =>
-      (0 to (columnCount-1)).foreach { j =>
+    (0 to (pixelMatrix.length - 1)).foreach { i =>
+      (0 to (columnCount - 1)).foreach { j =>
         diffMatrixPixels(i)(j) = pixelMatrix(i)(j) - meanColumn(i)
       }
     }
@@ -88,10 +83,10 @@ object MatrixHelpers {
 
     val covarianceMatrix = Array.ofDim[Double](columnCount, columnCount)
 
-    (0 to (columnCount-1)).foreach { i =>
-      (0 to (columnCount-1)).foreach { j =>
+    (0 to (columnCount - 1)).foreach { i =>
+      (0 to (columnCount - 1)).foreach { j =>
         var sum: Double = 0.0
-        (0 to (rowCount-1)).foreach { k =>
+        (0 to (rowCount - 1)).foreach { k =>
           sum += diffMatrixPixels(k)(i) * diffMatrixPixels(k)(j)
         }
         covarianceMatrix(i)(j) = sum
@@ -102,15 +97,17 @@ object MatrixHelpers {
   }
 
   /**
-   * Computes an Eigenvector matrix from a multi-dimensional covariance array.
-   * @param covarianceMatrix
+   * Computes an Eigenvector matrix from the normalized pixel matrix
+   * @param diffMatrix
    * @return
    */
-  def computeEigenVectors(covarianceMatrix: Array[Array[Double]]): DoubleMatrix2D = {
-    val doubleMatrix = new DenseDoubleMatrix2D(covarianceMatrix.length, covarianceMatrix(0).length)
-    doubleMatrix.assign(covarianceMatrix)
-    val eigenValues = new EigenvalueDecomposition(doubleMatrix)
-    eigenValues.getV
-  }
+  def computeEigenVectors(diffMatrix: Array[Array[Double]]): DoubleMatrix2D = {
+    val factory = DoubleFactory2D.dense
+    val diffDoubleMatrix = factory.make(diffMatrix.length, diffMatrix(0).length).assign(diffMatrix)
 
+    val shortDoubleMatrix = diffDoubleMatrix.zMult(diffDoubleMatrix, null, 1.0, 0.0, false, true)
+
+    val eigenVectorMatrix = new EigenvalueDecomposition(shortDoubleMatrix).getV
+    diffDoubleMatrix.zMult(eigenVectorMatrix, null)
+  }
 }
