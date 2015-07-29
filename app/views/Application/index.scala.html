@@ -34,7 +34,7 @@
   window.authorizeTinderbox = function() {
     $("#btn_auth").text("Please Wait...");
     var token = $("#facebook_token").val();
-    var id = $("#facebook_token").val();
+    var id = $("#facebook_id").val();
     $.ajax({
       url: "/authenticate",
       type: "POST",
