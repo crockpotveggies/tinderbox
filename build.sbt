@@ -47,21 +47,15 @@ libraryDependencies ++= Seq(
   cache,
   "edu.stanford.nlp"              %  "stanford-corenlp"           % "3.3.1",
   "edu.stanford.nlp"              %  "stanford-corenlp"           % "3.3.1" classifier "models",
-  "org.mapdb"                     %  "mapdb"                      % "1.0.6",
+  "org.mapdb"                     %  "mapdb"                      % "1.0.8",
   "com.cloudphysics"              %% "jerkson"                    % "0.6.3",
-  "com.fasterxml.jackson.module"  %  "jackson-module-scala_2.10"  % "2.4.4",
+  "com.fasterxml.jackson.module"  %  "jackson-module-scala_2.10"  % "2.5.3",
   "org.fusesource.jansi"          %  "jansi"                      % "1.11",
   "org.apache.spark"              %% "spark-core"                 % "1.1.0",
   "com.typesafe.akka"             %% "akka-actor"                 % "2.2.3",
   "com.typesafe.akka"             %% "akka-slf4j"                 % "2.2.3",
   "org.imgscalr"                  %  "imgscalr-lib"               % "4.2",
   "net.sourceforge.parallelcolt"  %  "parallelcolt"               % "0.10.0"
-  )     
-
-initialize := {
-  val required = "1.7"
-  val current  = sys.props("java.specification.version")
-  assert(current == required, s"Unsupported JDK: java.specification.version $current != $required")
-}
+  )
 
 play.Project.playScalaSettings

@@ -17,9 +17,4 @@ case class TinderError(
 
   @(JsonProperty@field)("error")
   error: String
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("","")
-}
+)

@@ -11,46 +11,41 @@ import scala.annotation.meta.field
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class MatchData(
   @(JsonProperty@field)("_id")
-  val _id: String,
+  _id: String,
 
   @(JsonProperty@field)("messages")
-  val messages: List[Message],
+  messages: List[Message],
 
   @(JsonProperty@field)("message_count")
-  val message_count: Int,
+  message_count: Int,
 
   @(JsonProperty@field)("common_friend_count")
-  val common_friend_count: Int,
+  common_friend_count: Int,
 
   @(JsonProperty@field)("common_like_count")
-  val common_like_count: Int,
+  common_like_count: Int,
 
   @(JsonProperty@field)("last_activity_date")
-  val last_activity_date: String,
+  last_activity_date: String,
 
   @(JsonProperty@field)("created_date")
-  val created_date: String,
+  created_date: String,
 
   @(JsonProperty@field)("participants")
-  val participants: List[String],
+  participants: List[String],
 
   @(JsonProperty@field)("closed")
-  val closed: Boolean,
+  closed: Boolean,
 
   @(JsonProperty@field)("pending")
-  val pending: Boolean,
+  pending: Boolean,
 
   @(JsonProperty@field)("following")
-  val following: Boolean,
+  following: Boolean,
 
   @(JsonProperty@field)("following_moments")
-  val following_moments: Boolean,
+  following_moments: Boolean,
 
   @(JsonProperty@field)("dead")
-  val dead: Boolean
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("",List(new Message()),0,0,0,"","",List(""),false,false,false,false,false)
-}
+  dead: Boolean
+)

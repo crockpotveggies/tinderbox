@@ -34,12 +34,14 @@ object TinderService {
       case null =>
         Logger.info("Creating new session for xAuthToken %s".format(xAuthToken))
         val tinderApi = new TinderApi(Some(xAuthToken))
-        val result = Await.result(tinderApi.getProfile, 10 seconds)
+        val result = Await.result(tinderApi.getProfile, 20 seconds)
         result match {
-          case Left(error) => None
+          case Left(error) =>
+            Logger.error(error.toString)
+            None
           case Right(profile) =>
             // create a placeholder auth object
-            val tinderAuth = new TinderAuth(xAuthToken,new TinderGlobals,profile,new TinderVersion)
+            val tinderAuth = new TinderAuth(xAuthToken,new TinderGlobals(0,0,0,"",false,"",0,0,"",false,0),profile,new TinderVersion("","","","",""))
             // save it
             val f = future { storeSession(tinderAuth) }
             Some(tinderAuth)

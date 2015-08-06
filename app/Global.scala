@@ -18,10 +18,6 @@ object Global extends GlobalSettings {
    */
   override def onStart(app: Application) {
 
-    val jvmVersion = sys.props("java.specification.version").toDouble
-    if (jvmVersion != 1.7)
-      throw new RuntimeException(s"Unsupported JRE: java.specification.version $jvmVersion != 1.7")
-
     // make sure the bot is instantiated and running
     TinderBot.context ! BotCommand("run")
 

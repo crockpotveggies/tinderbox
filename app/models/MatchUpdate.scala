@@ -14,17 +14,12 @@ import utils.tinder.model._
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class MatchUpdate(
   @(JsonProperty@field)("_id")
-  val _id: String,
+  _id: String,
 
   @(JsonProperty@field)("messages")
-  val `match`: Match,
+  `match`: Match,
 
   @(JsonProperty@field)("profile")
-  val profile: Option[Profile]
+  profile: Option[Profile]
 
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("",new Match(),None)
-}
+)

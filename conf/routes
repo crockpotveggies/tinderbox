@@ -52,7 +52,6 @@ DELETE  /t/:xauthtoken/facial/reset               controllers.FacialAnalysis.res
 
 # Bot
 GET     /t/:xauthtoken/bot                        controllers.Bot.bot(xauthtoken: String)
-GET     /bot/state                                controllers.Bot.state
 GET     /bot/log/:userId                          controllers.Bot.userLog(userId: String)
 POST    /bot/log/:userId                          controllers.Bot.createLog(userId: String)
 GET     /bot/log/:userId/updates                  controllers.Bot.userLogUpdates(userId: String)

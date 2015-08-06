@@ -13,9 +13,4 @@ import com.fasterxml.jackson.databind.annotation._
 case class MatchResult(
   @(JsonProperty@field)("match")
   `match`: MatchData
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this(new MatchData())
-}
+)

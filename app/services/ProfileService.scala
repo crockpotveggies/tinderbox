@@ -31,14 +31,14 @@ object ProfileService {
     users.get(userId) match {
       case null =>
         val tinderApi = new TinderApi(Some(xAuthToken))
-        val result = Await.result(tinderApi.getProfile(userId), 10 seconds)
+        val result = Await.result(tinderApi.getProfile(userId), 20 seconds)
         result match {
           case Left(error) =>
             Logger.error("Something went wrong when fetching profile for "+userId+": "+error.error)
             None
           case Right(profile) =>
-            storeProfile(userId, profile)
-            Some(profile)
+            storeProfile(userId, profile.results)
+            Some(profile.results)
         }
       case profile => Some(profile)
     }

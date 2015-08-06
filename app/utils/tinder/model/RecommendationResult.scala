@@ -13,13 +13,8 @@ import com.fasterxml.jackson.databind.annotation._
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class RecommendationResult(
   @(JsonProperty@field)("status")
-  val status: Int,
+  status: Int,
 
   @(JsonProperty@field)("results")
-  val results: List[RecommendedUser]
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this(0,List(new RecommendedUser()))
-}
+  results: List[RecommendedUser]
+)

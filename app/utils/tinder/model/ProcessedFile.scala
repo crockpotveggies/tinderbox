@@ -14,16 +14,11 @@ import com.fasterxml.jackson.databind.annotation._
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class ProcessedFile(
   @(JsonProperty@field)("width")
-  val width: Int,
+  width: Int,
 
   @(JsonProperty@field)("height")
-  val height: Int,
+  height: Int,
 
   @(JsonProperty@field)("url")
-  val url: String
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this(0,0,"")
-}
+  url: String
+)

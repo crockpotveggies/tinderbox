@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation._
  * Global variables for a Tinder app.
  * @param boost_decay
  * @param boost_down
- * @param boot_up
+ * @param boost_up
  * @param invite_type
  * @param kontagent
  * @param matchmaker_default_message
@@ -53,9 +53,4 @@ case class TinderGlobals(
 
   @(JsonProperty@field)("updates_interval")
   updates_interval: Int
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this(0,0,0,"",false,"",0,0,"",false,0)
-}
+)

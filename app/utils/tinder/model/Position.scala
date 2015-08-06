@@ -11,15 +11,10 @@ import com.fasterxml.jackson.databind.annotation._
  * @param lon
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-class Position(
-  @(JsonProperty@field)("_id")
+case class Position(
+  @(JsonProperty@field)("lat")
   lat: Double,
 
-  @(JsonProperty@field)("_id")
+  @(JsonProperty@field)("lon")
   lon: Double
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this(0.0,0.0)
-}
+)

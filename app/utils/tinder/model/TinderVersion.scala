@@ -14,24 +14,19 @@ import com.fasterxml.jackson.databind.annotation._
  * @param trending_active_text
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-class TinderVersion(
+case class TinderVersion(
   @(JsonProperty@field)("active_text")
-  active_text: String,
+  val active_text: String,
 
   @(JsonProperty@field)("age_filter")
-  age_filter: String,
+  val age_filter: String,
 
   @(JsonProperty@field)("matchmaker")
-  matchmaker: String,
+  val matchmaker: String,
 
   @(JsonProperty@field)("trending")
-  trending: String,
+  val trending: String,
 
   @(JsonProperty@field)("trending_active_text")
-  trending_active_text: String
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("","","","","")
-}
+  val trending_active_text: String
+)

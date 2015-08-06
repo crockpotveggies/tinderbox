@@ -56,10 +56,7 @@ Note: in some cases the Facebook ID cannot be obtained, and you can get your FB 
 
 ## Support
 
-Currently I'm not offering any support, but if there's enough interest I'd consider helping others contribute to the code.
-
-- Find a bug? It's OK to file an issue - I may not follow up on it.
-- Want a feature? Please don't open an issue, instead contribute and open a pull request.
+The original author is not offering any further support. The code is released "as is".
 
 ## Facial Analysis and Predictions
 

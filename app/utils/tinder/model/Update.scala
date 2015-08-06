@@ -28,9 +28,4 @@ case class Update(
 
   @(JsonProperty@field)("lists")
   lists: Option[List[Map[String, String]]]
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this(List(new Match()),List(""),List(Map(""->"")),None,None)
-}
+)

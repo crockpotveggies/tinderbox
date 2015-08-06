@@ -37,7 +37,7 @@ case class RecommendedUser(
   val common_friend_count: Int,
 
   @(JsonProperty@field)("common_friends")
-  val common_friends: List[String],
+  val common_friends: List[Option[String]],
 
   @(JsonProperty@field)("common_like_count")
   val common_like_count: Int,
@@ -51,6 +51,9 @@ case class RecommendedUser(
   @(JsonProperty@field)("gender")
   val gender: Int,
 
+  @(JsonProperty@field)("instagram")
+  val instagram: Option[InstagramProfile],
+
   @(JsonProperty@field)("name")
   val name: String,
 
@@ -59,9 +62,4 @@ case class RecommendedUser(
 
   @(JsonProperty@field)("ping_time")
   val ping_time: String
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("","","","",0,List(""),0,List(""),0,0,"",List(new Photo()),"")
-}
+)

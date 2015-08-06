@@ -37,12 +37,7 @@ case class Message(
 
   @(JsonProperty@field)("created_date")
   created_date: String
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("","","","","","","")
-}
+)
 
 
 /**
@@ -65,9 +60,4 @@ case class MessageOutgoingResult(
 
   @(JsonProperty@field)("created_date")
   created_date: String
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("","","","")
-}
+)

@@ -20,54 +20,48 @@ import com.fasterxml.jackson.databind.annotation._
  * @param name
  * @param photos
  * @param ping_time
- * @param id
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class Profile(
   @(JsonProperty@field)("_id")
-  val _id: String,
+  _id: String,
 
   @(JsonProperty@field)("bio")
-  val bio: String,
+  bio: String,
 
   @(JsonProperty@field)("birth_date")
-  val birth_date: String,
+  birth_date: String,
 
   @(JsonProperty@field)("birth_date_info")
-  val birth_date_info: String,
+  birth_date_info: String,
 
   @(JsonProperty@field)("common_friend_count")
-  val common_friend_count: Int,
+  common_friend_count: Int,
 
   @(JsonProperty@field)("common_friends")
-  val common_friends: List[String],
+  common_friends: List[String],
 
   @(JsonProperty@field)("common_like_count")
-  val common_like_count: Int,
+  common_like_count: Int,
 
   @(JsonProperty@field)("common_likes")
-  val common_likes: List[String],
+  common_likes: List[String],
 
   @(JsonProperty@field)("distance_mi")
-  val distance_mi: Int,
+  distance_mi: Int,
 
   @(JsonProperty@field)("gender")
-  val gender: Int,
+  gender: Int,
 
   @(JsonProperty@field)("name")
-  val name: String,
+  name: String,
 
   @(JsonProperty@field)("photos")
-  val photos: List[Photo],
+  photos: List[Photo],
 
   @(JsonProperty@field)("ping_time")
-  val ping_time: String
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("","","","",0,List(""),0,List(""),0,0,"",List(new Photo()),"")
-}
+  ping_time: String
+)
 
 
 /**
@@ -83,28 +77,38 @@ case class Profile(
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class ProfileBrief(
   @(JsonProperty@field)("_id")
-  val _id: String,
+  _id: String,
 
   @(JsonProperty@field)("bio")
-  val bio: String,
+  bio: String,
 
   @(JsonProperty@field)("birth_date")
-  val birth_date: String,
+  birth_date: String,
 
   @(JsonProperty@field)("gender")
-  val gender: Int,
+  gender: Int,
 
   @(JsonProperty@field)("name")
-  val name: String,
+  name: String,
 
   @(JsonProperty@field)("photos")
-  val photos: List[Photo],
+  photos: List[Photo],
 
   @(JsonProperty@field)("ping_time")
-  val ping_time: String
-  ) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("","","",0,"",List(new Photo()),"")
-}
+  ping_time: String
+)
+
+
+/**
+ * A shortened profile class used in match info.
+ * @param status
+ * @param results
+ */
+@JsonIgnoreProperties(ignoreUnknown=true)
+case class ProfileResult(
+  @(JsonProperty@field)("status")
+  status: Int,
+
+  @(JsonProperty@field)("results")
+  results: Profile
+)

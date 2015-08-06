@@ -344,15 +344,15 @@ once when the app is installed then cache the results and only rely on the
 incremental updates
 </p></div></div>
     </li><li name="utils.tinder.TinderApi#getProfile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getProfile(userId:String):scala.concurrent.Future[Either[utils.tinder.model.TinderError,utils.tinder.model.Profile]]"></a>
-      <a id="getProfile(String):Future[Either[TinderError,Profile]]"></a>
+      <a id="getProfile(userId:String):scala.concurrent.Future[Either[utils.tinder.model.TinderError,utils.tinder.model.ProfileResult]]"></a>
+      <a id="getProfile(String):Future[Either[TinderError,ProfileResult]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getProfile</span><span class="params">(<span name="userId">userId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Either">Either</span>[<a href="model/TinderError.html" class="extype" name="utils.tinder.model.TinderError">TinderError</a>, <a href="model/Profile.html" class="extype" name="utils.tinder.model.Profile">Profile</a>]]</span>
+        <span class="name">getProfile</span><span class="params">(<span name="userId">userId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Either">Either</span>[<a href="model/TinderError.html" class="extype" name="utils.tinder.model.TinderError">TinderError</a>, <a href="model/ProfileResult.html" class="extype" name="utils.tinder.model.ProfileResult">ProfileResult</a>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get user by id</p><div class="fullcomment"><div class="comment cmt"><p>Get user by id</p></div><dl class="paramcmts block"><dt class="param">userId</dt><dd class="cmt"><p>the id of the user
@@ -425,15 +425,15 @@ incremental updates
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="utils.tinder.TinderApi#jsonContext" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="jsonContext:com.codahale.jerkson.Json"></a>
-      <a id="jsonContext:Json"></a>
+      <a id="jsonContext:com.fasterxml.jackson.databind.ObjectMapperwithcom.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper"></a>
+      <a id="jsonContext:ObjectMapperwithScalaObjectMapper"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">jsonContext</span><span class="result">: <span class="extype" name="com.codahale.jerkson.Json">Json</span></span>
+        <span class="name">jsonContext</span><span class="result">: <span class="extype" name="com.fasterxml.jackson.databind.ObjectMapper">ObjectMapper</span> with <span class="extype" name="com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper">ScalaObjectMapper</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Instantiating this Json object here helps prevent ClassCast errors

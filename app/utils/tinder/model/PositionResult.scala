@@ -17,9 +17,4 @@ case class PositionResult(
 
   @(JsonProperty@field)("error")
   error: Option[String]
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this(0,None)
-}
+)

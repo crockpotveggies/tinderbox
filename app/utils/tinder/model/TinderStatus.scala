@@ -13,9 +13,4 @@ import com.fasterxml.jackson.databind.annotation._
 case class TinderStatus(
   @(JsonProperty@field)("status")
   status: Int
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this(200)
-}
+)

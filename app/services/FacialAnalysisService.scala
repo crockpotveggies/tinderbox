@@ -145,7 +145,7 @@ object FacialAnalysisService {
       case l: Map[String, List[Array[Double]]] => l.filterNot{ kv => kv._2.size==0 }.map(_._2).flatten.size
     } getOrElse 0
 
-    yesModelSize!=0 || noModelSize!=0
+    yesModelSize>50 || noModelSize>50
   }
 
   /*

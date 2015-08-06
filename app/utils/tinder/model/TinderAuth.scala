@@ -15,19 +15,14 @@ import com.fasterxml.jackson.databind.annotation._
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class TinderAuth(
   @(JsonProperty@field)("token")
-  val token: String,
+  token: String,
 
   @(JsonProperty@field)("globals")
-  val globals: TinderGlobals,
+  globals: TinderGlobals,
 
   @(JsonProperty@field)("user")
-  val user: User,
+  user: User,
 
   @(JsonProperty@field)("versions")
-  val versions: TinderVersion
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("",new TinderGlobals(),new User(),new TinderVersion())
-}
+  versions: TinderVersion
+)

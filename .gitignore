@@ -13,6 +13,7 @@ tmp
 .sbt
 .DS_Store
 data/
+faces/
 
 *.db
 /nbproject/private/

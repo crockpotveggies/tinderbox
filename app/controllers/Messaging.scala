@@ -68,7 +68,7 @@ object Messaging extends Controller {
         case (Some(h), Some(c)) =>
           val data = h
             .filterNot { m => m.person == None}
-            .map{ m => m.message_count = c.get(m._id); m }
+            .map{ m => val newM = m.copy(message_count = c.get(m._id)); newM }
           Ok(generate(data)).as("application/json")
 
         case (Some(h), None) =>

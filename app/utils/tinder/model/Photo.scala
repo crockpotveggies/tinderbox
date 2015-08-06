@@ -22,43 +22,38 @@ import com.fasterxml.jackson.databind.annotation._
 @JsonIgnoreProperties(ignoreUnknown=true)
 case class Photo(
   @(JsonProperty@field)("id")
-  val id: String,
+  id: String,
 
   @(JsonProperty@field)("url")
-  val url: String,
+  url: String,
 
   @(JsonProperty@field)("main")
-  val main: Option[Any],
+  main: Option[Any],
 
   @(JsonProperty@field)("fileName")
-  val fileName: String,
+  fileName: String,
 
   @(JsonProperty@field)("extension")
-  val extension: String,
+  extension: String,
 
   @(JsonProperty@field)("processedFiles")
-  val processedFiles: List[ProcessedFile],
+  processedFiles: List[ProcessedFile],
 
   @(JsonProperty@field)("shape")
-  val shape: Option[String],
+  shape: Option[String],
 
   @(JsonProperty@field)("crop")
-  val crop: Option[String],
+  crop: Option[String],
 
   @(JsonProperty@field)("ydistance_percent")
-  val ydistance_percent: Option[Double],
+  ydistance_percent: Option[Double],
 
   @(JsonProperty@field)("yoffset_percent")
-  val yoffset_percent: Option[Double],
+  yoffset_percent: Option[Double],
 
   @(JsonProperty@field)("xoffset_percent")
-  val xoffset_percent: Option[Double],
+  xoffset_percent: Option[Double],
 
   @(JsonProperty@field)("xdistance_percent")
-  val xdistance_percent: Option[Double]
-) {
-  /**
-   * necessary for object instantiation
-   */
-  def this() = this("","",None,"","",List(new ProcessedFile()),None,None,None,None,None,None)
-}
+  xdistance_percent: Option[Double]
+)

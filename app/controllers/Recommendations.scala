@@ -51,31 +51,34 @@ object Recommendations extends Controller {
    */
   def like(xAuthToken: String, userId: String) = Action.async { implicit request =>
     val tinderApi = new TinderApi(Some(xAuthToken))
-    val f = tinderApi.swipePositive(userId)
-    f.map { result =>
+
+    // save yesno data
+    val session = TinderService.fetchSession(xAuthToken).get
+    FacialAnalysisService.storeYesNoData(session.user._id, userId, true)
+
+    tinderApi.getProfile(userId).map { r =>
+      r match {
+        case Right(rec) =>
+          val log = BotLog(
+            System.currentTimeMillis(),
+            "swipe_like",
+            "Liked %s because: %s.".format(rec.results.name, "user manually selected"),
+            Some(rec.results._id),
+            Some(rec.results.photos.head.url)
+          )
+          TinderBot.writeLog(session.user._id, log)
+
+        case _ =>
+          Logger.warn("[tinderbot] Failed to write swipe log for user %s." format userId)
+      }
+    }
+
+    tinderApi.swipePositive(userId).map { result =>
       result match {
         case Right(r) =>
-            val recFuture = tinderApi.getProfile(userId).map { r =>
-              r match {
-                case Right(rec) =>
-                  val session = TinderService.fetchSession(xAuthToken).get
-                  val log = BotLog(
-                    System.currentTimeMillis(),
-                    "swipe_like",
-                    "Liked %s because: %s.".format(rec.name, "user manually selected"),
-                    Some(rec._id),
-                    Some(rec.photos.head.url)
-                  )
-                  TinderBot.writeLog(session.user._id, log)
-                  FacialAnalysisService.storeYesNoData(session.user._id, rec._id, true)
-
-                case _ =>
-                  Logger.warn("[tinderbot] Failed to write swipe log for user %s." format userId)
-              }
-          }
           Ok(generate(r))
         case Left(e) =>
-          InternalServerError
+          Ok("null")
       }
     }
   }
@@ -88,28 +91,32 @@ object Recommendations extends Controller {
    */
   def dislike(xAuthToken: String, userId: String) = Action.async { implicit request =>
     val tinderApi = new TinderApi(Some(xAuthToken))
+
+    // save yesno data
+    val session = TinderService.fetchSession(xAuthToken).get
+    FacialAnalysisService.storeYesNoData(session.user._id, userId, false)
+
+    tinderApi.getProfile(userId).map { r =>
+      r match {
+        case Right(rec) =>
+          val log = BotLog(
+            System.currentTimeMillis(),
+            "swipe_dislike",
+            "Disliked %s because: %s.".format(rec.results.name, "user manually selected"),
+            Some(rec.results._id),
+            Some(rec.results.photos.head.url)
+          )
+          TinderBot.writeLog(session.user._id, log)
+
+        case _ =>
+          Logger.warn("[tinderbot] Failed to write swipe log for user %s." format userId)
+      }
+    }
+
     val f = tinderApi.swipeNegative(userId)
     f.map { result =>
       result match {
         case Right(r) =>
-          val recFuture = tinderApi.getProfile(userId).map { r =>
-            r match {
-              case Right(rec) =>
-                val session = TinderService.fetchSession(xAuthToken).get
-                val log = BotLog(
-                  System.currentTimeMillis(),
-                  "swipe_dislike",
-                  "Disliked %s because: %s.".format(rec.name, "user manually selected"),
-                  Some(rec._id),
-                  Some(rec.photos.head.url)
-                )
-                TinderBot.writeLog(session.user._id, log)
-                FacialAnalysisService.storeYesNoData(session.user._id, rec._id, false)
-
-              case _ =>
-                Logger.warn("[tinderbot] Failed to write swipe log for user %s." format userId)
-            }
-          }
           Ok(generate(r))
         case Left(e) =>
           InternalServerError

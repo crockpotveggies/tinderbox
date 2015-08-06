@@ -32,19 +32,20 @@
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">User</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">User</span><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="age_filter_min">age_filter_min: <span class="extype" name="scala.Int">Int</span></span>, <span name="age_filter_max">age_filter_max: <span class="extype" name="scala.Int">Int</span></span>, <span name="api_token">api_token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bio">bio: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="birth_date">birth_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="create_date">create_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="distance_filter">distance_filter: <span class="extype" name="scala.Int">Int</span></span>, <span name="distance_filter_min">distance_filter_min: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="facebook_id">facebook_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="full_name">full_name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="gender">gender: <span class="extype" name="scala.Int">Int</span></span>, <span name="gender_filter">gender_filter: <span class="extype" name="scala.Int">Int</span></span>, <span name="interested_in">interested_in: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="ip_address">ip_address: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="location">location: <span class="extype" name="scala.Option">Option</span>[<a href="Location.html" class="extype" name="utils.tinder.model.Location">Location</a>]</span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="photos">photos: <span class="extype" name="scala.List">List</span>[<a href="Photo.html" class="extype" name="utils.tinder.model.Photo">Photo</a>]</span>, <span name="ping_time">ping_time: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pos">pos: <a href="Position.html" class="extype" name="utils.tinder.model.Position">Position</a></span>, <span name="discoverable">discoverable: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Information about the active user.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Information about the active user.</p></div><dl class="paramcmts block"><dt class="param">_id</dt><dd class="cmt"></dd><dt class="param">age_filter_min</dt><dd class="cmt"></dd><dt class="param">age_filter_max</dt><dd class="cmt"></dd><dt class="param">api_token</dt><dd class="cmt"></dd><dt class="param">bio</dt><dd class="cmt"></dd><dt class="param">birth_date</dt><dd class="cmt"></dd><dt class="param">create_date</dt><dd class="cmt"></dd><dt class="param">distance_filter</dt><dd class="cmt"></dd><dt class="param">distance_filter_min</dt><dd class="cmt"></dd><dt class="param">facebook_id</dt><dd class="cmt"></dd><dt class="param">full_name</dt><dd class="cmt"></dd><dt class="param">gender</dt><dd class="cmt"></dd><dt class="param">gender_filter</dt><dd class="cmt"></dd><dt class="param">interested_in</dt><dd class="cmt"></dd><dt class="param">ip_address</dt><dd class="cmt"></dd><dt class="param">location</dt><dd class="cmt"></dd><dt class="param">name</dt><dd class="cmt"></dd><dt class="param">photos</dt><dd class="cmt"></dd><dt class="param">ping_time</dt><dd class="cmt"></dd><dt class="param">pos</dt><dd class="cmt"><p>
+</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@JsonIgnoreProperties</span><span class="args">()</span>
               
         </dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -62,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="utils.tinder.model.User"><span>User</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="utils.tinder.model.User"><span>User</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -82,8 +83,8 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="utils.tinder.model.User#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():utils.tinder.model.User"></a>
+              <ol><li name="utils.tinder.model.User#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(_id:String,age_filter_min:Int,age_filter_max:Int,api_token:String,bio:String,birth_date:String,create_date:String,distance_filter:Int,distance_filter_min:Option[Int],facebook_id:String,full_name:Option[String],gender:Int,gender_filter:Int,interested_in:List[Int],ip_address:Option[String],location:Option[utils.tinder.model.Location],name:String,photos:List[utils.tinder.model.Photo],ping_time:String,pos:utils.tinder.model.Position,discoverable:Option[Boolean]):utils.tinder.model.User"></a>
       <a id="&lt;init&gt;:User"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -91,24 +92,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">User</span><span class="params">()</span>
+        <span class="name">User</span><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="age_filter_min">age_filter_min: <span class="extype" name="scala.Int">Int</span></span>, <span name="age_filter_max">age_filter_max: <span class="extype" name="scala.Int">Int</span></span>, <span name="api_token">api_token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bio">bio: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="birth_date">birth_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="create_date">create_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="distance_filter">distance_filter: <span class="extype" name="scala.Int">Int</span></span>, <span name="distance_filter_min">distance_filter_min: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="facebook_id">facebook_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="full_name">full_name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="gender">gender: <span class="extype" name="scala.Int">Int</span></span>, <span name="gender_filter">gender_filter: <span class="extype" name="scala.Int">Int</span></span>, <span name="interested_in">interested_in: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="ip_address">ip_address: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="location">location: <span class="extype" name="scala.Option">Option</span>[<a href="Location.html" class="extype" name="utils.tinder.model.Location">Location</a>]</span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="photos">photos: <span class="extype" name="scala.List">List</span>[<a href="Photo.html" class="extype" name="utils.tinder.model.Photo">Photo</a>]</span>, <span name="ping_time">ping_time: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pos">pos: <a href="Position.html" class="extype" name="utils.tinder.model.Position">Position</a></span>, <span name="discoverable">discoverable: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>)</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">necessary for object instantiation
-</p>
-    </li><li name="utils.tinder.model.User#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(_id:String,active_time:String,age_filter_max:Int,api_token:String,bio:String,birth_date:String,create_date:String,distance_filter:Int,distance_filter_min:Int,facebook_id:String,facebook_token:String,full_name:String,gender:Int,gender_filter:Int,interested_in:List[Int],ip_address:String,last_fb_sync_date:String,location:utils.tinder.model.Location,age_filter_min:Int,name:String,pending:Boolean,photos:List[utils.tinder.model.Photo],ping_time:String,pos:utils.tinder.model.Position,user_number:Int,discoverable:Option[Boolean]):utils.tinder.model.User"></a>
-      <a id="&lt;init&gt;:User"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">User</span><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="active_time">active_time: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="age_filter_max">age_filter_max: <span class="extype" name="scala.Int">Int</span></span>, <span name="api_token">api_token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bio">bio: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="birth_date">birth_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="create_date">create_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="distance_filter">distance_filter: <span class="extype" name="scala.Int">Int</span></span>, <span name="distance_filter_min">distance_filter_min: <span class="extype" name="scala.Int">Int</span></span>, <span name="facebook_id">facebook_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="facebook_token">facebook_token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="full_name">full_name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="gender">gender: <span class="extype" name="scala.Int">Int</span></span>, <span name="gender_filter">gender_filter: <span class="extype" name="scala.Int">Int</span></span>, <span name="interested_in">interested_in: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="ip_address">ip_address: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="last_fb_sync_date">last_fb_sync_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="location">location: <a href="Location.html" class="extype" name="utils.tinder.model.Location">Location</a></span>, <span name="age_filter_min">age_filter_min: <span class="extype" name="scala.Int">Int</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pending">pending: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="photos">photos: <span class="extype" name="scala.List">List</span>[<a href="Photo.html" class="extype" name="utils.tinder.model.Photo">Photo</a>]</span>, <span name="ping_time">ping_time: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pos">pos: <a href="Position.html" class="extype" name="utils.tinder.model.Position">Position</a></span>, <span name="user_number">user_number: <span class="extype" name="scala.Int">Int</span></span>, <span name="discoverable">discoverable: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>)</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">_id</dt><dd class="cmt"></dd><dt class="param">active_time</dt><dd class="cmt"></dd><dt class="param">age_filter_max</dt><dd class="cmt"></dd><dt class="param">api_token</dt><dd class="cmt"></dd><dt class="param">bio</dt><dd class="cmt"></dd><dt class="param">birth_date</dt><dd class="cmt"></dd><dt class="param">create_date</dt><dd class="cmt"></dd><dt class="param">distance_filter</dt><dd class="cmt"></dd><dt class="param">distance_filter_min</dt><dd class="cmt"></dd><dt class="param">facebook_id</dt><dd class="cmt"></dd><dt class="param">facebook_token</dt><dd class="cmt"></dd><dt class="param">full_name</dt><dd class="cmt"></dd><dt class="param">gender</dt><dd class="cmt"></dd><dt class="param">gender_filter</dt><dd class="cmt"></dd><dt class="param">interested_in</dt><dd class="cmt"></dd><dt class="param">ip_address</dt><dd class="cmt"></dd><dt class="param">last_fb_sync_date</dt><dd class="cmt"></dd><dt class="param">location</dt><dd class="cmt"></dd><dt class="param">age_filter_min</dt><dd class="cmt"></dd><dt class="param">name</dt><dd class="cmt"></dd><dt class="param">pending</dt><dd class="cmt"></dd><dt class="param">photos</dt><dd class="cmt"></dd><dt class="param">ping_time</dt><dd class="cmt"></dd><dt class="param">pos</dt><dd class="cmt"></dd><dt class="param">user_number</dt><dd class="cmt"><p>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">_id</dt><dd class="cmt"></dd><dt class="param">age_filter_min</dt><dd class="cmt"></dd><dt class="param">age_filter_max</dt><dd class="cmt"></dd><dt class="param">api_token</dt><dd class="cmt"></dd><dt class="param">bio</dt><dd class="cmt"></dd><dt class="param">birth_date</dt><dd class="cmt"></dd><dt class="param">create_date</dt><dd class="cmt"></dd><dt class="param">distance_filter</dt><dd class="cmt"></dd><dt class="param">distance_filter_min</dt><dd class="cmt"></dd><dt class="param">facebook_id</dt><dd class="cmt"></dd><dt class="param">full_name</dt><dd class="cmt"></dd><dt class="param">gender</dt><dd class="cmt"></dd><dt class="param">gender_filter</dt><dd class="cmt"></dd><dt class="param">interested_in</dt><dd class="cmt"></dd><dt class="param">ip_address</dt><dd class="cmt"></dd><dt class="param">location</dt><dd class="cmt"></dd><dt class="param">name</dt><dd class="cmt"></dd><dt class="param">photos</dt><dd class="cmt"></dd><dt class="param">ping_time</dt><dd class="cmt"></dd><dt class="param">pos</dt><dd class="cmt"><p>
 </p></dd></dl></div>
     </li></ol>
             </div>
@@ -194,19 +181,6 @@
       </span>
       <span class="symbol">
         <span class="name">_id</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt"></p>
-    </li><li name="utils.tinder.model.User#active_time" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="active_time:String"></a>
-      <a id="active_time:String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">active_time</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -347,15 +321,15 @@
       </h4>
       <p class="shortcomment cmt"></p>
     </li><li name="utils.tinder.model.User#distance_filter_min" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="distance_filter_min:Int"></a>
-      <a id="distance_filter_min:Int"></a>
+      <a id="distance_filter_min:Option[Int]"></a>
+      <a id="distance_filter_min:Option[Int]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">distance_filter_min</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">distance_filter_min</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -372,19 +346,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a>
-      <a id="equals(Any):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="utils.tinder.model.User#facebook_id" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="facebook_id:String"></a>
       <a id="facebook_id:String"></a>
@@ -395,19 +356,6 @@
       </span>
       <span class="symbol">
         <span class="name">facebook_id</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt"></p>
-    </li><li name="utils.tinder.model.User#facebook_token" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="facebook_token:String"></a>
-      <a id="facebook_token:String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">facebook_token</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -431,15 +379,15 @@
               
         </dd></dl></div>
     </li><li name="utils.tinder.model.User#full_name" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="full_name:String"></a>
-      <a id="full_name:String"></a>
+      <a id="full_name:Option[String]"></a>
+      <a id="full_name:Option[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">full_name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">full_name</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -482,19 +430,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hashCode():Int"></a>
-      <a id="hashCode():Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="utils.tinder.model.User#interested_in" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="interested_in:List[Int]"></a>
       <a id="interested_in:List[Int]"></a>
@@ -509,15 +444,15 @@
       </h4>
       <p class="shortcomment cmt"></p>
     </li><li name="utils.tinder.model.User#ip_address" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ip_address:String"></a>
-      <a id="ip_address:String"></a>
+      <a id="ip_address:Option[String]"></a>
+      <a id="ip_address:Option[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">ip_address</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">ip_address</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -534,29 +469,16 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="utils.tinder.model.User#last_fb_sync_date" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="last_fb_sync_date:String"></a>
-      <a id="last_fb_sync_date:String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">last_fb_sync_date</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt"></p>
     </li><li name="utils.tinder.model.User#location" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="location:utils.tinder.model.Location"></a>
-      <a id="location:Location"></a>
+      <a id="location:Option[utils.tinder.model.Location]"></a>
+      <a id="location:Option[Location]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">location</span><span class="result">: <a href="Location.html" class="extype" name="utils.tinder.model.Location">Location</a></span>
+        <span class="name">location</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="Location.html" class="extype" name="utils.tinder.model.Location">Location</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -612,19 +534,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="utils.tinder.model.User#pending" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="pending:Boolean"></a>
-      <a id="pending:Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">pending</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt"></p>
     </li><li name="utils.tinder.model.User#photos" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="photos:List[utils.tinder.model.Photo]"></a>
       <a id="photos:List[Photo]"></a>
@@ -663,7 +572,8 @@
         <span class="name">pos</span><span class="result">: <a href="Position.html" class="extype" name="utils.tinder.model.Position">Position</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p>
+      <p class="shortcomment cmt">
+</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -677,33 +587,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toString():String"></a>
-      <a id="toString():String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="utils.tinder.model.User#user_number" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="user_number:Int"></a>
-      <a id="user_number:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">user_number</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">
-</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -770,7 +653,15 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

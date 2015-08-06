@@ -213,7 +213,7 @@
       <p class="shortcomment cmt">Computes a difference matrix.</p><div class="fullcomment"><div class="comment cmt"><p>Computes a difference matrix.</p></div><dl class="paramcmts block"><dt class="param">pixelMatrix</dt><dd class="cmt"></dd><dt class="param">meanColumn</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>
 </p></dd></dl></div>
     </li><li name="utils.face.MatrixHelpers#computeEigenVectors" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="computeEigenVectors(covarianceMatrix:Array[Array[Double]]):cern.colt.matrix.DoubleMatrix2D"></a>
+      <a id="computeEigenVectors(diffMatrix:Array[Array[Double]]):cern.colt.matrix.DoubleMatrix2D"></a>
       <a id="computeEigenVectors(Array[Array[Double]]):DoubleMatrix2D"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -221,10 +221,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">computeEigenVectors</span><span class="params">(<span name="covarianceMatrix">covarianceMatrix: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Double">Double</span>]]</span>)</span><span class="result">: <span class="extype" name="cern.colt.matrix.DoubleMatrix2D">DoubleMatrix2D</span></span>
+        <span class="name">computeEigenVectors</span><span class="params">(<span name="diffMatrix">diffMatrix: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Double">Double</span>]]</span>)</span><span class="result">: <span class="extype" name="cern.colt.matrix.DoubleMatrix2D">DoubleMatrix2D</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Computes an Eigenvector matrix from a multi-dimensional covariance array.</p><div class="fullcomment"><div class="comment cmt"><p>Computes an Eigenvector matrix from a multi-dimensional covariance array.</p></div><dl class="paramcmts block"><dt class="param">covarianceMatrix</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>
+      <p class="shortcomment cmt">Computes an Eigenvector matrix from the normalized pixel matrix</p><div class="fullcomment"><div class="comment cmt"><p>Computes an Eigenvector matrix from the normalized pixel matrix</p></div><dl class="paramcmts block"><dt class="param">diffMatrix</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>
 </p></dd></dl></div>
     </li><li name="utils.face.MatrixHelpers#computeMeanColumn" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="computeMeanColumn(pixelMatrix:Array[Array[Double]]):Array[Double]"></a>

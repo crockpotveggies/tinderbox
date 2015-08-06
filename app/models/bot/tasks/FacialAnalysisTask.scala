@@ -34,31 +34,30 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val us
           Logger.error("[tinderbot] Couldn't retrieve profile for %s for reason %s." format (matchUser, error.toString))
 
         case Right(profile) =>
-          try {
-            profile.photos.map { photo =>
-              val faces = FacialDetection(photo.url).extractFaces
-              // only store data for photos with single faces to ensure it is the face of the user
-              if (faces.size == 1) {
-                faces.foreach { face =>
-                  // normal processing for eigenfaces
-                  val pixels = ImageUtil.getNormalizedImagePixels(face, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
+          profile.results.photos.map { photo =>
+            val faces = FacialDetection(photo.url).extractFaces
+            // only store data for photos with single faces to ensure it is the face of the user
+            if (faces.size == 1) {
+              faces.foreach { face =>
+                // normal processing for eigenfaces
+                val pixels = ImageUtil.getNormalizedImagePixels(face, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
 
-                  swipeType match {
-                    case "yes" =>
-                      FacialAnalysisService.appendYesPixels(userId, matchUser, List(pixels))
-                      Logger.debug("[tinderbot] Stored YES pixels for an image from user %s." format matchUser)
+                swipeType match {
+                  case "yes" =>
+                    FacialAnalysisService.appendYesPixels(userId, matchUser, List(pixels))
+                    Logger.debug("[tinderbot] Stored YES pixels for an image from user %s." format matchUser)
 
-                    case "no" =>
-                      FacialAnalysisService.appendNoPixels(userId, matchUser, List(pixels))
-                      Logger.debug("[tinderbot] Stored NO pixels for an image from user %s." format matchUser)
-                  }
-                  counts += 1
+                  case "no" =>
+                    FacialAnalysisService.appendNoPixels(userId, matchUser, List(pixels))
+                    Logger.debug("[tinderbot] Stored NO pixels for an image from user %s." format matchUser)
                 }
+
+                // save the face to disk
+                ImageUtil.writeBufferedImage("faces/face_"+matchUser+"_"+counts+".gif", face)
+
+                counts += 1
               }
             }
-          } catch {
-            case e: java.lang.NullPointerException =>
-              Logger.error("[tinderbot] Profile for %s returned null (user possibly deleted)." format matchUser)
           }
       }
 

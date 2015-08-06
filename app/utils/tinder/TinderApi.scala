@@ -7,7 +7,9 @@ import play.api.libs.ws.tinder._
 import scala.concurrent.Future
 import java.util.{TimeZone, Date}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import com.codahale.jerkson
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 /**
  * Provides easy access to the Tinder API
@@ -19,7 +21,8 @@ class TinderApi(
   /**
    * Instantiating this Json object here helps prevent ClassCast errors
    */
-  val jsonContext = new jerkson.Json{}
+  val jsonContext = new ObjectMapper() with ScalaObjectMapper
+  jsonContext.registerModule(DefaultScalaModule)
 
   /**
    * The current profile's user id
@@ -66,18 +69,18 @@ class TinderApi(
     request
       .map { response =>
         try {
-          Right(jsonContext.parse[T](response.body))
+          Right(jsonContext.readValue[T](response.body))
         } catch {
           case e: Throwable =>
             try {
               // check if this response was a Tinder error
-              Left(jsonContext.parse[model.TinderError](response.body))
+              Left(jsonContext.readValue[model.TinderError](response.body))
             } catch {
               case e: Throwable =>
                 // sometimes Tinder wraps these things in a results object
                 val res = (response.json \ "results")
                 if(res==None || res==null) throw new Exception("Data was not wrapped in a results class. Could not parse.")
-                val recs = jsonContext.parse[T](Json.stringify(res))
+                val recs = jsonContext.readValue[T](Json.stringify(res))
                 Right(recs)
             }
         }
@@ -98,21 +101,21 @@ class TinderApi(
       .post(data)
       .map { response =>
         try {
-          Right(jsonContext.parse[T](response.body))
+          Right(jsonContext.readValue[T](response.body))
         } catch {
           case e: Throwable =>
             println(e.getCause)
             try {
               // sometimes Tinder wraps these things in a results object
               val res = (response.json \ "results")
-              val recs = jsonContext.parse[T](Json.stringify(res))
+              val recs = jsonContext.readValue[T](Json.stringify(res))
               if(recs==null || recs=="null") throw new Exception("Data was not wrapped in a results class. Could not parse.")
               Right(recs)
             } catch {
               case e: Throwable =>
                 //println("[Tinder] Parsing failed with: \n" + response.body)
                 println(stackTrace(e))
-                Left(jsonContext.parse[model.TinderError](response.body))
+                Left(jsonContext.readValue[model.TinderError](response.body))
             }
         }
       }
@@ -130,12 +133,12 @@ class TinderApi(
       .delete()
       .map { response =>
       try {
-        Right(jsonContext.parse[T](response.body))
+        Right(jsonContext.readValue[T](response.body))
       } catch {
         case e: Throwable =>
           println("[Tinder] Parsing failed with: \n" + response.body)
           println(stackTrace(e))
-          Left(jsonContext.parse[model.TinderError](response.body))
+          Left(jsonContext.readValue[model.TinderError](response.body))
       }
     }
   }
@@ -153,13 +156,13 @@ class TinderApi(
       .map { response =>
       try {
         val res = (response.json \ "results")
-        val recs = jsonContext.parse[List[model.RecommendedUser]](Json.stringify(res))
+        val recs = jsonContext.readValue[List[model.RecommendedUser]](Json.stringify(res))
         Right(recs)
       } catch {
         case e: Exception =>
           println("[Tinder] Parsing failed with: \n"+response.body)
           println(stackTrace(e))
-          Left(jsonContext.parse[model.TinderError](response.body))
+          Left(jsonContext.readValue[model.TinderError](response.body))
       }
     }
   }
@@ -270,7 +273,7 @@ class TinderApi(
    * @param userId the id of the user
    */
   def getProfile(userId: String) = {
-    tinderGet[model.Profile]("user/"+userId)
+    tinderGet[model.ProfileResult]("user/"+userId)
   }
 
   /**
