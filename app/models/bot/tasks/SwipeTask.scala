@@ -95,29 +95,31 @@ class SwipeTask(val xAuthToken: String, val tinderBot: ActorRef, val rec: Recomm
 
   def receive = {
     case "tick" =>
-      // some initial criteria
-      val day = 86400000L
-      val lastSeenAgo = {
-        val now = System.currentTimeMillis
-        val lastSeen = tinderApi.ISO8601.parse(rec.ping_time).getTime
-        now - lastSeen
-      }
+      if(!rec._id.startsWith("tinder_rate_limited")) {
+        // some initial criteria
+        val day = 86400000L
+        val lastSeenAgo = {
+          val now = System.currentTimeMillis
+          val lastSeen = tinderApi.ISO8601.parse(rec.ping_time).getTime
+          now - lastSeen
+        }
 
-      /*
-      Here we assess a recommended user. The strategy is to eliminate users who
-      don't meet certain criteria.
-       */
-      if(rec.photos.size==2 && rec.bio=="") dislikeUser("sparse photos, no bio")
-      else if (rec.photos.size==1) dislikeUser("sparse photos")
-      else if (lastSeenAgo > (day*3)) dislikeUser("hasn't been active for %s days".format((lastSeenAgo/day)))
-      else if (!photoCriteria(rec.photos)) dislikeUser("failed photo criteria")
-      else if (rec.bio.matches("no.{0,15}hookups")) likeUser("claiming friendship only")
-      else if (autoLike) likeUser("auto-liked")
-      else {
-        recommendation.FacialRecommendation.makeComparison(user.user._id, rec._id, rec.photos) match {
-          case Some(true) => likeUser("face matched positive recommendation criteria")
-          case Some(false) => dislikeUser("face did not match recommendation criteria")
-          case None => ignoreUser("not enough data for decision")
+        /*
+        Here we assess a recommended user. The strategy is to eliminate users who
+        don't meet certain criteria.
+         */
+        if (rec.photos.size == 2 && rec.bio == "") dislikeUser("sparse photos, no bio")
+        else if (rec.photos.size == 1) dislikeUser("sparse photos")
+        else if (lastSeenAgo > (day * 3)) dislikeUser("hasn't been active for %s days".format((lastSeenAgo / day)))
+        else if (!photoCriteria(rec.photos)) dislikeUser("failed photo criteria")
+        else if (rec.bio.matches("no.{0,15}hookups")) likeUser("claiming friendship only")
+        else if (autoLike) likeUser("auto-liked")
+        else {
+          recommendation.FacialRecommendation.makeComparison(user.user._id, rec._id, rec.photos) match {
+            case Some(true) => likeUser("face matched positive recommendation criteria")
+            case Some(false) => dislikeUser("face did not match recommendation criteria")
+            case None => ignoreUser("not enough data for decision")
+          }
         }
       }
 

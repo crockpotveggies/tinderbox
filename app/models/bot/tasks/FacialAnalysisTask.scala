@@ -26,47 +26,54 @@ class FacialAnalysisTask(val xAuthToken: String, val tinderBot: ActorRef, val us
 
   def receive = {
     case "tick" =>
-      val result = Await.result(new TinderApi(Some(xAuthToken)).getProfile(matchUser), 30 seconds)
-      var counts = 0
-      result match {
-        case Left(error) =>
-          FacialAnalysisService.resetModels(userId, matchUser)
-          Logger.error("[tinderbot] Couldn't retrieve profile for %s for reason %s." format (matchUser, error.toString))
+      if(!matchUser.startsWith("tinder_rate_limited")) {
+        val result = Await.result(new TinderApi(Some(xAuthToken)).getProfile(matchUser), 30 seconds)
+        var counts = 0
+        result match {
+          case Left(error) =>
+            FacialAnalysisService.resetModels(userId, matchUser)
+            Logger.error("[tinderbot] Couldn't retrieve profile for %s for reason %s." format(matchUser, error.toString))
 
-        case Right(profile) =>
-          profile.results.photos.map { photo =>
-            val faces = FacialDetection(photo.url).extractFaces
-            // only store data for photos with single faces to ensure it is the face of the user
-            if (faces.size == 1) {
-              faces.foreach { face =>
-                // normal processing for eigenfaces
-                val pixels = ImageUtil.getNormalizedImagePixels(face, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
+          case Right(profile) =>
+            profile.results.photos.map { photo =>
+              val faces = FacialDetection(photo.url).extractFaces
+              // only store data for photos with single faces to ensure it is the face of the user
+              if (faces.size == 1) {
+                faces.foreach { face =>
+                  // normal processing for eigenfaces
+                  val pixels = ImageUtil.getNormalizedImagePixels(face, DEFAULT_FACE_SIZE, DEFAULT_FACE_SIZE)
 
-                swipeType match {
-                  case "yes" =>
-                    FacialAnalysisService.appendYesPixels(userId, matchUser, List(pixels))
-                    Logger.debug("[tinderbot] Stored YES pixels for an image from user %s." format matchUser)
+                  swipeType match {
+                    case "yes" =>
+                      FacialAnalysisService.appendYesPixels(userId, matchUser, List(pixels))
+                      Logger.debug("[tinderbot] Stored YES pixels for an image from user %s." format matchUser)
 
-                  case "no" =>
-                    FacialAnalysisService.appendNoPixels(userId, matchUser, List(pixels))
-                    Logger.debug("[tinderbot] Stored NO pixels for an image from user %s." format matchUser)
+                    case "no" =>
+                      FacialAnalysisService.appendNoPixels(userId, matchUser, List(pixels))
+                      Logger.debug("[tinderbot] Stored NO pixels for an image from user %s." format matchUser)
+                  }
+
+                  // save the face to disk
+                  ImageUtil.writeBufferedImage("faces/face_" + matchUser + "_" + counts + ".gif", face)
+
+                  counts += 1
                 }
-
-                // save the face to disk
-                ImageUtil.writeBufferedImage("faces/face_"+matchUser+"_"+counts+".gif", face)
-
-                counts += 1
               }
             }
-          }
-      }
+        }
 
-      // if no data was stored, leave a placeholder so it doesn't get re-processed
-      if(counts==0) {
+        // if no data was stored, leave a placeholder so it doesn't get re-processed
+        if (counts == 0) {
+          FacialAnalysisService.resetModels(userId, matchUser)
+        }
+
+        Logger.info("[tinderbot] Stored %s facial models for user %s." format(counts, matchUser))
+
+      } else {
+        // if no data was stored, leave a placeholder so it doesn't get re-processed
         FacialAnalysisService.resetModels(userId, matchUser)
-      }
 
-      Logger.info("[tinderbot] Stored %s facial models for user %s." format (counts, matchUser))
+      }
 
       // make sure we properly shut down this actor
       self ! PoisonPill
