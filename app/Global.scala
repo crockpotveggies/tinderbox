@@ -21,6 +21,23 @@ object Global extends GlobalSettings {
     // make sure the bot is instantiated and running
     TinderBot.context ! BotCommand("run")
 
+    // make the faces directory if it doesn't exist
+    val facesDir = new java.io.File("faces")
+
+    // if the directory does not exist, create it
+    if (!facesDir.exists()) {
+      println("Creating faces directory.")
+      var result = false;
+
+      try{
+        facesDir.mkdir();
+        result = true;
+      }
+      catch{
+        case _: Exception => println("Failed to create faces directory. Likely a permissions issue.")
+      }
+    }
+
     println(ansi().fg(RED).bg(WHITE).a("""
 
      |__________________`s__________________
