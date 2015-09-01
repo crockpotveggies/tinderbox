@@ -3,7 +3,7 @@ tinderbox
 
 Another [@crockpotveggies](https://twitter.com/crockpotveggies) experiment.
 
-**Heads up!** As soon as you turn on this bot, it WILL start messaging all of your contacts. Please also check out the **Support** section below and the [Wiki](https://github.com/crockpotveggies/tinderbox/wiki) for tips on getting started. You will probably want to customize the messages. To do so, edit this [file](https://github.com/crockpotveggies/tinderbox/blob/master/app/models/bot/tasks/message/FunMessages.scala) then re-build the app using [these instructions](https://github.com/crockpotveggies/tinderbox/wiki/Editing-the-Code).
+**Heads up!** As soon as you turn on this bot, it WILL start messaging all of your contacts. Please also check out the **Support** section below (the original author is no longer supporting this software) and the [Wiki](https://github.com/crockpotveggies/tinderbox/wiki) for tips on getting started. You will probably want to customize the messages. To do so, edit this [file](https://github.com/crockpotveggies/tinderbox/blob/master/app/models/bot/tasks/message/FunMessages.scala) then re-build the app using [these instructions](https://github.com/crockpotveggies/tinderbox/wiki/Editing-the-Code).
 
 ## What is Tinderbox?
 
